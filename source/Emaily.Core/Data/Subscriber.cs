@@ -8,6 +8,7 @@ namespace Emaily.Core.Data
     {
         public string OwnerId { get; set; }
         public string Email { get; set; }
+        public string Token { get; set; }
 
         public List List { get; set; }
         public int ListId { get; set; }
@@ -31,6 +32,13 @@ namespace Emaily.Core.Data
         public IList<Click> Clicks { get; set; }
         public IList<Queue> Queues { get; set; }
         public IList<CampaignResult> Results { get; set; }
+
+        public Subscriber()
+        {
+            this.Clicks=new List<Click>();
+            this.Queues=new List<Queue>();
+            this.Results = new List<CampaignResult>();
+        }
 
     }
 }

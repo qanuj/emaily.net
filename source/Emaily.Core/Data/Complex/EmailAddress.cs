@@ -8,5 +8,12 @@ namespace Emaily.Core.Data.Complex
         public string Name { get; set; }
         public string Email { get; set; }
         public string ReplyTo { get; set; }
+
+        public EmailAddress() { }
+        public EmailAddress(string email,string name)
+        {
+            this.Email = email;
+            this.Name = name;
+        }
     }
 }

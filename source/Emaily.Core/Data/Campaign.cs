@@ -8,5 +8,10 @@ namespace Emaily.Core.Data
     public class Campaign : CampaignBase
     {
         public IList<CampaignList> Lists { get; set; }
+
+        public Campaign()
+        {
+            this.Lists=new List<CampaignList>();
+        }
     }
 }

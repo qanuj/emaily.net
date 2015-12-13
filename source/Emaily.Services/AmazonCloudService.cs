@@ -38,10 +38,10 @@ namespace Emaily.Services
             });
         }
 
-        public Task SendEmailAsync(EmailAddress sender, EmailAddress Receiver, string subject, string plainText, string htmlText,string queryString)
+        public async Task<string> SendEmailAsync(EmailAddress sender, EmailAddress Receiver, string subject, string plainText, string htmlText, string queryString)
         {
-            var body = new Body { Html=new Content(htmlText), Text = new Content(plainText)};
-            var task= _amazon.SendEmailAsync(new SendEmailRequest
+            var body = new Body { Html = new Content(htmlText), Text = new Content(plainText) };
+            var task = await _amazon.SendEmailAsync(new SendEmailRequest
             {
                 Destination = new Destination(new List<string> { sender.Email }),
                 Message = new Message(new Content(subject), body),
@@ -49,7 +49,33 @@ namespace Emaily.Services
                 Source = sender.Email
             });
 
-            return task;
+            return task.MessageId;
+        }
+
+        public string SendEmail(EmailAddress sender, EmailAddress Receiver, string subject, string plainText, string htmlText, string queryString)
+        {
+            var body = new Body { Html = new Content(htmlText), Text = new Content(plainText) };
+            var task = _amazon.SendEmail(new SendEmailRequest
+            {
+                Destination = new Destination(new List<string> { sender.Email }),
+                Message = new Message(new Content(subject), body),
+                ReplyToAddresses = new List<string> { sender.Email },
+                Source = sender.Email
+            });
+            return task.MessageId;
+        }
+
+        public string SendEmail(EmailAddress sender, EmailAddress Receiver, MailNote note)
+        {
+            var body = new Body { Html = new Content(note.Message) };
+            var task = _amazon.SendEmail(new SendEmailRequest
+            {
+                Destination = new Destination(new List<string> { sender.Email }),
+                Message = new Message(new Content(note.Subject), body),
+                ReplyToAddresses = new List<string> { sender.Email },
+                Source = sender.Email
+            });
+            return task.MessageId;
         }
 
         public void VerifyEmail(string email)

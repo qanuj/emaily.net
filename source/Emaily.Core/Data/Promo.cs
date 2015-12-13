@@ -16,6 +16,11 @@ namespace Emaily.Core.Data
         public bool IsDiscountPercentage { get; set; } 
         public int DiscountApplicationMonths { get; set; }//-1 for forever.
 
-        public IList<Plan> Plans { get; set; } 
+        public IList<Plan> Plans { get; set; }
+
+        public Promo()
+        {
+            this.Plans=new List<Plan>();
+        }
     }
 }

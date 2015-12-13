@@ -12,5 +12,10 @@ namespace Emaily.Services
         CloudServiceInfo Info { get; }
     }
 
+
+    public interface IAppProvider
+    {
+        int[] Apps { get; }
+    }
     
 }

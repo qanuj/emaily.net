@@ -13,5 +13,10 @@ namespace Emaily.Core.Data
         public int ListId { get; set; }
 
         public IList<AutoEmail> Emails { get; set; }
+
+        public AutoResponder()
+        {
+            this.Emails=new List<AutoEmail>();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Emaily.Core.Abstraction;
 using System.Collections.Generic;
 using Emaily.Core.Data.Complex;
@@ -31,5 +32,16 @@ namespace Emaily.Core.Data
         public IList<List> Lists { get; set; }
         public IList<Subscriber> Subscribers { get; set; }
         public IList<Template> Templates { get; set; }
+
+        public App()
+        {
+            this.Smtp=new SmtpInfo();
+            this.Sender=new EmailAddress();
+            this.Campaigns=new List<CampaignBase>();
+            this.Clients=new List<Client>();
+            this.Lists=new List<List>();
+            this.Subscribers = new List<Subscriber>();
+            this.Templates = new List<Template>();
+        }
     }
 }

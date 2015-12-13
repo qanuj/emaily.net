@@ -25,5 +25,10 @@ namespace Emaily.Core.Data
         public CurrencyEnum Currency { get; set; }
 
         public IList<App> Apps { get; set; }
+
+        public Plan()
+        {
+            this.Apps=new List<App>();
+        }
     }
 }

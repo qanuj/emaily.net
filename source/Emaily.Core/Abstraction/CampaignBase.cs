@@ -37,5 +37,12 @@ namespace Emaily.Core.Abstraction
         public IList<Link> Links { get; set; }
         public IList<Queue> Queues { get; set; }
 
+        protected CampaignBase()
+        {
+            this.Results=new List<CampaignResult>();
+            this.Links=new List<Link>();
+            this.Queues=new List<Queue>();
+        }
+
     }
 }
