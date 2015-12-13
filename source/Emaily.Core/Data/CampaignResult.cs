@@ -1,3 +1,4 @@
+using System;
 using Emaily.Core.Abstraction;
 
 namespace Emaily.Core.Data
@@ -13,8 +14,9 @@ namespace Emaily.Core.Data
         public string Country { get; set; }
         public string UserAgent { get; set; }
 
-        public bool IsOpened { get; set; }
-        public bool IsBounced { get; set; }
-        public bool IsMarkedSpam { get; set; }
+        public DateTime? Opened { get; set; }
+        public DateTime? Bounced { get; set; }
+        public DateTime? MarkedSpam { get; set; }
+        public bool IsSoftBounce { get; set; }
     }
 }

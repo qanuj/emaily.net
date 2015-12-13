@@ -159,6 +159,7 @@ namespace Emaily.Services
         private readonly IRepository<Domain> _domainRepository;
         private readonly IRepository<Queue> _queueRepository;
         private readonly IRepository<Template> _templateRepository;
+        private readonly IRepository<Click> _clickRepository;
         private readonly IRepository<Client> _clientRepository;
         private readonly IRepository<Campaign> _campaignRepository;
         private readonly IRepository<CampaignList> _campaignListRepository;
@@ -173,7 +174,7 @@ namespace Emaily.Services
         private readonly IAppProvider _appProvider;
 
 
-        public EmailService(IRepository<App> appRepository, IRepository<Plan> planRepository, IRepository<Client> clientRepository, IRepository<Campaign> campaignRepository, IRepository<List> listRepository, IRepository<AutoEmail> autoEmailRepository, IRepository<AutoResponder> autoResponderRepository, IRepository<Domain> domainRepository, IRepository<Queue> queueRepository, IRepository<Template> templateRepository, IRepository<CampaignList> campaignListRepository, IRepository<CampaignResult> campaignResultRepository, IRepository<Link> linkRepository, IRepository<Subscriber> subscriberRepository, IRepository<Promo> promoRepository, IEmailProvider emailProvider, IStorageProvider storageProvider, ICloudProvider cloudProvider, IAppProvider appProvider)
+        public EmailService(IRepository<App> appRepository, IRepository<Plan> planRepository, IRepository<Client> clientRepository, IRepository<Campaign> campaignRepository, IRepository<List> listRepository, IRepository<AutoEmail> autoEmailRepository, IRepository<AutoResponder> autoResponderRepository, IRepository<Domain> domainRepository, IRepository<Queue> queueRepository, IRepository<Template> templateRepository, IRepository<CampaignList> campaignListRepository, IRepository<CampaignResult> campaignResultRepository, IRepository<Link> linkRepository, IRepository<Subscriber> subscriberRepository, IRepository<Promo> promoRepository, IEmailProvider emailProvider, IStorageProvider storageProvider, ICloudProvider cloudProvider, IAppProvider appProvider, IRepository<Click> clickRepository)
         {
             _appRepository = appRepository;
             _planRepository = planRepository;
@@ -194,6 +195,7 @@ namespace Emaily.Services
             _storageProvider = storageProvider;
             _cloudProvider = cloudProvider;
             _appProvider = appProvider;
+            _clickRepository = clickRepository;
         }
 
         private IQueryable<AppVM> Apps()
@@ -236,8 +238,8 @@ namespace Emaily.Services
                 Status = x.Status,
                 Recipients = x.Recipients,
                 Started = x.Started,
-                UniqueClicks = x.Clicks,
-                UniqueOpens = x.Opens
+                UniqueClicks = x.Links.Sum(z => z.Clicks.Select(y => y.SubscriberId).Distinct().Count()),
+                UniqueOpens = x.Results.Select(y => y.SubscriberId).Distinct().Count()
             });
         }
 
@@ -315,7 +317,7 @@ namespace Emaily.Services
 
         }
 
-        public void ConfirmSubscription(UpdateSubscriptionVM model)
+       public void ConfirmSubscription(UpdateSubscriptionVM model)
         {
             model.Email = model.Email.ToLower().Trim();
             if (string.IsNullOrWhiteSpace(model.Email)) throw new Exception("Invalid Email address");
@@ -530,5 +532,144 @@ namespace Emaily.Services
 
             return Apps().FirstOrDefault(x => x.Id == app.Id);
         }
+
+        private CampaignResult CreateResult(CampaignResultVM model,string userAgent,string country)
+        {
+            return _campaignResultRepository.Create(new CampaignResult
+            {
+                Opened = DateTime.UtcNow,
+                SubscriberId = model.SubscriberId,
+                CampaignId = model.CampaignId,
+                Country = country,
+                UserAgent = userAgent,
+            });
+        }
+
+        public void MarkRead(CampaignResultVM model, string country, string userAgent)
+        {
+            var subscriber = _subscriberRepository.ById(model.SubscriberId);
+            if (subscriber == null) throw new Exception("Subscriber not found");
+
+            var campaignResult = _campaignResultRepository.All.FirstOrDefault(x => x.CampaignId == model.CampaignId && x.SubscriberId == model.SubscriberId) ??
+                            CreateResult(model, userAgent, country);
+
+            campaignResult.Opened = DateTime.UtcNow;
+
+            _campaignResultRepository.Update(campaignResult);
+            _campaignResultRepository.SaveChanges();
+        }
+
+        public void MarkSpam(CampaignResultVM model, string country, string userAgent)
+        {
+            var subscriber = _subscriberRepository.ById(model.SubscriberId);
+            if (subscriber == null) throw new Exception("Subscriber not found");
+
+            subscriber.IsComplaint = true;
+
+            var campaignResult = _campaignResultRepository.All.FirstOrDefault(x => x.CampaignId == model.CampaignId && x.SubscriberId == model.SubscriberId) ??
+                            CreateResult(model, userAgent, country);
+
+            campaignResult.MarkedSpam = DateTime.UtcNow;
+
+            _campaignResultRepository.Update(campaignResult);
+            _campaignResultRepository.SaveChanges();
+        }
+
+        public void MarkBounced(CampaignResultVM model, string country, string userAgent, bool IsSoftBounce)
+        {
+            var subscriber = _subscriberRepository.ById(model.SubscriberId);
+            if (subscriber == null) throw new Exception("Subscriber not found");
+
+            subscriber.IsBounced = true;
+            subscriber.IsSoftBounce = IsSoftBounce;
+
+            var campaignResult = _campaignResultRepository.All.FirstOrDefault(x => x.CampaignId == model.CampaignId && x.SubscriberId == model.SubscriberId) ??
+                            CreateResult(model, userAgent, country);
+
+            campaignResult.Bounced = DateTime.UtcNow;
+            campaignResult.Opened = null; //since it bounced;
+            campaignResult.IsSoftBounce = IsSoftBounce;
+
+
+            _campaignResultRepository.Update(campaignResult);
+            _campaignResultRepository.SaveChanges();
+        }
+
+        public void CreateOrUpdateClick(CreateClickVM model,string country,string userAgent)
+        {
+            var campaign = _campaignRepository.ById(model.CampaignId);
+            if (campaign == null) throw new Exception("Campaign not found");
+
+            MarkRead(model, country, userAgent);
+
+            var link = _linkRepository.ById(model.LinkId);
+            if (link == null) throw new Exception("Link not found");
+
+            _clickRepository.Create(new Click
+            {
+                SubscriberId = model.SubscriberId,
+                LinkId = model.LinkId
+            });
+
+            _clickRepository.SaveChanges(); //incase the open has not fired.
+
+        }
+
+        public void CreateTemplate(CreateTemplateVM model)
+        {
+            var template = _templateRepository.Create(new Template
+            {
+               AppId = model.AppId,
+               Name = model.Name,
+               Custom = JsonConvert.SerializeObject(model.Custom),
+               Html = model.Html,
+               OwnerId = model.OwnerId
+            });
+            _templateRepository.SaveChanges();
+
+        }
+
+        public void UpdateTemplate(UpdateTemplateVM model)
+        {
+            var template = _templateRepository.ById(model.Id);
+            if (template == null) throw new Exception("Template not found");
+            CheckIsMine(template.AppId);
+
+            template.Name = model.Name;
+            template.Html = model.Html;
+            template.Custom = JsonConvert.SerializeObject(model.Custom);
+
+            _templateRepository.Update(template);
+
+            _templateRepository.SaveChanges();
+        }
+    }
+
+    public class UpdateTemplateVM
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public dynamic Custom { get; set; }
+        public string Html { get; set; }
+    }
+
+    public class CreateTemplateVM
+    {
+        public int AppId { get; set; }
+        public string Name { get; set; }
+        public dynamic Custom { get; set; }
+        public string Html { get; set; }
+        public string OwnerId { get; set; }
+    }
+
+    public class CampaignResultVM
+    {
+        public int CampaignId { get; set; }
+        public int SubscriberId { get; set; }
+    }
+
+    public class CreateClickVM  : CampaignResultVM
+    {
+        public int LinkId { get; set; }
     }
 }
