@@ -5,6 +5,7 @@ using Emaily.Core.Abstraction.Services;
 using Emaily.Core.Data;
 using Emaily.Core.DTO;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Emaily.Core.Data.Complex;
 using Emaily.Core.Enumerations;
 using Newtonsoft.Json;
@@ -591,6 +592,57 @@ namespace Emaily.Services
             _autoResponderRepository.Update(entity);
 
             _autoResponderRepository.SaveChanges();
+        }
+
+        public void AddCustomField(CustomFieldVM model)
+        {
+            var list = _listRepository.ById(model.ListId);
+            if (list == null) throw new Exception("List not found");
+            CheckIsMine(list.AppId);
+
+            var fields = string.IsNullOrWhiteSpace(list.Custom) ? new List<CustomField>() : JsonConvert.DeserializeObject<List<CustomField>>(list.Custom);
+
+            if (fields.All(x => x.Name != model.Name))
+            {
+                fields.Add(new CustomField { Name = model.Name, Mode = model.Mode });
+            }
+            list.Custom = JsonConvert.SerializeObject(fields);
+
+            _listRepository.Update(list);
+            _listRepository.SaveChanges();
+        }
+
+        public void RenameCustomField(RenameCustomFieldVM model)
+        {
+            var list = _listRepository.ById(model.ListId);
+            if (list == null) throw new Exception("List not found");
+            CheckIsMine(list.AppId);
+
+            var fields = string.IsNullOrWhiteSpace(list.Custom) ? new List<CustomField>() : JsonConvert.DeserializeObject<List<CustomField>>(list.Custom);
+            var field = fields.FirstOrDefault(x => x.Name == model.OldName);
+            if (field != null && fields.All(x => x.Name != model.NewName))
+            {
+                field.Name = model.NewName;
+            }
+            list.Custom = JsonConvert.SerializeObject(fields);
+            _listRepository.Update(list);
+            _listRepository.SaveChanges();
+        }
+
+        public void DeleteCustomField(CustomFieldVM model)
+        {
+            var list = _listRepository.ById(model.ListId);
+            if (list == null) throw new Exception("List not found");
+            CheckIsMine(list.AppId);
+
+            var fields = string.IsNullOrWhiteSpace(list.Custom) ? new List<CustomField>() : JsonConvert.DeserializeObject<List<CustomField>>(list.Custom);
+            var field = fields.FirstOrDefault(x => x.Name == model.Name);
+            if (field != null){
+                fields.Remove(field);
+            }
+            list.Custom = JsonConvert.SerializeObject(fields);
+            _listRepository.Update(list);
+            _listRepository.SaveChanges();
         }
     }
 

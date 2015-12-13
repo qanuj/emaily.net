@@ -25,5 +25,9 @@ namespace Emaily.Core.Abstraction.Services
         void UpdateAutoEmail(UpdateAutoEmailVM model);
         void CreateAutoResponder(CreateAutoResponderVM model);
         void UpdateAutoResponder(UpdateAutoResponderVM model);
+
+        void AddCustomField(CustomFieldVM model);
+        void RenameCustomField(RenameCustomFieldVM model);
+        void DeleteCustomField(CustomFieldVM model);
     }
 }

@@ -61,9 +61,12 @@
     <Compile Include="DTO\CreateListVM.cs" />
     <Compile Include="DTO\CreateSubscriber.cs" />
     <Compile Include="DTO\CreateTemplateVM.cs" />
+    <Compile Include="DTO\CustomField.cs" />
+    <Compile Include="DTO\CustomFieldVM.cs" />
     <Compile Include="DTO\EditCampaignVM.cs" />
     <Compile Include="DTO\ListEmail.cs" />
     <Compile Include="DTO\ListVM.cs" />
+    <Compile Include="DTO\RenameCustomFieldVM.cs" />
     <Compile Include="DTO\RenameListVM.cs" />
     <Compile Include="DTO\SendCampaignVM.cs" />
     <Compile Include="DTO\UpdateAppVM.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="Data\Template.cs" />
     <Compile Include="Enumerations\CampaignStatusEnum.cs" />
     <Compile Include="Enumerations\CurrencyEnum.cs" />
+    <Compile Include="Enumerations\CustomFieldEnum.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Abstraction\Services\IEmailService.cs" />
   </ItemGroup>
