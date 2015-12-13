@@ -625,35 +625,5 @@ namespace Emaily.Services
         }
     }
 
-    public class UpdateAutoEmailVM : EditCampaignVM
-    {
-        public int Id { get; set; } 
-        public dynamic Custom { get; set; }
-        public string TimeCondition { get; set; }
-        public string TimeZone { get; set; }
-    }
-
-    public class CreateAutoEmailVM   : CreateCampaignVM
-    {
-        public int AutoResponderId { get; set; }
-        public dynamic Custom { get; set; }
-        public string TimeCondition { get; set; }
-        public string TimeZone { get; set; }
-    }
-
-    public class UpdateAutoResponderVM
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public dynamic Custom { get; set; }
-        public AutoResponderEnum Mode { get; set; }
-    }
-
-    public class CreateAutoResponderVM
-    {
-        public int ListId { get; set; }
-        public string Name { get; set; }
-        public dynamic Custom { get; set; }
-        public AutoResponderEnum Mode { get; set; }
-    }
+    
 }
