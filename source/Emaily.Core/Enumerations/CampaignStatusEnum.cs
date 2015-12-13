@@ -4,7 +4,7 @@ namespace Emaily.Core.Enumerations
     {
         None,
         Draft,
-        Start,
+        Active,
         Sending,
         Sent,
         Error

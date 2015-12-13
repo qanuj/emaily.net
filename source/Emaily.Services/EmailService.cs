@@ -5,159 +5,20 @@ using Emaily.Core.Abstraction.Services;
 using Emaily.Core.Data;
 using Emaily.Core.DTO;
 using System.Collections.Generic;
-using System.Net.Configuration;
-using System.Net.Mail;
-using System.Reflection.Emit;
-using System.Text;
-using Amazon.SimpleEmail.Model.Internal.MarshallTransformations;
 using Emaily.Core.Data.Complex;
 using Emaily.Core.Enumerations;
 using Newtonsoft.Json;
 
 namespace Emaily.Services
 {
-    public class CreateAppVM
-    {
-        public string Company { get; set; }
-        public string Email { get; set; }
-        public string Plan { get; set; }
-        public string OwnerId { get; set; }
-        public CurrencyEnum Currency { get; set; }
-        public SmtpInfo Smtp { get; set; }
-        public EmailAddress Sender { get; set; }
-        public string Logo { get; set; }
-    }
-
-    public class UpdateAppVM
-    {
-        public string Company { get; set; }
-        public SmtpInfo Smtp { get; set; }
-        public string FromName { get; set; }
-        public string ReplyTo { get; set; }
-        public string Logo { get; set; }
-        public int Id { get; set; }
-    }
-
-    public class CampaignVM
-    {
-        public int Id { get; set; }     
-        public string Errors { get; set; }
-        public string Title { get; set; }
-        public int Recipients { get; set; }
-        public DateTime? Started { get; set; }
-        public int UniqueOpens { get; set; }
-        public int UniqueClicks { get; set; }
-        public CampaignStatusEnum Status { get; set; }
-    }
-
-   public class CreateCampaignVM
-    {
-        public string Title { get; set; }
-        public string Name { get; set; }
-        public string HtmlText { get; set; }
-        public string PlainText { get; set; }
-        public bool IsHtml { get; set; }
-        public string FromName { get; set; }
-        public string ReplyTo { get; set; }
-        public string QueryString { get; set; }
-        public string Label { get; set; }
-        public int AppId { get; set; }
-        public string OwnerId { get; set; }
-    }
-
-    public class EditCampaignVM 
-    {
-        public string Title { get; set; }
-        public string Name { get; set; }
-        public string HtmlText { get; set; }
-        public string PlainText { get; set; }
-        public bool IsHtml { get; set; }
-        public string FromName { get; set; }
-        public string ReplyTo { get; set; }
-        public string QueryString { get; set; }
-        public string Label { get; set; }
-        public string OwnerId { get; set; }
-        public int CampaignId { get; set; }
-    }
-
-    public class SendCampaignVM
-    {
-        public int CampaignId { get; set; }
-        public int[] Lists { get; set; }
-        public DateTime? Future { get; set; }
-        public string Timezone { get; set; }
-    }
-
-    public class ListVM
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int AppId { get; set; }
-        public int Actives { get; set; }
-        public int Unsubscribed { get; set; }
-        public int Bounced { get; set; }
-        public int Total { get; set; }
-        public string Key { get; set; }
-        public int Spams { get; set; }
-    }
-
-    public class CreateListVM
-    {
-        public int AppId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class RenameListVM
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class UpdateListVM
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public MailNote Confirmation { get; set; }
-        public MailNote GoodBye { get; set; }
-        public MailNote ThankYou { get; set; }
-        public string SubscribedUrl { get; set; }
-        public string ConfirmUrl { get; set; }
-        public bool IsOptIn { get; set; }
-        public bool IsUnsubcribeAllList { get; set; }
-        public string UnsubscribedUrl { get; set; }
-    }
-
-    public class CreateSubscriber
-    {
-        public int ListId { get; set; }
-        public string Key { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public dynamic Custom { get; set; }
-        public string OwnerId { get; set; }
-    }
-
-    public class ListEmail
-    {
-        public int ListId { get; set; }
-        public string Email { get; set; }
-    }
-
-    public class UpdateSubscriptionVM
-    {
-        public int Id { get; set; }
-        public string Email { get; set; }
-        public string Token { get; set; }
-    }
-
+    
     public class EmailService : IEmailService
     {
         private readonly IRepository<App> _appRepository;
         private readonly IRepository<Plan> _planRepository;
         private readonly IRepository<AutoEmail> _autoEmailRepository;
         private readonly IRepository<AutoResponder> _autoResponderRepository;
-        private readonly IRepository<Domain> _domainRepository;
-        private readonly IRepository<Queue> _queueRepository;
+        private readonly IRepository<Domain> _domainRepository; 
         private readonly IRepository<Template> _templateRepository;
         private readonly IRepository<Click> _clickRepository;
         private readonly IRepository<Client> _clientRepository;
@@ -174,7 +35,8 @@ namespace Emaily.Services
         private readonly IAppProvider _appProvider;
 
 
-        public EmailService(IRepository<App> appRepository, IRepository<Plan> planRepository, IRepository<Client> clientRepository, IRepository<Campaign> campaignRepository, IRepository<List> listRepository, IRepository<AutoEmail> autoEmailRepository, IRepository<AutoResponder> autoResponderRepository, IRepository<Domain> domainRepository, IRepository<Queue> queueRepository, IRepository<Template> templateRepository, IRepository<CampaignList> campaignListRepository, IRepository<CampaignResult> campaignResultRepository, IRepository<Link> linkRepository, IRepository<Subscriber> subscriberRepository, IRepository<Promo> promoRepository, IEmailProvider emailProvider, IStorageProvider storageProvider, ICloudProvider cloudProvider, IAppProvider appProvider, IRepository<Click> clickRepository)
+        public EmailService(IRepository<App> appRepository, IRepository<Plan> planRepository, IRepository<Client> clientRepository, IRepository<Campaign> campaignRepository, IRepository<List> listRepository, IRepository<AutoEmail> autoEmailRepository, IRepository<AutoResponder> autoResponderRepository, IRepository<Domain> domainRepository,
+            IRepository<Template> templateRepository, IRepository<CampaignList> campaignListRepository, IRepository<CampaignResult> campaignResultRepository, IRepository<Link> linkRepository, IRepository<Subscriber> subscriberRepository, IRepository<Promo> promoRepository, IEmailProvider emailProvider, IStorageProvider storageProvider, ICloudProvider cloudProvider, IAppProvider appProvider, IRepository<Click> clickRepository)
         {
             _appRepository = appRepository;
             _planRepository = planRepository;
@@ -183,8 +45,7 @@ namespace Emaily.Services
             _listRepository = listRepository;
             _autoEmailRepository = autoEmailRepository;
             _autoResponderRepository = autoResponderRepository;
-            _domainRepository = domainRepository;
-            _queueRepository = queueRepository;
+            _domainRepository = domainRepository; 
             _templateRepository = templateRepository;
             _campaignListRepository = campaignListRepository;
             _campaignResultRepository = campaignResultRepository;
@@ -301,7 +162,7 @@ namespace Emaily.Services
                 Email = model.Email,
                 Name = model.Name,
                 ListId = model.ListId,
-                OwnerId = model.OwnerId,
+                OwnerId = _appProvider.OwnerId,
                 Token=GenerateRandomString(model.Email)
             });
 
@@ -428,7 +289,7 @@ namespace Emaily.Services
 
             campaign.Started = DateTime.UtcNow;
             campaign.Recipients = 0;
-            campaign.Status = CampaignStatusEnum.Start;
+            campaign.Status = CampaignStatusEnum.Active;
             campaign.Future = model.Future;
             campaign.Timezone = model.Timezone;
 
@@ -467,7 +328,7 @@ namespace Emaily.Services
                 HtmlText = model.HtmlText,
                 PlainText = model.PlainText,
                 IsHtml = model.IsHtml,
-                OwnerId = model.OwnerId,
+                OwnerId = _appProvider.OwnerId,
                 QueryString = model.QueryString
             });
 
@@ -503,10 +364,25 @@ namespace Emaily.Services
             var plan = FindPlanByName(model.Plan);
             if (plan == null) throw new Exception("Plan not found");
 
+            int? promoId = null;
+            if (!string.IsNullOrWhiteSpace(model.PromoCode))
+            {
+                var promo =
+                    _promoRepository.All.FirstOrDefault(
+                        x =>
+                            x.Code == model.PromoCode && (!x.Start.HasValue || x.Start < DateTime.UtcNow) &&
+                            (!x.End.HasValue || x.End > DateTime.UtcNow));
+
+                if(promo==null) throw new Exception("Invalid Promo Code");
+
+                promoId = promo.Id;
+            }
+
             var app = _appRepository.Create(new App
             {
                 PlanId = plan.Id,
-                OwnerId = model.OwnerId,
+                PromoId = promoId,
+                OwnerId = _appProvider.OwnerId,
                 AppKey = GenerateRandomString(16),
                 Clients=new List<Client>
                 {
@@ -514,7 +390,7 @@ namespace Emaily.Services
                     {
                         ApiKey = GenerateRandomString(16),
                         IsOwner = true,
-                        OwnerId = model.OwnerId,
+                        OwnerId = _appProvider.OwnerId,
                         Name = model.Company
                     }
                 },
@@ -617,13 +493,17 @@ namespace Emaily.Services
 
         public void CreateTemplate(CreateTemplateVM model)
         {
-            var template = _templateRepository.Create(new Template
+            var app = _appRepository.ById(model.AppId);
+            if (app == null) throw new Exception("App not found");
+            CheckIsMine(app.Id);
+
+            _templateRepository.Create(new Template
             {
                AppId = model.AppId,
                Name = model.Name,
                Custom = JsonConvert.SerializeObject(model.Custom),
                Html = model.Html,
-               OwnerId = model.OwnerId
+               OwnerId = _appProvider.OwnerId
             });
             _templateRepository.SaveChanges();
 
@@ -643,33 +523,137 @@ namespace Emaily.Services
 
             _templateRepository.SaveChanges();
         }
+
+        public void CreateAutoEmail(CreateAutoEmailVM model)
+        {
+            var autoResponder = _autoResponderRepository.ById(model.AutoResponderId);
+            if (autoResponder == null) throw new Exception("Auto Responder not found");
+
+            var list = _listRepository.ById(autoResponder.ListId);
+            if (list == null) throw new Exception("List not found");
+
+            var app = _appRepository.ById(list.AppId);
+            if (app == null) throw new Exception("App not found");
+
+            _autoEmailRepository.Create(new AutoEmail
+            {
+               AutoResponderId = model.AutoResponderId,
+               AppId = list.AppId,
+               Name = model.Name,
+               Custom = JsonConvert.SerializeObject(model.Custom),
+               TimeCondition=model.TimeCondition,
+               TimeZone = model.TimeZone,
+               HtmlText = model.HtmlText,
+               IsHtml = model.IsHtml,
+               Label = model.Label,
+               PlainText = model.PlainText,
+               OwnerId = _appProvider.OwnerId,
+               QueryString = model.QueryString,
+               Sender = new EmailAddress
+               {
+                    Name = model.FromName,
+                    Email = app.Sender.Email,
+                    ReplyTo = model.ReplyTo
+               },
+               Status = CampaignStatusEnum.Active
+            });
+
+            _autoResponderRepository.SaveChanges();
+
+        }
+
+        public void UpdateAutoEmail(UpdateAutoEmailVM model)
+        {
+            var autoEmail = _autoEmailRepository.ById(model.Id);
+            if (autoEmail == null) throw new Exception("Auto Responder Email not found");
+
+            var autoResponder = _autoResponderRepository.ById(autoEmail.AutoResponderId);
+            if (autoResponder == null) throw new Exception("Auto Responder not found");
+
+            autoEmail.Name = model.Name;
+            autoEmail.Label = model.Label;
+            autoEmail.Sender.Name = model.FromName;
+            autoEmail.Sender.ReplyTo = model.ReplyTo;
+            autoEmail.HtmlText = model.HtmlText;
+            autoEmail.PlainText = model.PlainText;
+            autoEmail.IsHtml = model.IsHtml;
+            autoEmail.QueryString = model.QueryString;
+            autoEmail.TimeCondition = model.TimeCondition;
+            autoEmail.TimeZone = model.TimeZone;
+            autoEmail.Custom = JsonConvert.SerializeObject(model.Custom);
+
+            _autoEmailRepository.Update(autoEmail);
+            _autoResponderRepository.SaveChanges();
+        }
+
+
+        public void CreateAutoResponder(CreateAutoResponderVM model)
+        {
+            var list = _listRepository.ById(model.ListId);
+            if (list == null) throw new Exception("List not found");
+
+            CheckIsMine(list.AppId);
+
+            _autoResponderRepository.Create(new AutoResponder
+            {
+               Name = model.Name,
+               Custom = JsonConvert.SerializeObject(model.Custom),
+               ListId = model.ListId,
+               Mode = model.Mode
+            });
+
+            _autoResponderRepository.SaveChanges();
+        }
+
+        public void UpdateAutoResponder(UpdateAutoResponderVM model)
+        {
+            var entity = _autoResponderRepository.ById(model.Id);
+            if (entity == null) throw new Exception("Auto Responder not found");
+
+            var list = _listRepository.ById(entity.ListId);
+            if (list == null) throw new Exception("List not found");
+
+            CheckIsMine(list.AppId);
+
+            entity.Mode = model.Mode;
+            entity.Name = model.Name;
+            entity.Custom = JsonConvert.SerializeObject(model.Custom);
+
+            _autoResponderRepository.Update(entity);
+
+            _autoResponderRepository.SaveChanges();
+        }
     }
 
-    public class UpdateTemplateVM
+    public class UpdateAutoEmailVM : EditCampaignVM
+    {
+        public int Id { get; set; } 
+        public dynamic Custom { get; set; }
+        public string TimeCondition { get; set; }
+        public string TimeZone { get; set; }
+    }
+
+    public class CreateAutoEmailVM   : CreateCampaignVM
+    {
+        public int AutoResponderId { get; set; }
+        public dynamic Custom { get; set; }
+        public string TimeCondition { get; set; }
+        public string TimeZone { get; set; }
+    }
+
+    public class UpdateAutoResponderVM
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public dynamic Custom { get; set; }
-        public string Html { get; set; }
+        public AutoResponderEnum Mode { get; set; }
     }
 
-    public class CreateTemplateVM
+    public class CreateAutoResponderVM
     {
-        public int AppId { get; set; }
+        public int ListId { get; set; }
         public string Name { get; set; }
         public dynamic Custom { get; set; }
-        public string Html { get; set; }
-        public string OwnerId { get; set; }
-    }
-
-    public class CampaignResultVM
-    {
-        public int CampaignId { get; set; }
-        public int SubscriberId { get; set; }
-    }
-
-    public class CreateClickVM  : CampaignResultVM
-    {
-        public int LinkId { get; set; }
+        public AutoResponderEnum Mode { get; set; }
     }
 }

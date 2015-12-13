@@ -16,6 +16,7 @@ namespace Emaily.Services
     public interface IAppProvider
     {
         int[] Apps { get; }
+        string OwnerId { get; }
     }
     
 }

@@ -27,6 +27,9 @@ namespace Emaily.Core.Data
         public Plan Plan { get; set; }
         public int PlanId { get; set; }
 
+        public Promo Promo { get; set; }
+        public int? PromoId { get; set; }
+
         public IList<CampaignBase> Campaigns { get; set; }
         public IList<Client> Clients { get; set; }
         public IList<List> Lists { get; set; }
