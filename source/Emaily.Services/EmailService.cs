@@ -58,7 +58,6 @@ namespace Emaily.Services
             _appProvider = appProvider;
             _clickRepository = clickRepository;
         }
-
         private IQueryable<AppVM> Apps()
         {
             return _appRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new AppVM
@@ -72,7 +71,6 @@ namespace Emaily.Services
                 Used = x.Used
             });
         }
-
         private IQueryable<ListVM> Lists()
         {
             return _listRepository.All.Where(x=> _appProvider.Apps.Contains(x.AppId)).Select(x => new ListVM
@@ -88,7 +86,6 @@ namespace Emaily.Services
                 Total = x.Subscribers.Count()
             });
         }
-
         private IQueryable<CampaignVM> Campaigns()
         {
             return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new CampaignVM
@@ -103,30 +100,40 @@ namespace Emaily.Services
                 UniqueOpens = x.Results.Select(y => y.SubscriberId).Distinct().Count()
             });
         }
-
         private Plan FindPlanByName(string name)
         {
             return _planRepository.All.FirstOrDefault(x => x.Name == name);
         }
-
         private Client FindClientByOwnerId(string ownerId)
         {
             return _clientRepository.All.FirstOrDefault(x => x.OwnerId == ownerId);
         }
-
-        public string GenerateRandomString(int length)
+        private string GenerateRandomString(int length)
         {
             return "hello";
         }
-
-        public string GenerateRandomString(string name)
+        private string GenerateRandomString(string name)
         {
             return "hello";
         }
-
+        private void SendNote(MailNote note, EmailAddress sender, EmailAddress receiver)
+        {
+            _emailProvider.SendEmail(sender, receiver, note);
+        }
         private void CheckIsMine(int appId)
         {
             if (_appProvider.Apps.Any(x => appId == x)) throw new Exception("Access Denied");
+        }
+        private CampaignResult CreateResult(CampaignResultVM model, string userAgent, string country)
+        {
+            return _campaignResultRepository.Create(new CampaignResult
+            {
+                Opened = DateTime.UtcNow,
+                SubscriberId = model.SubscriberId,
+                CampaignId = model.CampaignId,
+                Country = country,
+                UserAgent = userAgent,
+            });
         }
 
         public ListVM CreateList(CreateListVM model)
@@ -142,7 +149,6 @@ namespace Emaily.Services
 
             return Lists().FirstOrDefault(x => x.Id == list.Id);
         }
-
         public void Subscribe(CreateSubscriber model)
         {
             model.Email = model.Email.ToLower().Trim();
@@ -177,8 +183,7 @@ namespace Emaily.Services
             }
 
         }
-
-       public void ConfirmSubscription(UpdateSubscriptionVM model)
+        public void ConfirmSubscription(UpdateSubscriptionVM model)
         {
             model.Email = model.Email.ToLower().Trim();
             if (string.IsNullOrWhiteSpace(model.Email)) throw new Exception("Invalid Email address");
@@ -199,7 +204,6 @@ namespace Emaily.Services
                 SendNote(list.ThankYou, app.Sender, new EmailAddress(subscriber.Email, subscriber.Name));
             }
         }
-
         public void Unsubscribe(ListEmail model)
         {
             model.Email = model.Email.ToLower().Trim();
@@ -219,12 +223,6 @@ namespace Emaily.Services
             var app = _appRepository.ById(list.AppId);
             SendNote(list.GoodBye, app.Sender,new EmailAddress(subscriber.Email, subscriber.Name));
         }
-
-        private void SendNote(MailNote note, EmailAddress sender, EmailAddress receiver)
-        {
-            _emailProvider.SendEmail(sender, receiver,note);
-        }
-
         public ListVM RenameList(RenameListVM model)
         {
             var list = _listRepository.ById(model.Id);
@@ -238,7 +236,6 @@ namespace Emaily.Services
 
             return Lists().FirstOrDefault(x => x.Id == list.Id);
         }
-
         public ListVM UpdateList(UpdateListVM model)
         {
             var list = _listRepository.ById(model.Id);
@@ -259,7 +256,6 @@ namespace Emaily.Services
 
             return Lists().FirstOrDefault(x => x.Id == list.Id);
         }
-
         public AppVM UpdateApp(UpdateAppVM model)
         {
             var app = _appRepository.ById(model.Id);
@@ -276,7 +272,6 @@ namespace Emaily.Services
 
             return Apps().FirstOrDefault(x => x.Id == app.Id);
         }
-
         public void SendCampaign(SendCampaignVM model)
         {
             var campaign = _campaignRepository.ById(model.CampaignId);
@@ -306,7 +301,6 @@ namespace Emaily.Services
 
             _campaignRepository.SaveChanges();
         }
-
         public CampaignVM CreateCampaign(CreateCampaignVM model)
         {
             var app = _appRepository.ById(model.AppId);
@@ -336,7 +330,6 @@ namespace Emaily.Services
 
             return Campaigns().FirstOrDefault(x => x.Id == campaign.Id);
         }
-
         public CampaignVM UpdateCampaign(EditCampaignVM model)
         {
             var campaign = _campaignRepository.ById(model.CampaignId);
@@ -358,7 +351,6 @@ namespace Emaily.Services
 
             return Campaigns().FirstOrDefault(x => x.Id == campaign.Id);
         }
-
         public AppVM CreateApp(CreateAppVM model)
         {
             var plan = FindPlanByName(model.Plan);
@@ -408,19 +400,6 @@ namespace Emaily.Services
 
             return Apps().FirstOrDefault(x => x.Id == app.Id);
         }
-
-        private CampaignResult CreateResult(CampaignResultVM model,string userAgent,string country)
-        {
-            return _campaignResultRepository.Create(new CampaignResult
-            {
-                Opened = DateTime.UtcNow,
-                SubscriberId = model.SubscriberId,
-                CampaignId = model.CampaignId,
-                Country = country,
-                UserAgent = userAgent,
-            });
-        }
-
         public void MarkRead(CampaignResultVM model, string country, string userAgent)
         {
             var subscriber = _subscriberRepository.ById(model.SubscriberId);
@@ -434,7 +413,6 @@ namespace Emaily.Services
             _campaignResultRepository.Update(campaignResult);
             _campaignResultRepository.SaveChanges();
         }
-
         public void MarkSpam(CampaignResultVM model, string country, string userAgent)
         {
             var subscriber = _subscriberRepository.ById(model.SubscriberId);
@@ -450,7 +428,6 @@ namespace Emaily.Services
             _campaignResultRepository.Update(campaignResult);
             _campaignResultRepository.SaveChanges();
         }
-
         public void MarkBounced(CampaignResultVM model, string country, string userAgent, bool IsSoftBounce)
         {
             var subscriber = _subscriberRepository.ById(model.SubscriberId);
@@ -470,7 +447,6 @@ namespace Emaily.Services
             _campaignResultRepository.Update(campaignResult);
             _campaignResultRepository.SaveChanges();
         }
-
         public void CreateOrUpdateClick(CreateClickVM model,string country,string userAgent)
         {
             var campaign = _campaignRepository.ById(model.CampaignId);
@@ -490,7 +466,6 @@ namespace Emaily.Services
             _clickRepository.SaveChanges(); //incase the open has not fired.
 
         }
-
         public void CreateTemplate(CreateTemplateVM model)
         {
             var app = _appRepository.ById(model.AppId);
@@ -508,7 +483,6 @@ namespace Emaily.Services
             _templateRepository.SaveChanges();
 
         }
-
         public void UpdateTemplate(UpdateTemplateVM model)
         {
             var template = _templateRepository.ById(model.Id);
@@ -523,7 +497,6 @@ namespace Emaily.Services
 
             _templateRepository.SaveChanges();
         }
-
         public void CreateAutoEmail(CreateAutoEmailVM model)
         {
             var autoResponder = _autoResponderRepository.ById(model.AutoResponderId);
@@ -561,7 +534,6 @@ namespace Emaily.Services
             _autoResponderRepository.SaveChanges();
 
         }
-
         public void UpdateAutoEmail(UpdateAutoEmailVM model)
         {
             var autoEmail = _autoEmailRepository.ById(model.Id);
@@ -585,8 +557,6 @@ namespace Emaily.Services
             _autoEmailRepository.Update(autoEmail);
             _autoResponderRepository.SaveChanges();
         }
-
-
         public void CreateAutoResponder(CreateAutoResponderVM model)
         {
             var list = _listRepository.ById(model.ListId);
@@ -604,7 +574,6 @@ namespace Emaily.Services
 
             _autoResponderRepository.SaveChanges();
         }
-
         public void UpdateAutoResponder(UpdateAutoResponderVM model)
         {
             var entity = _autoResponderRepository.ById(model.Id);
