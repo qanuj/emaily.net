@@ -389,6 +389,8 @@
     <Content Include="App\views\account\account.about.html" />
     <Content Include="App\views\account\account.html" />
     <Content Include="App\views\account\accounts.js" />
+    <Content Include="App\views\campaign\campaign.create.html" />
+    <Content Include="App\views\campaign\campaign.create.js" />
     <Content Include="App\views\list\list.create.html" />
     <Content Include="App\views\list\list.create.js" />
     <Content Include="App\views\list\list.card.html" />
@@ -397,6 +399,8 @@
     <Content Include="App\views\reports\report.card.html" />
     <Content Include="App\views\reports\report.cards.html" />
     <Content Include="App\views\reports\reports.js" />
+    <Content Include="App\views\template\template.create.html" />
+    <Content Include="App\views\template\template.create.js" />
     <Content Include="App\views\template\template.card.html" />
     <Content Include="App\views\template\template.cards.html" />
     <Content Include="App\views\template\templates.js" />

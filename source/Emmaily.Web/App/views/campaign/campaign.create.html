@@ -1,0 +1,26 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="dismiss()">&times;</button>
+    <h3 class="modal-title"><i class="fa fa-th-list"></i> Add New List</h3>
+</div>
+<div class="modal-body">
+    <div class="form-body">
+        <div class="form-group" ng-if="brands.length>1">
+            <label class="control-label">Brand</label>
+            <ui-select ng-model="record.appId" title="Choose a Brand...">
+                <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                <ui-select-choices repeat="item.ID as item in brands  | propsFilter: {Name: $select.search}">
+                    {{item.Name}}
+                </ui-select-choices>
+            </ui-select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Name</label>
+            <input class="form-control" type="text" ng-model="record.name" required placeholder="Name" name="Name"/>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-info" ng-click="ok(record)"><i class="fa fa-check"></i> Add</button>
+    <button class="btn btn-default" ng-click="dismiss()"><i class="fa fa-close"></i> Cancel</button>
+</div>

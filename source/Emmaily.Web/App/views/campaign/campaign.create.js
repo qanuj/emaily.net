@@ -1,15 +1,15 @@
-﻿app.controller('listCreateController', [
+﻿app.controller('campaignCreateController', [
     '$scope', 'dataService', '$uibModalInstance', 'opt', function ($scope, db, $uibModalInstance, opt) {
 
-        var title = "List";
+        var title = "Campaign";
         $scope.title = title;
-        $scope.name = 'list';
-        $scope.icon = "th-list";
+        $scope.name = 'campaign';  
+        $scope.icon = 'paper-plane-o';
         $scope.record = { appId:$scope.brands && $scope.brands.length && $scope.brands[0].id };
 
         $scope.ok = function (record) {
             var entity = angular.copy(record);
-            return db.put('list', entity).then(function (status) {
+            return db.put('campaign', entity).then(function (status) {
                 if (status.id) {
                     $uibModalInstance.close({ ok: true });
                 }

@@ -197,7 +197,8 @@ namespace Emaily.Services
             return _templateRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new TemplateVM
             {
                 Id = x.Id,
-                Title = x.Name
+                Title = x.Name,
+                Created = x.Created
             });
         }
 
