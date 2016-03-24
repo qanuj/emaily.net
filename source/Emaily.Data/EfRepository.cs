@@ -10,14 +10,13 @@ using Emaily.Core.Abstraction.Persistence;
 
 namespace Emaily.Data
 {
-    public abstract class EfRepository<TEntity> : IRepository<TEntity> where TEntity : Entity, IEntity, ISoftDelete
+    public class EfRepository<TEntity> : IRepository<TEntity> where TEntity : Entity, IEntity, ISoftDelete
     {
         public IEntityFunctions Funcs { get; set; }
 
-        protected EfRepository(DbContext context, IEventManager eventManager)
+        public EfRepository(DbContext context)
         {
             Context = context;
-            EventManager = eventManager;
         }
 
         protected DbContext Context { get; }
@@ -113,12 +112,7 @@ namespace Emaily.Data
         {
             AttachDetachedCollection(entities);
         }
-
-        internal delegate void EntityEvent(TEntity entity);
-
-        public IEventManager EventManager { get; }
-
-
+                                              
         public virtual ICollection<TEntity> Create(ICollection<TEntity> entities)
         {
             Attach(entities);

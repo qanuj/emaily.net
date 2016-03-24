@@ -217,7 +217,7 @@ app.factory('about', ['dataService', '$rootScope',function (db, $rootScope) {
             return db.get("nav/items/" + code);
         },
         me: function () {
-            return db.get('util/me');
+            return db.get('account/me/profile');
         },
         logout: function () {
             return db.postEx('/account/logoff',{}).then(function() {
@@ -266,7 +266,7 @@ app.controller('FooterController', ['$scope', 'about', function ($scope, about) 
 app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'editableOptions', '$http', function ($rootScope, settings, $state, about, $urlRouter, talker, editableOptions, $http) {
 
     editableOptions.theme = 'bs3';
-    var _sys,enums;
+    var enums;
     var role = document.querySelector('html').dataset.appRoles.toLowerCase();
     $rootScope.canImpersonate = role == 'admin';
     $rootScope.canPermission = role == 'admin';
@@ -289,6 +289,13 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
         { id: 15, name: 'Multiline' }
     ];
 
+    $rootScope.navigations = [
+        { icon: 'paper-plane-o', title: 'Campaigns', route: 'campaigns', childs: [] },
+        { icon: 'code', title: 'Templates', route: 'templates', childs: [] },
+        { icon: 'th-list', title: 'Lists', route: 'lists', childs: [] },
+        { icon: 'pie-chart', title: 'Reports', route: 'reports', childs: [] }
+    ];
+
     $rootScope.search = function (q) {
         var d = angular.copy($state.current.data); d.q = q;
         $state.go($state.current.name, d);
@@ -308,21 +315,6 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
         });
     };
 
-    function getAbout() {
-        return about.get().then(function (result) {
-            result = result || { App:{Logo:'',Name:'Emaily'} }
-            _sys = result;
-            $rootScope.logo = result.App.Logo;
-            $rootScope.name = result.App.Name;
-            $rootScope.app = result;
-        });
-    };
-    function getTopNavigtion() {
-        return about.topNav(_sys.App.TopNav).then(function (navigations) {
-            $rootScope.navigations = navigations;
-            $rootScope.sidebar = navigations.length > 5;
-        });
-    }
     function findPermission(me, name) {
         return { write: me.Write.indexOf(name) > -1, read: me.Read.indexOf(name) > -1 || me.Write.indexOf(name) > -1 };
     }
@@ -390,7 +382,7 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
     $rootScope.logout = about.logout;
     $rootScope.about = about.me;
 
-    getAbout().then(about.masters).then(getEnum).then(getTopNavigtion).then(getMySelf);
+    getEnum().then(getMySelf);
 
     $rootScope.$state = $state; // state to be accessed from view
 

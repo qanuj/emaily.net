@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Emaily.Web.Models
@@ -13,6 +14,25 @@ namespace Emaily.Web.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    public class UserProfileEditViewModel
+    {
+        public string Name { get; set; }
+        public string Picture { get; set; }
+        public string Email { get; set; }
+        public DateTime? Birthday { get; set; }
+        public string Address { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Postcode { get; set; }
+        public string Country { get; set; }
+    }
+
+    public class UserProfileViewModel  : UserProfileEditViewModel
+    {
+        public bool EmailConfirmed { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
+        
     }
 
     public class ExternalLoginListViewModel

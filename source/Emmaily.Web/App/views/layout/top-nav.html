@@ -1,21 +1,21 @@
 ﻿<ul class="nav navbar-nav">
     <li ui-sref-active="active" class="classic-menu-dropdown" ng-repeat="n in navigations">
-        <a ng-if="n.Childs.length==0" class="{{menuclass}}" ui-sref="{{n.Route}}"><i class="fa fa-{{n.Icon}}"></i> {{n.Title}}</a>
-        <a ng-if="n.Childs.length==1" class="{{menuclass}}" ui-sref="{{n.Childs[0].Route}}"><i class="fa fa-{{n.Childs[0].Icon}}"></i> {{n.Childs[0].Title}}</a>
-        <a ng-if="n.Childs.length>1" href="javascript:;" class="dropdown-toggle {{menuclass}}" data-hover="megamenu-dropdown" data-close-others="true">
-            <i class="fa fa-{{n.Icon}}"></i> {{n.Title}} <i class="fa fa-angle-down"></i>
+        <a ng-if="n.childs.length==0" class="{{menuclass}}" ui-sref="{{n.route}}"><i class="fa fa-{{n.icon}}"></i> {{n.title}}</a>
+        <a ng-if="n.childs.length==1" class="{{menuclass}}" ui-sref="{{n.childs[0].route}}"><i class="fa fa-{{n.childs[0].icon}}"></i> {{n.childs[0].title}}</a>
+        <a ng-if="n.childs.length>1" href="javascript:;" class="dropdown-toggle {{menuclass}}" data-hover="megamenu-dropdown" data-close-others="true">
+            <i class="fa fa-{{n.icon}}"></i> {{n.title}} <i class="fa fa-angle-down"></i>
         </a>
-        <ul ng-if="n.Childs.length>1" class="dropdown-menu pull-left">
-            <li ng-repeat-start="c in n.Childs" ng-if="c.IsSeperator" class="divider"></li>
-            <li ui-sref-active="active" ng-repeat-end ng-class="{'dropdown-submenu':c.Childs.length>0}">
-                <a ng-if="c.Childs.length==0 && c.Route" ui-sref="{{c.Route}}"><i class="fa fa-{{c.Icon}}"></i> {{c.Title}}</a>
-                <a ng-if="c.Childs.length==0 && c.Href" href="{{c.Href}}" target="_blank"><i class="fa fa-{{c.Icon}}"></i> {{c.Title}}</a>
-                <a ng-if="c.Childs.length>0" href="javascript:;">
-                    <i class="fa fa-{{c.Icon}}"></i> {{c.Title}}
+        <ul ng-if="n.childs.length>1" class="dropdown-menu pull-left">
+            <li ng-repeat-start="c in n.childs" ng-if="c.isSeperator" class="divider"></li>
+            <li ui-sref-active="active" ng-repeat-end ng-class="{'dropdown-submenu':c.childs.length>0}">
+                <a ng-if="c.childs.length==0 && c.route" ui-sref="{{c.route}}"><i class="fa fa-{{c.icon}}"></i> {{c.title}}</a>
+                <a ng-if="c.childs.length==0 && c.href" href="{{c.href}}" target="_blank"><i class="fa fa-{{c.icon}}"></i> {{c.title}}</a>
+                <a ng-if="c.childs.length>0" href="javascript:;">
+                    <i class="fa fa-{{c.icon}}"></i> {{c.title}}
                 </a>
                 <ul class="dropdown-menu">
-                    <li ng-repeat-start="x in c.Childs" ng-if="x.IsSeperator" class="divider"></li>
-                    <li ui-sref-active="active" ng-repeat-end><a ui-sref="{{x.Route}}"><i class="fa fa-{{x.Icon}}"></i> {{x.Title}}</a></li>
+                    <li ng-repeat-start="x in c.childs" ng-if="x.isSeperator" class="divider"></li>
+                    <li ui-sref-active="active" ng-repeat-end><a ui-sref="{{x.route}}"><i class="fa fa-{{x.icon}}"></i> {{x.title}}</a></li>
                 </ul>
             </li>
         </ul>

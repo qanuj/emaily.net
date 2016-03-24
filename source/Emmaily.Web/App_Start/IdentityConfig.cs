@@ -77,8 +77,14 @@ namespace Emaily.Web
         }
     }
 
-    public class ApplicationRoleManager : RoleManager<Role> {
-        public ApplicationRoleManager(RoleStore<Role> store) : base(store){}
+    public class ApplicationRoleManager : RoleManager<IdentityRole> {
+        public ApplicationRoleManager(RoleStore<IdentityRole> store) : base(store){}
+        
+        public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
+        {
+            var manager = new ApplicationRoleManager(new ApplicationRoleStore(context.Get<ApplicationDbContext>()));
+            return manager;
+        }
     }
 
     public class ApplicationUserStore : UserStore<User>
@@ -86,7 +92,7 @@ namespace Emaily.Web
         public ApplicationUserStore(ApplicationDbContext context) : base(context) { }
     }
 
-    public class ApplicationRoleStore : RoleStore<Role>
+    public class ApplicationRoleStore : RoleStore<IdentityRole>
     {
         public ApplicationRoleStore(ApplicationDbContext context) : base(context) { }
     }

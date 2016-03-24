@@ -1,22 +1,14 @@
 <div class="page-header-inner">
     <div class="page-logo">
-        <a ui-sref="home"><img ng-src="{{logo}}" alt="{{name}}" class="logo-default"/></a>
-        <div ng-if="sidebar" ng-click="toggleSidebar()" class="menu-toggler sidebar-toggler"></div>
+        <a ui-sref="home"><img src="/Content/images/emaily-white.png" alt="Emaily - Most inexpensive, effective marketing email service" class="logo-default"/></a>
     </div>
-    <div ng-if="!sidebar" ng-include="'App/views/layout/top-nav.html'" class="hor-menu hor-menu-light hidden-sm hidden-xs"></div>
+    <div ng-include="'App/views/layout/top-nav.html'" class="hor-menu hor-menu-light hidden-xs"></div>
     <form ng-include="'App/views/layout/top-search.html'" class="search-form search-form-expanded" ng-submit="search(q)" method="GET"></form>
     <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse"> </a>
     <div class="top-menu">
         <ul class="nav navbar-nav pull-right">
-            <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar" ng-include="'App/views/layout/top-cart.html'"></li>
             <li class="dropdown dropdown-extended dropdown-tasks" id="header_task_bar" ng-include="'App/views/layout/top-notify.html'"></li>
             <li class="dropdown dropdown-user" ng-include="'App/views/layout/top-user.html'"></li>
-            <li class="dropdown dropdown-quick-sidebar-toggler">
-                <a ng-click="toggleQuick()" class="dropdown-toggle">
-                    <i class="icon-logout"></i>
-                    <span class="badge badge-warning">{{unreadAll||''}}</span>
-                </a>
-            </li>
         </ul>
     </div>
 </div>

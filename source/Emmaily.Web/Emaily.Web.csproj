@@ -222,6 +222,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BasicApiController.cs" />
+    <Compile Include="Controllers\Api\v1\AccountController.cs" />
     <Compile Include="Controllers\Api\v1\UtilController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -232,6 +233,14 @@
     <Compile Include="Migrations\201603240821403_Init.cs" />
     <Compile Include="Migrations\201603240821403_Init.Designer.cs">
       <DependentUpon>201603240821403_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603241036586_Profile Moved.cs" />
+    <Compile Include="Migrations\201603241036586_Profile Moved.Designer.cs">
+      <DependentUpon>201603241036586_Profile Moved.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603241053111_More Profile Fields.cs" />
+    <Compile Include="Migrations\201603241053111_More Profile Fields.Designer.cs">
+      <DependentUpon>201603241053111_More Profile Fields.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -389,24 +398,16 @@
     <Content Include="App\views\home\home.js" />
     <Content Include="App\views\layout\bread-bar.html" />
     <Content Include="App\views\layout\bread-save.html" />
-    <Content Include="App\views\layout\client\footer.html" />
-    <Content Include="App\views\layout\client\header.html" />
-    <Content Include="App\views\layout\client\sidebar.html" />
     <Content Include="App\views\layout\footer.html" />
     <Content Include="App\views\layout\header.html" />
     <Content Include="App\views\layout\page-bar.html" />
     <Content Include="App\views\layout\page-save.html" />
-    <Content Include="App\views\layout\quick-sidebar.html" />
     <Content Include="App\views\layout\sidebar-left.html" />
     <Content Include="App\views\layout\sidebar.html" />
-    <Content Include="App\views\layout\top-cart.html" />
     <Content Include="App\views\layout\top-nav.html" />
     <Content Include="App\views\layout\top-notify.html" />
     <Content Include="App\views\layout\top-search.html" />
     <Content Include="App\views\layout\top-user.html" />
-    <Content Include="App\views\layout\user\footer.html" />
-    <Content Include="App\views\layout\user\header.html" />
-    <Content Include="App\views\layout\user\sidebar.html" />
     <Content Include="App\views\news\news.edit.html" />
     <Content Include="App\views\news\news.edit.js" />
     <Content Include="App\views\news\news.index.html" />
@@ -570,6 +571,9 @@
     <Content Include="Content\css\xtra.sm.css" />
     <Content Include="Content\css\xtra.xl.css" />
     <Content Include="Content\css\xtra.xs.css" />
+    <Content Include="Content\images\emaily-white.png" />
+    <Content Include="Content\images\emaily.png" />
+    <Content Include="Content\images\favicon.png" />
     <Content Include="Content\img\32px.png" />
     <Content Include="Content\img\32px_line.png" />
     <Content Include="Content\img\32px_original.png" />
@@ -1214,6 +1218,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201603240821403_Init.resx">
       <DependentUpon>201603240821403_Init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241036586_Profile Moved.resx">
+      <DependentUpon>201603241036586_Profile Moved.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241053111_More Profile Fields.resx">
+      <DependentUpon>201603241053111_More Profile Fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

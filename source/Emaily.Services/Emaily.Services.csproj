@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="AmazonCloudService.cs" />
     <Compile Include="EmailService.cs" />
+    <Compile Include="Extensions\StringSerializationExt.cs" />
     <Compile Include="IAmazonConfigProvider.cs" />
     <Compile Include="ICloudConfigProvider.cs" />
     <Compile Include="ICloudProvider.cs" />

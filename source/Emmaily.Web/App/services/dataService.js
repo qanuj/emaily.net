@@ -419,7 +419,7 @@
 
 
     var query = function (table) {
-        var base = '/api/v2/my/' + table;
+        var base = '/api/v1/' + table;
 
         var fillTo = function (fld, source) {
             var items = source.Items || source;

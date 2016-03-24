@@ -38,7 +38,7 @@
         }
 
         function loadMySelf() {
-            return db.get('util/me').then(function(me) {
+            return db.get('account/me/profile').then(function(me) {
                 $rootScope.me = me;
             });
         }
@@ -51,7 +51,7 @@
 
         function bindEntity(result) {
             $scope.record = result;
-            $scope.record.picture = { url: result.Picture, email: result.Email, title: result.FirstName + ' ' + (result.Surname||''), missing: 'mm' };
+            $scope.record.picture = { url: result.picture, email: result.email, title: result.name, missing: 'mm' };
         }
 
         function loadProfile() {

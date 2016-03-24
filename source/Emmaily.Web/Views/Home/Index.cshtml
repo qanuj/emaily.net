@@ -2,10 +2,10 @@
     Layout = null;
     var app = new {Name="Emaily",Theme="emaily",Role="Admin"};
 }
-<html lang="en" ng-app="app" data-app-name="@app.Name" data-app-theme="@app.Theme" data-app-roles="@app.Role.ToLower()">
+<html lang="en" ng-app="app" data-app-name="@app.Name" data-app-theme="@app.Theme" data-app-roles="@app.Role.ToLower()" ng-cloak>
 <head>
-    <title>@app.Name</title>
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <title>{{title ? title+' | ':''}}@app.Name - Most inexpensive, effective marketing email service</title>
+    <link rel="Shortcut Icon" type="image/ico" href="~/Content/images/favicon.png">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,8 +34,6 @@
                 <div ui-view fill-height additional-padding="-10" debounce-wait="400" footer-element-id="page-footer"></div>
             </div>
         </div>
-        <a ng-click="toggleQuick()" class="page-quick-sidebar-toggler"><i class="icon-login"></i></a>
-        <div ng-include="'App/views/layout/quick-sidebar.html'" class="page-quick-sidebar-wrapper"></div>
     </div>
     <div ng-include="'App/views/layout/footer.html'" ng-controller="FooterController" id="page-footer" class="page-footer">
     </div>

@@ -1,5 +1,6 @@
 using System.Data.Entity;
 using System.Reflection;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using Autofac;
@@ -9,6 +10,7 @@ using Emaily.Core.Abstraction.Services;
 using Emaily.Services;
 using Emaily.Web.Models;
 using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
 
@@ -22,7 +24,10 @@ namespace Emaily.Web
             builder.RegisterControllers(Assembly.GetExecutingAssembly());
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.RegisterModule<DataContextModule>();
-            builder.RegisterType<ApplicationDbContext>().InstancePerLifetimeScope();
+            builder.RegisterType<ApplicationDbContext>().AsSelf().As<DbContext>().InstancePerLifetimeScope();
+
+            builder.Register<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
+            builder.Register<IDataProtectionProvider>(c => app.GetDataProtectionProvider()).InstancePerRequest();
             builder.RegisterType<UtilService>().As<IUtilService>();
 
             builder.Register(c => app.GetDataProtectionProvider()).InstancePerRequest();
