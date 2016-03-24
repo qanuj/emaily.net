@@ -11,8 +11,8 @@ namespace Emaily.Core.DTO
         public string Title { get; set; }
         public int? Recipients { get; set; }
         public DateTime? Started { get; set; }
-        public int UniqueOpens { get; set; }
-        public int UniqueClicks { get; set; }
+        public int? UniqueOpens { get; set; }
+        public int? UniqueClicks { get; set; }
         public CampaignStatusEnum Status { get; set; }
     }
 
@@ -22,8 +22,8 @@ namespace Emaily.Core.DTO
         public string Title { get; set; }
         public int? Recipients { get; set; }
         public DateTime Started { get; set; }
-        public int UniqueOpens { get; set; }
-        public int UniqueClicks { get; set; }
+        public int? UniqueOpens { get; set; }
+        public int? UniqueClicks { get; set; }
         public CampaignStatusEnum Status { get; set; }
     }
 
