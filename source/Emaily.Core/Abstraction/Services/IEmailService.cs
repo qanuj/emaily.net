@@ -1,4 +1,5 @@
-﻿using Emaily.Core.DTO;
+﻿using System.Linq;
+using Emaily.Core.DTO;
 
 namespace Emaily.Core.Abstraction.Services
 {
@@ -14,6 +15,10 @@ namespace Emaily.Core.Abstraction.Services
         void SendCampaign(SendCampaignVM model);
         CampaignVM CreateCampaign(CreateCampaignVM model);
         CampaignVM UpdateCampaign(EditCampaignVM model);
+
+        bool DeleteCampaign(int id);
+        CampaignInfoVM CampaignById(int id);
+
         AppVM CreateApp(CreateAppVM model);
         void MarkRead(CampaignResultVM model, string country, string userAgent);
         void MarkSpam(CampaignResultVM model, string country, string userAgent);
@@ -29,5 +34,9 @@ namespace Emaily.Core.Abstraction.Services
         void AddCustomField(CustomFieldVM model);
         void RenameCustomField(RenameCustomFieldVM model);
         void DeleteCustomField(CustomFieldVM model);
+
+        IQueryable<CampaignVM> Campaigns();
+        IQueryable<ListVM> Lists();
+        IQueryable<AppVM> Apps();
     }
 }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Emaily.Core.Abstraction;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Emaily.Core.Data;
@@ -25,14 +26,14 @@ namespace Emaily.Web.Models
         public ICollection<UserApps> Apps { get; set; } 
     }
 
-    public class UserApps
+    public class UserApps : Entity
     {
         public User User { get; set; }
         public App App { get; set; }
 
-        [Key,Column(Order = 1)]
+        [Index("UserApp", 1, IsUnique = true)]
         public string UserId { get; set; }
-        [Key, Column(Order = 2)]
+        [Index("UserApp", 2, IsUnique = true)]
         public int AppId { get; set; }
     }
 

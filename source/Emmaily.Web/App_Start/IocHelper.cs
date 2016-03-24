@@ -9,6 +9,7 @@ using Autofac.Integration.WebApi;
 using Emaily.Core.Abstraction.Services;
 using Emaily.Services;
 using Emaily.Web.Models;
+using Emaily.Web.Security;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
@@ -29,6 +30,10 @@ namespace Emaily.Web
             builder.Register<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
             builder.Register<IDataProtectionProvider>(c => app.GetDataProtectionProvider()).InstancePerRequest();
             builder.RegisterType<UtilService>().As<IUtilService>();
+            builder.RegisterType<Services.EmailService>().As<IEmailService>();
+            builder.RegisterType<SessionAppProvider>().As<IAppProvider>();
+            builder.RegisterType<CloudProvider>().As<ICloudProvider>();
+            builder.RegisterType<EmailProvider>().As<IEmailProvider>();
 
             builder.Register(c => app.GetDataProtectionProvider()).InstancePerRequest();
 

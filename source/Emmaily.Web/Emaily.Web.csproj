@@ -223,6 +223,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BasicApiController.cs" />
     <Compile Include="Controllers\Api\v1\AccountController.cs" />
+    <Compile Include="Controllers\Api\v1\CampaignContoller.cs" />
     <Compile Include="Controllers\Api\v1\UtilController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -242,12 +243,17 @@
     <Compile Include="Migrations\201603241053111_More Profile Fields.Designer.cs">
       <DependentUpon>201603241053111_More Profile Fields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603241224236_More Changes.cs" />
+    <Compile Include="Migrations\201603241224236_More Changes.Designer.cs">
+      <DependentUpon>201603241224236_More Changes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\ApplicationOAuthProvider.cs" />
+    <Compile Include="Security\SessionAppProvider.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -369,6 +375,9 @@
     <Content Include="App\views\account\account.about.html" />
     <Content Include="App\views\account\account.html" />
     <Content Include="App\views\account\accounts.js" />
+    <Content Include="App\views\campaign\campaigns.js" />
+    <Content Include="App\views\campaign\campaign.card.html" />
+    <Content Include="App\views\campaign\campaign.cards.html" />
     <Content Include="App\views\company\companies.js" />
     <Content Include="App\views\company\company.about.html" />
     <Content Include="App\views\company\company.address.html" />
@@ -1224,6 +1233,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603241053111_More Profile Fields.resx">
       <DependentUpon>201603241053111_More Profile Fields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241224236_More Changes.resx">
+      <DependentUpon>201603241224236_More Changes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

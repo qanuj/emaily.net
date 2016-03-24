@@ -2,6 +2,7 @@
 body {
     overflow-x: hidden;
 }
+
 .highlighted {
     background-color: #FFC107;
     color: #fff;
@@ -9,60 +10,67 @@ body {
 
 /* Override Font-Awesome */
 /* Color Added for Clarity */
-.fa-file-text-o:before, 
+.fa-file-text-o:before,
 .fa-file-txt-o:before {
-    content:"\f0f6";
+    content: "\f0f6";
     color: #808080;
 }
-.fa-file-word-o:before, 
-.fa-file-doc-o:before, 
+
+.fa-file-word-o:before,
+.fa-file-doc-o:before,
 .fa-file-docx-o:before {
-    content:"\f1c2";
+    content: "\f1c2";
     color: #2277bb;
 }
-.fa-file-sound-o:before, 
+
+.fa-file-sound-o:before,
 .fa-file-audio-o:before {
     content: "\f1c7";
     color: #1C84FE;
 }
+
 .fa-file-pdf-o:before {
-    content:"\f1c1";
+    content: "\f1c1";
     color: #D70B0A;
 }
-.fa-file-excel-o:before, 
-.fa-file-xls-o:before, 
+
+.fa-file-excel-o:before,
+.fa-file-xls-o:before,
 .fa-file-xlsx-o:before {
-    content:"\f1c3";
+    content: "\f1c3";
     color: #22bb66;
 }
-.fa-file-powerpoint-o:before, 
-.fa-file-ppt-o:before, 
+
+.fa-file-powerpoint-o:before,
+.fa-file-ppt-o:before,
 .fa-file-pptx-o:before {
-    content:"\f1c4";
+    content: "\f1c4";
     color: #ff5533;
 }
-.fa-file-photo-o:before, 
-.fa-file-picture-o:before, 
-.fa-file-image-o:before, 
-.fa-file-bmp-o:before, 
-.fa-file-gif-o:before, 
-.fa-file-jpeg-o:before, 
-.fa-file-jpg-o:before, 
+
+.fa-file-photo-o:before,
+.fa-file-picture-o:before,
+.fa-file-image-o:before,
+.fa-file-bmp-o:before,
+.fa-file-gif-o:before,
+.fa-file-jpeg-o:before,
+.fa-file-jpg-o:before,
 .fa-file-png-o:before {
-    content:"\f1c5";
+    content: "\f1c5";
     color: #ffaa00;
 }
-.fa-file-archive-o:before, 
-.fa-file-bz2-o:before, 
-.fa-file-dmg-o:before, 
-.fa-file-gz-o:before, 
-.fa-file-gzip-o:before, 
-.fa-file-iso-o:before, 
-.fa-file-rar-o:before, 
-.fa-file-tar-o:before, 
-.fa-file-tgz-o:before, 
+
+.fa-file-archive-o:before,
+.fa-file-bz2-o:before,
+.fa-file-dmg-o:before,
+.fa-file-gz-o:before,
+.fa-file-gzip-o:before,
+.fa-file-iso-o:before,
+.fa-file-rar-o:before,
+.fa-file-tar-o:before,
+.fa-file-tgz-o:before,
 .fa-file-zip-o:before {
-    content:"\f1c6";
+    content: "\f1c6";
     color: #333355;
 }
 
@@ -86,9 +94,9 @@ body {
     margin-left: -100px;
 }
 
-.globelynx .well{
-   background-color:#8A8585;
-   color:#fff;
+.globelynx .well {
+    background-color: #8A8585;
+    color: #fff;
 }
 
 .globelynx .page-header.navbar .page-logo {
@@ -189,31 +197,36 @@ body {
         font-size: 8em;
         margin-top: 25%;
     }
+
 .mt-element-overlay .mt-overlay-1 {
     height: auto;
 }
 
-.mt-element-overlay .mt-overlay-1 .mt-info.at-top {
-    top: 50%;
-}
+    .mt-element-overlay .mt-overlay-1 .mt-info.at-top {
+        top: 50%;
+    }
 
-.mt-element-overlay .mt-overlay-1 .mt-info {
-    top: 75%;
-}
-.mt-element-overlay .mt-overlay-1 .mt-info > li {
-    margin: 3px 3px;
-}
+    .mt-element-overlay .mt-overlay-1 .mt-info {
+        top: 75%;
+    }
+
+        .mt-element-overlay .mt-overlay-1 .mt-info > li {
+            margin: 3px 3px;
+        }
+
 .mt-card-avatar.mt-overlay-1 > .mt-picture > i {
     position: absolute;
     top: 50%;
     font-size: 8em;
     left: 30%;
 }
+
 .mt-card-avatar.mt-overlay-1 > img.min175 {
     min-height: 175px;
     max-height: 175px;
     border: 0px;
 }
+
 .mt-card-avatar.mt-overlay-1 > .mt-picture.mt-square {
     min-height: 275px;
     max-height: 275px;
@@ -222,6 +235,7 @@ body {
     background-repeat: no-repeat;
     background-position: 50% 50%;
 }
+
 .mt-card-avatar.mt-overlay-1 > .mt-picture.mt-16x9 {
     min-height: 150px;
     max-height: 150px;
@@ -230,14 +244,17 @@ body {
     background-repeat: no-repeat;
     background-position: 50% 50%;
 }
+
 .mt-element-card .mt-card-item .mt-card-content {
     overflow: hidden;
     width: 100%;
     height: 70px;
 }
+
 .mt-element-card .mt-card-item .mt-card-avatar {
     margin-bottom: 0px;
 }
+
 .mt-element-card .mt-card-item .mt-card-content .mt-card-name {
     margin-bottom: 0px;
 }
@@ -253,10 +270,12 @@ body {
 .mt-card-item .mt-card-content {
     cursor: pointer;
 }
+
 .mt-card-item.active .mt-card-content {
     background-color: #569EF5;
     color: #fff;
 }
+
 .mt-card-item.mt-element-ribbon {
     padding: 0px;
 }
@@ -268,41 +287,44 @@ body {
     left: -2px;
 }
 
-.mt-card-badges .ribbon {
-    height: 22px;
-    line-height: 5px;
-    font-size: 15px;
-    position: relative;
-    opacity: 0.8;
-    float: left;
-    z-index: 0;
-}
-.mt-card-badges .ribbon:hover {
-    opacity: 1;
-}
+    .mt-card-badges .ribbon {
+        height: 22px;
+        line-height: 5px;
+        font-size: 15px;
+        position: relative;
+        opacity: 0.8;
+        float: left;
+        z-index: 0;
+    }
+
+        .mt-card-badges .ribbon:hover {
+            opacity: 1;
+        }
 
 .mt-element-list.small .list-news.ext-1.mt-list-container ul > .mt-list-item {
     padding: 5px;
     clear: both;
 }
+
 .mt-element-list.small .list-news.ext-1 .list-thumb img {
     max-height: 80px;
 }
+
 .scroller .table-container {
     background-color: #fff;
 }
 
 .list-editable .list-group-item {
-    padding:15px;
+    padding: 15px;
 }
 
-.list-editable .list-group-item > btn {
-    margin-bottom: 7px;
-}
+    .list-editable .list-group-item > btn {
+        margin-bottom: 7px;
+    }
 
 .datetimepicker {
-   font-family: 'Open Sans', sans-serif !important;
-   font-size: 14px;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 14px;
 }
 
 .chart-legend,
@@ -312,57 +334,65 @@ body {
 .radar-legend,
 .polararea-legend,
 .doughnut-legend {
-  list-style-type: none;
-  margin-top: 5px;
-  text-align: center;
-  /* NOTE: Browsers automatically add 40px of padding-left to all lists, so we should offset that, otherwise the legend is off-center */
-  -webkit-padding-start: 0;
-  /* Webkit */
-  -moz-padding-start: 0;
-  /* Mozilla */
-  padding-left: 0;
-  /* IE (handles all cases, really, but we should also include the vendor-specific properties just to be safe) */
+    list-style-type: none;
+    margin-top: 5px;
+    text-align: center;
+    /* NOTE: Browsers automatically add 40px of padding-left to all lists, so we should offset that, otherwise the legend is off-center */
+    -webkit-padding-start: 0;
+    /* Webkit */
+    -moz-padding-start: 0;
+    /* Mozilla */
+    padding-left: 0;
+    /* IE (handles all cases, really, but we should also include the vendor-specific properties just to be safe) */
 }
-.chart-legend li,
-.bar-legend li,
-.line-legend li,
-.pie-legend li,
-.radar-legend li,
-.polararea-legend li,
-.doughnut-legend li {
-  display: inline-block;
-  white-space: nowrap;
-  position: relative;
-  margin-bottom: 4px;
-  border-radius: 5px;
-  padding: 2px 8px 2px 28px;
-  font-size: smaller;
-  cursor: default;
-}
-.chart-legend li span,
-.bar-legend li span,
-.line-legend li span,
-.pie-legend li span,
-.radar-legend li span,
-.polararea-legend li span,
-.doughnut-legend li span {
-  display: block;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-}
+
+    .chart-legend li,
+    .bar-legend li,
+    .line-legend li,
+    .pie-legend li,
+    .radar-legend li,
+    .polararea-legend li,
+    .doughnut-legend li {
+        display: inline-block;
+        white-space: nowrap;
+        position: relative;
+        margin-bottom: 4px;
+        border-radius: 5px;
+        padding: 2px 8px 2px 28px;
+        font-size: smaller;
+        cursor: default;
+    }
+
+        .chart-legend li span,
+        .bar-legend li span,
+        .line-legend li span,
+        .pie-legend li span,
+        .radar-legend li span,
+        .polararea-legend li span,
+        .doughnut-legend li span {
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+        }
+
 .bootstrap-switch-default {
     white-space: nowrap;
 }
+
 .pointer {
     cursor: pointer;
 }
+
 .page-header.navbar .page-logo.wider {
-    overflow: hidden; width: 225px;border-bottom: 1px solid #eee;
+    overflow: hidden;
+    width: 225px;
+    border-bottom: 1px solid #eee;
 }
+
 .page-header.navbar .page-logo.white {
     background-color: #fff;
 }
@@ -370,6 +400,7 @@ body {
 .dark .mt-card-avatar {
     background-color: #2b3643;
 }
+
 .across {
     font-size: 1em;
     position: absolute;
@@ -381,39 +412,48 @@ body {
     width: 100%;
     opacity: 0.8;
 }
+
 li.list-group-item.active a {
     color: #fff;
 }
+
 .control-group {
     position: relative;
     display: inline-block;
     vertical-align: middle;
 }
+
 .editor.movable {
     position: absolute;
     padding: 5px;
 }
-.editor.movable span {
-    white-space: pre;
-}
+
+    .editor.movable span {
+        white-space: pre;
+    }
+
 .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none;   /* Chrome/Safari/Opera */
-  -khtml-user-select: none;    /* Konqueror */
-  -moz-user-select: none;      /* Firefox */
-  -ms-user-select: none;       /* IE/Edge */
-  user-select: none;           /* non-prefixed version, currently
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none; /* non-prefixed version, currently
                                   not supported by any browser */
 }
+
 .color-picker-wrapper .color-picker-input-wrapper {
-  width: 100%;
+    width: 100%;
 }
+
 .color-picker-wrapper .color-picker-swatch:not(.input-group-addon) {
-  height: 28px;
+    height: 28px;
 }
+
 .color-picker-wrapper.color-picker-swatch-only .input-group .input-group-addon {
-  border-radius: 4px;
-} 
+    border-radius: 4px;
+}
+
 .page-quick-sidebar-wrapper .page-quick-sidebar .media-object,
 .page-quick-sidebar-wrapper .page-quick-sidebar .page-quick-sidebar-chat .page-quick-sidebar-chat-user .page-quick-sidebar-chat-user-messages .avatar {
     background-color: #FFFFFF;
@@ -421,6 +461,7 @@ li.list-group-item.active a {
     height: 45px;
     background-position: 100% 100%;
 }
+
 .page-quick-sidebar-wrapper .page-quick-sidebar .page-quick-sidebar-chat .page-quick-sidebar-chat-users .media-list .media .media-body .media-heading-sub {
     text-transform: lowercase;
 }
@@ -434,33 +475,39 @@ li.list-group-item.active a {
     background-color: #337ab7;
     color: #FFFFFF;
 }
-.icon-btn > i {
-    font-size: 2em;
-}
-.icon-btn:hover {
-    color: #000;
-    background-color: #fff;
-    border-color: #46B5EA;
-}
-.icon-btn:hover > div{
-    color: #000;
-}
 
-.icon-btn > div {
-    margin-top: 15px;
-    color: #fff;
-}
+    .icon-btn > i {
+        font-size: 2em;
+    }
+
+    .icon-btn:hover {
+        color: #000;
+        background-color: #fff;
+        border-color: #46B5EA;
+    }
+
+        .icon-btn:hover > div {
+            color: #000;
+        }
+
+    .icon-btn > div {
+        margin-top: 15px;
+        color: #fff;
+    }
+
 ul.scatter-legend li {
     display: inline-block;
     margin-right: 10px;
     margin-top: 10px;
 }
-.scatter-legend li span{
+
+.scatter-legend li span {
     display: inline-block;
     width: 12px;
     height: 12px;
     margin-right: 5px;
 }
+
 .pricing-content-1 .text-muted {
     font-size: 0.7em;
 }
@@ -469,9 +516,11 @@ ul.scatter-legend li {
     top: 166px;
     background-color: #8BC34A;
 }
-.pricing-content-1 .price-ribbon-2:after {
-    border-color: #457D04  transparent transparent #457D04 ;
-}
+
+    .pricing-content-1 .price-ribbon-2:after {
+        border-color: #457D04 transparent transparent #457D04;
+    }
+
 .page-header.navbar .search-form .input-group .input-group-btn .btn.search {
     margin-left: -24px;
     padding: 0;
@@ -480,18 +529,22 @@ ul.scatter-legend li {
     margin-top: 4px;
     display: block;
 }
-@media (max-width: 767px){
+
+@media (max-width: 767px) {
     .page-header.navbar {
         padding-left: 0;
         padding-right: 0;
     }
-    .page-header.navbar .page-logo.wider {
-        width: 170px;
-    }
-    .page-header.navbar .search-form {
-        display: none;
-    }
+
+        .page-header.navbar .page-logo.wider {
+            width: 170px;
+        }
+
+        .page-header.navbar .search-form {
+            display: none;
+        }
 }
+
 .fullbox {
     width: 100%;
     height: 583px;
@@ -500,11 +553,17 @@ ul.scatter-legend li {
     left: 0px;
     text-align: center;
 }
+
 .poster-frame {
-  display: table-cell;
-  vertical-align: middle;
+    display: table-cell;
+    vertical-align: middle;
 }
+
 .mt-element-overlay .mt-overlay-1 img.bottom {
     bottom: 0;
     position: absolute;
+}
+
+.page-header.navbar .page-logo {
+    width: 180px;
 }

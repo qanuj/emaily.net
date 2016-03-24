@@ -25,6 +25,8 @@ namespace Emaily.Core.Abstraction.Persistence
         TEntity Purge(TEntity entity);
 
         IQueryable<TEntity> All { get; }
+
+        
     }
 
     public interface IRepository<TEntity> : IRepository<TEntity, int> where TEntity : Entity

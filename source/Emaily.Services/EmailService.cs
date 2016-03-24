@@ -5,7 +5,6 @@ using Emaily.Core.Abstraction.Services;
 using Emaily.Core.Data;
 using Emaily.Core.DTO;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using Emaily.Core.Data.Complex;
 using Emaily.Core.Enumerations;
 using Newtonsoft.Json;
@@ -31,12 +30,29 @@ namespace Emaily.Services
         private readonly IRepository<Promo> _promoRepository;
         private readonly IEmailProvider _emailProvider;
         private readonly ICloudProvider _cloudProvider;
-        private readonly IStorageProvider _storageProvider;
+        //private readonly IStorageProvider _storageProvider;
         private readonly IAppProvider _appProvider;
 
 
-        public EmailService(IRepository<App> appRepository, IRepository<Plan> planRepository, IRepository<Client> clientRepository, IRepository<NormalCampaign> campaignRepository, IRepository<List> listRepository, IRepository<AutoEmail> autoEmailRepository, IRepository<AutoResponder> autoResponderRepository, IRepository<Domain> domainRepository,
-            IRepository<Template> templateRepository, IRepository<CampaignList> campaignListRepository, IRepository<CampaignResult> campaignResultRepository, IRepository<Link> linkRepository, IRepository<Subscriber> subscriberRepository, IRepository<Promo> promoRepository, IEmailProvider emailProvider, IStorageProvider storageProvider, ICloudProvider cloudProvider, IAppProvider appProvider, IRepository<Click> clickRepository)
+        public EmailService(
+            IRepository<App> appRepository, 
+            IRepository<Plan> planRepository, 
+            IRepository<Client> clientRepository, 
+            IRepository<NormalCampaign> campaignRepository, 
+            IRepository<List> listRepository, 
+            IRepository<AutoEmail> autoEmailRepository, 
+            IRepository<AutoResponder> autoResponderRepository, 
+            IRepository<Domain> domainRepository, 
+            IRepository<Template> templateRepository, 
+            IRepository<CampaignList> campaignListRepository, 
+            IRepository<CampaignResult> campaignResultRepository, 
+            IRepository<Link> linkRepository, 
+            IRepository<Subscriber> subscriberRepository, 
+            IRepository<Promo> promoRepository,
+            IRepository<Click> clickRepository,
+            IEmailProvider emailProvider, 
+            ICloudProvider cloudProvider, 
+            IAppProvider appProvider)
         {
             _appRepository = appRepository;
             _planRepository = planRepository;
@@ -53,12 +69,12 @@ namespace Emaily.Services
             _subscriberRepository = subscriberRepository;
             _promoRepository = promoRepository;
             _emailProvider = emailProvider;
-            _storageProvider = storageProvider;
+            //_storageProvider = storageProvider;
             _cloudProvider = cloudProvider;
             _appProvider = appProvider;
             _clickRepository = clickRepository;
         }
-        private IQueryable<AppVM> Apps()
+        public IQueryable<AppVM> Apps()
         {
             return _appRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new AppVM
             {
@@ -71,7 +87,7 @@ namespace Emaily.Services
                 Used = x.Used
             });
         }
-        private IQueryable<ListVM> Lists()
+        public IQueryable<ListVM> Lists()
         {
             return _listRepository.All.Where(x=> _appProvider.Apps.Contains(x.AppId)).Select(x => new ListVM
             {
@@ -86,7 +102,7 @@ namespace Emaily.Services
                 Total = x.Subscribers.Count()
             });
         }
-        private IQueryable<CampaignVM> Campaigns()
+        public IQueryable<CampaignVM> Campaigns()
         {
             return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new CampaignVM
             {
@@ -100,6 +116,7 @@ namespace Emaily.Services
                 UniqueOpens = x.Results.Select(y => y.SubscriberId).Distinct().Count()
             });
         }
+
         private Plan FindPlanByName(string name)
         {
             return _planRepository.All.FirstOrDefault(x => x.Name == name);
@@ -351,6 +368,46 @@ namespace Emaily.Services
 
             return Campaigns().FirstOrDefault(x => x.Id == campaign.Id);
         }
+
+        public bool DeleteCampaign(int id)
+        {
+            var campaign = _campaignRepository.ById(id);
+            if (campaign == null) throw new Exception("Campaign not found");
+            CheckIsMine(campaign.AppId);
+
+            campaign.Deleted = DateTime.UtcNow;
+            _campaignRepository.Update(campaign);
+            return _campaignRepository.SaveChanges()>0;
+        }
+
+        public CampaignInfoVM CampaignById(int id)
+        {
+            var campaign = _campaignRepository.All.Where(x => x.Id == id && !x.Deleted.HasValue).Select(x =>
+            new CampaignInfoVM
+            {
+                AppId=x.AppId,
+                Custom = x.Custom,
+                Id = x.Id,
+                Title = x.Name,
+                Label = x.Label,
+                Future = x.Future,
+                HtmlText = x.HtmlText,
+                IsHtml = x.IsHtml,
+                Lists = x.Lists.Select(y=>y.ListId),
+                PlainText = x.PlainText,
+                Sender = new SenderViewModel
+                {
+                     Email = x.Sender.Email,
+                     Name = x.Sender.Name,
+                     ReplyTo = x.Sender.ReplyTo
+                },
+                QueryString = x.QueryString
+            }).FirstOrDefault();
+            if (campaign == null) throw new Exception("Campaign not found");
+            CheckIsMine(campaign.AppId);
+            return campaign;
+        }
+
         public AppVM CreateApp(CreateAppVM model)
         {
             var plan = FindPlanByName(model.Plan);
@@ -641,6 +698,11 @@ namespace Emaily.Services
             list.Custom = JsonConvert.SerializeObject(fields);
             _listRepository.Update(list);
             _listRepository.SaveChanges();
+        }
+
+        public IQueryable<CampaignVM> Campaigns(string userId)
+        {
+            throw new NotImplementedException();
         }
     }
 
