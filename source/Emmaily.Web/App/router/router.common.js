@@ -100,7 +100,7 @@
             controller: "templateIndexController",
             resolve: {}
         })
-        .state('edittTemplate', {
+        .state('editTemplate', {
             url: "/template/edit/:id",
             templateUrl: root + "template/template.edit.html",
             data: { title: 'List' },

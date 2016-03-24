@@ -99,7 +99,13 @@ namespace Emaily.Services
                 Title = x.Name,
                 HtmlText = x.PlainText,
                 PlainText = x.PlainText,
-                QueryString = x.QueryString
+                QueryString = x.QueryString,
+                Sender = new SenderViewModel
+                {                     
+                    ReplyTo = x.Sender.ReplyTo,
+                    Email = x.Sender.Email,
+                    Name = x.Sender.Name
+                }
             }).FirstOrDefault();
             if (template == null) throw new Exception("Template not found");
             CheckIsMine(template.AppId);
@@ -640,6 +646,12 @@ namespace Emaily.Services
             template.HtmlText = model.HtmlText;
             template.PlainText = model.PlainText;
             template.QueryString = model.QueryString;
+            template.Sender= new EmailAddress
+            {
+                Email = model.Sender.Email,
+                Name = model.Sender.Name,
+                ReplyTo = model.Sender.ReplyTo
+            };
             template.Custom = JsonConvert.SerializeObject(model.Custom);
 
             _templateRepository.Update(template);

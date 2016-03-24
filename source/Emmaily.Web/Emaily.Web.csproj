@@ -265,6 +265,10 @@
     <Compile Include="Migrations\201603241458595_Stats comes later.Designer.cs">
       <DependentUpon>201603241458595_Stats comes later.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603241607035_Template has Sender Information.cs" />
+    <Compile Include="Migrations\201603241607035_Template has Sender Information.Designer.cs">
+      <DependentUpon>201603241607035_Template has Sender Information.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -403,6 +407,8 @@
     <Content Include="App\views\reports\report.card.html" />
     <Content Include="App\views\reports\report.cards.html" />
     <Content Include="App\views\reports\reports.js" />
+    <Content Include="App\views\template\template.edit.html" />
+    <Content Include="App\views\template\template.edit.js" />
     <Content Include="App\views\template\template.create.html" />
     <Content Include="App\views\template\template.create.js" />
     <Content Include="App\views\template\template.card.html" />
@@ -1276,6 +1282,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603241458595_Stats comes later.resx">
       <DependentUpon>201603241458595_Stats comes later.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241607035_Template has Sender Information.resx">
+      <DependentUpon>201603241607035_Template has Sender Information.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

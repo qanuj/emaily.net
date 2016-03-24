@@ -46,6 +46,7 @@ namespace Emaily.Core.DTO
         public string QueryString { get; set; }
         public bool IsHtml { get; set; }
         public int AppId { get; set; }
+        public SenderViewModel Sender { get; set; }
     }
 
     public class CampaignInfoVM

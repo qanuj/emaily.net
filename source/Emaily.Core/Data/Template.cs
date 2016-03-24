@@ -1,4 +1,6 @@
 using Emaily.Core.Abstraction;
+using Emaily.Core.Data.Complex;
+using Emaily.Core.DTO;
 
 namespace Emaily.Core.Data
 {
@@ -11,5 +13,6 @@ namespace Emaily.Core.Data
         public string PlainText { get; set; }
         public string QueryString { get; set; }
         public string OwnerId { get; set; }
+        public EmailAddress Sender { get; set; }
     }
 }
