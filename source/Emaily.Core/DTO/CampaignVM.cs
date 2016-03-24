@@ -9,7 +9,7 @@ namespace Emaily.Core.DTO
         public int Id { get; set; }
         public string Errors { get; set; }
         public string Title { get; set; }
-        public int Recipients { get; set; }
+        public int? Recipients { get; set; }
         public DateTime? Started { get; set; }
         public int UniqueOpens { get; set; }
         public int UniqueClicks { get; set; }
@@ -20,7 +20,7 @@ namespace Emaily.Core.DTO
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public int Recipients { get; set; }
+        public int? Recipients { get; set; }
         public DateTime Started { get; set; }
         public int UniqueOpens { get; set; }
         public int UniqueClicks { get; set; }

@@ -22,10 +22,10 @@ namespace Emaily.Core.Abstraction
         public string QueryString { get; set; }
         public bool IsHtml { get; set; }
 
-        public int Recipients { get; set; }
-        public int Sents { get; set; }
-        public int Clicks { get; set; }
-        public int Opens { get; set; }
+        public int? Recipients { get; set; }
+        public int? Sents { get; set; }
+        public int? Clicks { get; set; }
+        public int? Opens { get; set; }
 
         public string Errors { get; set; }
         public DateTime? Started { get; set; }

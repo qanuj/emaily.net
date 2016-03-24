@@ -261,6 +261,10 @@
     <Compile Include="Migrations\201603241422093_Promo may not be needed.Designer.cs">
       <DependentUpon>201603241422093_Promo may not be needed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603241458595_Stats comes later.cs" />
+    <Compile Include="Migrations\201603241458595_Stats comes later.Designer.cs">
+      <DependentUpon>201603241458595_Stats comes later.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -1269,6 +1273,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603241422093_Promo may not be needed.resx">
       <DependentUpon>201603241422093_Promo may not be needed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241458595_Stats comes later.resx">
+      <DependentUpon>201603241458595_Stats comes later.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
