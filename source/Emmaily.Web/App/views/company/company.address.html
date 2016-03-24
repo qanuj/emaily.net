@@ -1,0 +1,21 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-8 col-lg-6">
+            <div class="input-group">
+                <input type="text" ng-model="address" maxlength="50" required placeholder="Address" class="form-control" name="Address">
+                <div class="input-group-btn">
+                    <a href="#" title="Add" id="btn-company-address-add" class="btn btn-info" ng-click="createAddress(address)" type="submit"><i class="fa fa-plus"></i> Add</a>
+                </div>
+            </div>
+            <div class="clearfix margin-bottom-10"></div>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="address in addresses">
+                    <i class="fa fa-map-marker"></i> {{address.Address}} {{address.City}} {{address.CountryName}}
+                    <a href="mailto:{{address.Email}}">{{address.Email}}</a>
+                    <a title="Delete" class="btn btn-danger pull-right" href="#" ng-click="deleteAddress(addresss)"><i class="fa fa-trash"></i><span class="hidden-xs"> Delete</span></a>
+                    <a title="Edit" class="btn btn-default pull-right" href="#" ng-click="editAddress(addresss)"><i class="fa fa-pencil"></i><span class="hidden-xs"> Edit</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

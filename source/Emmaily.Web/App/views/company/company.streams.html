@@ -1,0 +1,38 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-hover table-responsive">
+                <tr>
+                    <th>Storage</th>
+                    <th>Name</th>
+                    <th>Rtmp</th>
+                    <th>Preview</th>
+                    <th>Command</th>
+                    <th width="15%"><button ng-click="addNewStream()" class="btn btn-info" type="button"><i class="fa fa-plus"></i> Add New</button></th>
+                </tr>
+                <tr ng-repeat="item in streams">
+                    <td>
+                        <span editable-select="item.StorageID" e-name="StorageID" e-form="streamform"
+                              e-ng-options="g.ID as g.ServiceProvider for g in storages"
+                              e-required>{{ item.Storage || 'empty' }}</span>
+                    </td>
+                    <td><span editable-text="item.Name" e-name="Name" e-form="streamform" e-required>{{ item.Name || 'empty' }}</span></td>
+                    <td><span editable-text="item.RtmpUrl" e-name="RtmpUrl" e-form="streamform" e-required>{{ item.RtmpUrl || 'empty' }}</span></td>
+                    <td><span editable-text="item.PreviewUrl" e-name="PreviewUrl" e-form="streamform" e-required>{{ item.PreviewUrl || 'empty' }}</span></td>
+                    <td><span editable-text="item.Command" e-name="Command" e-form="streamform" e-required>{{ item.Command || 'empty' }}</span></td>
+                    <td style="white-space: nowrap">
+                        <form editable-form name="streamform" onbeforesave="saveStream($data, item.ID)"
+                              ng-show="streamform.$visible" class="form-buttons form-inline" shown="insertedStream == item">
+                            <button type="submit" ng-disabled="streamform.$waiting" class="btn btn-primary"><i class="fa fa-pencil"></i> Save</button>
+                            <button type="button" ng-disabled="streamform.$waiting" ng-click="streamform.$cancel()" class="btn btn-default"><i class="fa fa-remove"></i> Cancel</button>
+                        </form>
+                        <div class="buttons" ng-show="!streamform.$visible">
+                            <button class="btn btn-primary" ng-click="streamform.$show()"><i class="fa fa-pencil"></i> Edit</button>
+                            <button class="btn btn-danger" ng-click="trashStream(item)"><i class="fa fa-trash"></i> Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿<div class="form-body">
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="host in record.General.Hosts">
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="host" readonly disabled />
+                <span class="input-group-btn">
+                    <button class="btn btn-danger" ng-click="removeHost(host)" type="button"><i class="fa fa-trash"></i></button>
+                </span>
+            </div>
+        </li>
+        <li class="list-group-item">
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="record.General.NewHost" placeholder="New Host Name">
+                <span class="input-group-btn">
+                    <button class="btn btn-info" ng-click="addHost(record.General.NewHost)" type="button"><i class="fa fa-plus"></i></button>
+                </span>
+            </div>
+        </li>
+    </ul>
+</div>

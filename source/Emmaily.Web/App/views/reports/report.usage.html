@@ -1,0 +1,188 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer" class="scroller" slimscroll>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="portlet light bordered">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-building font-red-sunglo"></i>
+                        <span class="caption-subject font-red-sunglo bold uppercase">Companies</span>
+                        <span class="caption-helper">filters.</span>
+                    </div>
+                    <div class="actions"></div>
+                </div>
+                <div class="portlet-body">
+                    <div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer" class="scroller" slimscroll>
+                        <ul class="nav nav-pills nav-stacked">
+                            <li ng-repeat="r in clients" ng-class="{active:search.ClientID==r.ClientID}">
+                                <a ng-click="selectClient(r)">
+                                    {{r.Title}}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="portlet light bordered">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-fire font-red-sunglo"></i>
+                                <span class="caption-subject font-red-sunglo bold uppercase">Encoding</span>
+                                <span class="caption-helper">monthly stats...</span>
+                            </div>
+                            <div class="actions"></div>
+                        </div>
+                        <div class="portlet-body">
+                            <canvas id="line" class="chart chart-scatter" chart-data="data" chart-options="chartOption"
+                                    chart-legend="true" chart-series="series"
+                                    chart-click="onClick"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="portlet light bordered">
+                        <div class="portlet-title">
+                            <div class="caption">
+                                <i class="fa fa-angle-double-up font-red-sunglo"></i>
+                                <span class="caption-subject font-red-sunglo bold uppercase">Bandwith</span>
+                                <span class="caption-helper">monthly stats...</span>
+                            </div>
+                            <div class="actions"></div>
+                        </div>
+                        <div class="portlet-body">
+                            <canvas class="chart chart-scatter" chart-data="dataBandwith" chart-options="chartOption"
+                                    chart-legend="true" chart-series="seriesBandwith"
+                                    chart-click="onClick"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat dark">
+                        <div class="visual">
+                            <i class="fa fa-clock-o"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.Duration}}">{{current.Duration | time}}</span>
+                            </div>
+                            <div class="desc"> Total Time </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat green">
+                        <div class="visual">
+                            <i class="fa fa-film"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.Items}}">{{current.Items}}</span>
+                            </div>
+                            <div class="desc"> Total Items </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat blue">
+                        <div class="visual">
+                            <i class="fa fa-video-camera"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.Programmes}}">{{current.Programmes}}</span>
+                            </div>
+                            <div class="desc"> Programmes </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat red">
+                        <div class="visual">
+                            <i class="fa fa-angle-left"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.EncodeInputSize | gb}}">{{current.EncodeInputSize | gb}}</span>GB
+                            </div>
+                            <div class="desc"> Input Size </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat blue">
+                        <div class="visual">
+                            <i class="fa fa-fire"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.Encodes}}">{{current.Encodes}}</span>
+                            </div>
+                            <div class="desc"> Encodings </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat green">
+                        <div class="visual">
+                            <i class="fa fa-angle-right"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.EncodeOutputSize | gb}}">{{current.EncodeOutputSize | gb}}</span>GB
+                            </div>
+                            <div class="desc"> Output Size </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat blue">
+                        <div class="visual">
+                            <i class="fa fa-angle-double-up"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.Egress | gb}}">{{current.Egress | gb}}</span>GB
+                            </div>
+                            <div class="desc"> Egress </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat red">
+                        <div class="visual">
+                            <i class="fa fa-angle-double-down"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.Ingress | gb}}">{{current.Ingress | gb}}</span>GB
+                            </div>
+                            <div class="desc"> Ingress </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="dashboard-stat purple">
+                        <div class="visual">
+                            <i class="fa fa-database"></i>
+                        </div>
+                        <div class="details">
+                            <div class="number">
+                                <span data-counter="counterup" data-value="{{current.Size | gb}}">{{current.Size | gb}}</span>GB
+                            </div>
+                            <div class="desc"> Total Size </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

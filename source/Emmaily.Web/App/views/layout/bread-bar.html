@@ -1,0 +1,21 @@
+﻿<ul class="page-breadcrumb">
+    <li>
+        <a ui-sref="home"><i class="fa fa-home"></i> <span class="hidden-xs">Home</span></a>
+        <i class="fa fa-circle"></i>
+    </li>
+    <li ng-repeat="b in breads">
+        <a href="{{b.link}}" target="{{b.target||'_top'}}"><i ng-if="b.icon" class="fa fa-{{b.icon}}"></i> {{b.title}}</a>
+        <i class="fa fa-circle"></i>
+    </li>
+    <li>
+        <span><i ng-if="icon" class="fa fa-{{icon}}"></i> {{title}}</span>
+        <i class="fa fa-circle"></i>
+    </li>
+    <li ng-if="total>0">
+        <span>{{start}}-{{end}} of {{total}}</span>
+    </li>
+    <li ng-if="total==0">
+        <span class="font-red-thunderbird">no records found</span>
+        <a ui-sref="{q:''}"><i class="fa fa-close"></i></a>
+    </li>
+</ul>

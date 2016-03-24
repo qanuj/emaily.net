@@ -1,0 +1,69 @@
+﻿<div class="page-bar">
+    <div ng-include="'App/views/layout/bread-save.html'"></div>
+    <div class="page-toolbar" ng-if="perm.download.read && cards.Items.length">
+        <div class="btn-group">
+            <a class="btn btn-success btn-sm btn-outline" title="Download" href="/download/list" target="_blank"><i class="fa fa-download"></i><span class="hidden-md hidden-sm hidden-xs"> Download</span></a>
+        </div>
+    </div>
+</div>
+<div class="clearfix margin-bottom-10"></div>
+<div class="row">
+    <div class="col-md-9" ng-if="!cart">
+        <div class="note note-warning">
+            <h2>Oops! Nothing in list.</h2>
+            <p>
+                There is no assets added to list, to click select cards and from actions menu choose <strong>Add To List</strong>
+            </p>
+        </div>
+    </div>
+    <div class="col-md-4" ng-if="cart">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption caption-md">
+                    <i class="icon-briefcase theme-font"></i>
+                    <span class="caption-subject theme-font bold">Items</span>
+                    <span class="caption-helper">{{cart}}</span>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-danger" ng-click="trashSelected()"><i class="fa fa-remove"></i> Remove <span class="badge badge-info">{{(records | filter:{selected:true}).length}}</span></button>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer"
+                     class="scroller" slimscroll="{height:'auto'}">
+                    <div class="mt-element-card mt-element-overlay">
+                        <div ng-include="'App/views/share/share.card.html'"></div>
+                    </div>
+                </div>
+                <div class="clearfix margin-bottom-20"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8" ng-if="cart">
+        <div class="portlet light">
+            <div class="portlet-title tabbable-line">
+                <div class="caption caption-md">
+                    <i class="icon-share-alt theme-font"></i>
+                    <span class="caption-subject theme-font bold">Share</span>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li ng-class="{active:mode=='email'}"><a title="e-mail" data-target="#email" data-toggle="tab"><i class="fa  fa-envelope-o"></i><span class="hidden-md hidden-sm hidden-xs"> Email</span></a></li>
+                    <li ng-class="{active:mode=='screening'}"><a title="Screening" data-target="#screening" data-toggle="tab"><i class="fa  fa-envelope-o"></i><span class="hidden-md hidden-sm hidden-xs"> Screening</span></a></li>
+                    <li ng-class="{active:mode=='youtube'}" class="bg-red-thunderbird bg-font-red-thunderbird"><a title="YouTube" class="bg-red-thunderbird bg-font-red-thunderbird" data-target="#youtube" data-toggle="tab"><i class="fa  fa-youtube bg-red-thunderbird bg-font-red-thunderbird"></i><span class="hidden-md hidden-sm hidden-xs"></span></a></li>
+                    <li ng-class="{active:mode=='facebook'}" class="bg-blue-steel bg-font-blue-steel"><a title="Facebook"  class="bg-blue-steel bg-font-blue-steel" data-target="#facebook" data-toggle="tab"><i class="fa  fa-facebook bg-blue-steel bg-font-blue-steel"></i><span class="hidden-md hidden-sm hidden-xs"></span></a></li>
+                    <li ng-class="{active:mode=='twitter'}" class="bg-blue bg-font-blue"><a title="Twitter" class="bg-blue bg-font-blue" data-target="#twitter" data-toggle="tab"><i class="fa  fa-twitter bg-blue bg-font-blue"></i><span class="hidden-md hidden-sm hidden-xs"></span></a></li>
+                </ul>
+            </div>
+            <div class="portlet-body">
+                <div class="tab-content">
+                    <div ng-class="{'active in':mode=='email'}" ng-include="'App/views/share/share.email.html'" class="tab-pane fade" id="email"></div>
+                    <div ng-class="{'active in':mode=='screening'}" ng-include="'App/views/share/share.screening.html'" class="tab-pane fade" id="screening"></div>
+                    <div ng-class="{'active in':mode=='youtube'}" ng-include="'App/views/share/share.youtube.html'" class="tab-pane fade" id="youtube"></div>
+                    <div ng-class="{'active in':mode=='facebook'}" ng-include="'App/views/share/share.facebook.html'" class="tab-pane fade" id="facebook"></div>
+                    <div ng-class="{'active in':mode=='twitter'}" ng-include="'App/views/share/share.twitter.html'" class="tab-pane fade" id="twitter"></div>
+                </div>
+                <div class="clearfix margin-bottom-20"></div>
+            </div>
+        </div>
+    </div>
+</div>

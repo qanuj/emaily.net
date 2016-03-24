@@ -1,0 +1,62 @@
+﻿
+.dropzone {
+    min-height: 200px;
+    border: 1px dotted rgb(43, 136, 226) !important;
+    background: white;
+    overflow: hidden;
+    display: table;
+}
+
+    .dropzone .text-muted {
+        clear: both;
+        white-space: nowrap;
+        font-size: 0.6em;
+    }
+
+    .dropzone i {
+        display: block;
+        color: #ffffff;
+        width: 20%;
+        -ms-border-radius: 11px;
+        border-radius: 11px;
+        text-align: center;
+        line-height: normal !important;
+        float: left;
+    }
+
+    .dropzone .dz-message {
+        font-size: 1.5em;
+        text-align: center;
+        vertical-align: middle;
+        display: table-cell;
+    }
+
+    .dropzone .dz-info {
+        font-size: 2em;
+    }
+
+    .dropzone input {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        border: solid transparent;
+        border-width: 0 0 100px 200px;
+        -ms-opacity: 0;
+        opacity: 0;
+        -webkit-filter: alpha(opacity=0);
+        -moz-filter: alpha(opacity=0);
+        -o-filter: alpha(opacity=0);
+        filter: alpha(opacity=0);
+        -moz-transform: translate(-300px, 0) scale(4);
+        direction: ltr;
+        z-index: 1;
+        cursor: pointer;
+    }
+
+    .dropzone.dz-clickable {
+        cursor: pointer;
+    }

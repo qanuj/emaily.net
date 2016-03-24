@@ -1,0 +1,37 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label">Twitter Account</label>
+            <div class="input-group btn-addon">
+                <ui-select ng-model="twitter.account" title="Choose a twitter account...">
+                    <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                    <ui-select-choices group-by="'Client'" repeat="ts.ID as ts in claims | filter: {Provider:'Twitter'}">
+                        <div ng-bind-html="ts.Name"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <div class="input-group-btn">
+                    <a href="/connect/Twitter?returnUrl=/%23share?mode=twitter" class="btn blue">Connect <i class="fa fa-twitter"></i><i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="note note-danger" ng-if="twterror">
+            <h3>Error</h3>
+            <p>
+                {{twterror}}
+            </p>
+            <a href="/connect/twitter?returnUrl=/%23share?mode=twitter" class="btn blue">Re-Connect <i class="fa fa-twitter"></i><i class="fa fa-plus"></i></a>
+        </div>
+        <div class="form-group">
+            <button ng-click="sendTweets(twitter,tweets)" btn-loading="loading.twitter" data-loading-text="Sharing..." class="btn btn-lg btn-success"><i class="fa fa-twitter"></i> Start Sharing</button>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-sm-6" ng-repeat="t in tweets">
+        <div class="form-group" ng-class="{'has-error':!t.length || t.length>144}">
+            <label class="control-label">Tweet</label>
+            <textarea ng-model="t" class="form-control" rows="5" ng-maxlength="144"></textarea>
+            <span ng-hide="t.length<=144" class="help-block help-block-error">Only 144 characters allowed.</span>
+        </div>
+    </div>
+</div>

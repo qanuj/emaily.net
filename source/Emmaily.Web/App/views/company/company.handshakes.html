@@ -1,0 +1,35 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-8 col-lg-6">
+            <table class="table table-bordered table-hover">
+                <tr>
+                    <th style="width: 40%">Company</th>
+                    <th style="width: 40%">Relation</th>
+                    <th><button ng-click="addNewHandshake()" class="btn btn-info" type="button"><i class="fa fa-plus"></i> Add New</button></th>
+                </tr>
+                <tr ng-repeat="item in handshakes">
+                    <td>
+                        <span editable-select="item.PartyID" e-name="PartyID" e-form="rowform"
+                              e-ng-options="g.ID as g.Title for g in resellers"
+                              e-required>{{ item.Party || 'empty' }}</span>
+                    </td>
+                    <td>
+                        <span editable-select="item.Relation" e-name="Relation" e-form="rowform"
+                              e-ng-options="g as (g|uncamel) for g in enums.partyrelationenum" e-required>{{ item.Relation || 'empty' }}</span>
+                    </td>
+                    <td style="white-space: nowrap">
+                        <form editable-form name="rowform" onbeforesave="saveHandshake($data, item.ID)"
+                              ng-show="rowform.$visible" class="form-buttons form-inline" shown="insertedHandshake == item">
+                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary"><i class="fa fa-pencil"></i> Save</button>
+                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default"><i class="fa fa-remove"></i> Cancel</button>
+                        </form>
+                        <div class="buttons" ng-show="!rowform.$visible">
+                            <button class="btn btn-primary" ng-click="rowform.$show()"><i class="fa fa-pencil"></i> Edit</button>
+                            <button class="btn btn-danger" ng-click="trashHandshake(item)"><i class="fa fa-trash"></i> Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

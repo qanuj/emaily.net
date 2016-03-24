@@ -1,0 +1,13 @@
+﻿    <div class="btn-group" ng-show="totalPages>1">
+        <a ng-if="!linkMode" class="btn blue-chambray btn-sm btn-outline" ng-disabled="currentPage==1" ng-click="pageAction(1,$event)">&laquo;</a>
+        <a ng-if="!linkMode" class="btn blue-chambray btn-sm btn-outline" ng-disabled="currentPage==1" ng-click="pageAction(currentPage-1,$event)">&lsaquo;</a>
+        <a ng-if="!linkMode" class="btn blue-chambray btn-sm btn-outline hidden-xs" ng-repeat="p in pages" ng-click="pageAction(p,$event)" ng-class="{active: p == currentPage}">{{p}}<span ng-if="p == currentPage" class="sr-only">(current)</span></a>
+        <a ng-if="!linkMode" class="btn blue-chambray btn-sm btn-outline" ng-disabled="currentPage==totalPages" ng-click="pageAction(currentPage+1,$event)">&rsaquo;</a>
+        <a ng-if="!linkMode" class="btn blue-chambray btn-sm btn-outline" ng-disabled="currentPage==totalPages" ng-click="pageAction(totalPages,$event)">&raquo;</a>
+
+        <a ng-if="linkMode" class="btn blue-chambray btn-sm btn-outline" ng-disabled="currentPage==1" ui-sref="{page:1}">&laquo;</a>
+        <a ng-if="linkMode" class="btn blue-chambray btn-sm btn-outline" ng-disabled="currentPage==1" ui-sref="{page:currentPage-1}">&lsaquo;</a>
+        <a ng-if="linkMode" class="btn blue-chambray btn-sm btn-outline hidden-xs" ng-repeat="p in pages" ui-sref="{page:p}" ng-class="{active: p == currentPage}">{{p}}<span ng-if="p == currentPage" class="sr-only">(current)</span></a>
+        <a ng-if="linkMode" class="btn blue-chambray btn-sm btn-outline" ng-disabled="currentPage==totalPages" ui-sref="{page:currentPage+1}">&rsaquo;</a>
+        <a ng-if="linkMode" class="btn blue-chambray btn-sm btn-outline" ng-disabled="currentPage==totalPages" ui-sref="{page:totalPages}">&raquo;</a>
+    </div>

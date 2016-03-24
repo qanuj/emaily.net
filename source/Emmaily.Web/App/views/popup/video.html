@@ -1,0 +1,13 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="dismiss()">&times;</button>
+    <h3 class="modal-title">
+        <i class="fa fa-play"></i> Play
+        <small>{{info.Title}}</small>
+        <button type="button" class="btn btn-link" ng-click="openTab(url)"><i class="fa fa-external-link"></i></button>
+    </h3>
+</div>
+<div class="modal-body" style="background-color: #000;padding:0px">
+    <div class="embed-responsive embed-responsive-16by9">
+        <iframe class="vz-player embed-responsive-item" allowfullscreen ng-src="{{url}}" frameborder="0"></iframe>
+    </div>
+</div>

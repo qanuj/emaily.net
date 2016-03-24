@@ -1,0 +1,116 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div class="row">
+    <div class="col-lg-2">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption caption-md">
+                    <i class="icon-people theme-font"></i>
+                    <span class="caption-subject theme-font bold">Roles</span>
+                </div>
+                <div class="actions">
+                    <span class="badge badge-warning">{{roles.length || 'Loading..'}}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="input-group">
+                    <input type="text" class="form-control" ng-model="roleName" placeholder="Role name...">
+                    <span class="input-group-btn">
+                        <button class="btn green" type="button" ng-click="createRole(roleName)"><i class="fa fa-plus"></i> Add</button>
+                    </span>
+                </div>
+                <div class="clearfix margin-bottom-10"></div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li ng-repeat="r in roles" ng-class="{active:role.ID==r.ID}">
+                        <a ng-click="selectRole(r)">
+                            <span class="badge badge-warning pull-right"> {{r.Count}} </span> {{r.Label}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="portlet light" ng-if="role">
+            <div class="portlet-title">
+                <div class="caption caption-md">
+                    <i class="icon-user theme-font"></i>
+                    <span class="caption-subject theme-font bold">Users</span>
+                </div>
+                <div class="actions">
+                    <span class="badge badge-warning">{{users.length || 'Loading..'}}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="input-group">
+                    <ui-select ng-model="usr.selected" reset-search-input="false" title="Choose an user">
+                        <ui-select-match allow-clear="true" placeholder="user email...">{{$select.selected.Title}}</ui-select-match>
+                        <ui-select-choices repeat="usr.UserName as usr in foundUsers track by $index" refresh="refreshUsers($select.search)" refresh-delay="0">
+                            <div class="media">
+                                <div class="pull-left">
+                                    <div class="media-object">
+                                        <img class="img-rounded" ng-src="{{usr.ImageFile | gravtaar:usr.UserName:50:'mm'}}">
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="media-heading" ng-bind-html="usr.Title | highlight: $select.search"></h5>
+                                    <p>{{usr.Reseller}}</p>
+                                </div>
+                            </div>
+                        </ui-select-choices>
+                    </ui-select>
+                    <span class="input-group-btn">
+                        <button class="btn green" type="button" ng-click="addUserToRole(usr.selected,role)"><i class="fa fa-plus"></i> Add</button>
+                    </span>
+                </div>
+                <div ng-if="usr.error" class="note note-danger">
+                    <h5>{{usr.error}}</h5>
+                </div>
+                <div class="clearfix margin-bottom-10"></div>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="u in users">
+                        <a ng-click="removeUserFromRole(role,u)" class="btn btn-danger btn-icon-only"><i class="fa fa-trash"></i></a>
+                        {{u.Label}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6" ng-if="role">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption caption-md">
+                    <i class="icon-lock theme-font"></i>
+                    <span class="caption-subject theme-font bold">Permissions for {{role.Label}}</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="control-label">Features (Read)</label>
+                        <ui-select multiple title="choose permissions" ng-model="permission.read" theme="bootstrap" sortable="true" clear-on-select="true" close-on-select="false">
+                            <ui-select-match placeholder="Select permission...">{{$item}}</ui-select-match>
+                            <ui-select-choices repeat="permission in enums.apiaccessenum  | filter: $select.search">
+                                {{permission}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-body">
+                    <div class="form-group">
+                        <label class="control-label">Features (Read & Write)</label>
+                        <ui-select multiple title="choose permissions" ng-model="permission.write" theme="bootstrap" sortable="true" clear-on-select="true" close-on-select="false">
+                            <ui-select-match placeholder="Select permission...">{{$item}}</ui-select-match>
+                            <ui-select-choices repeat="permission in enums.apiaccessenum  | filter: $select.search">
+                                {{permission}}
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>  
+                <div class="form-group">
+                    <button id="btn-applypermission" class="btn btn-info" ng-click="applyPermission(role,permission)"><i class="fa fa-edit"></i> Apply Permissions</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

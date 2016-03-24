@@ -1,0 +1,43 @@
+﻿<div class="mt-card-item mt-element-ribbon" ng-class="{active:card.selected}">
+    <div class="mt-card-avatar mt-overlay-1">
+        <div class="mt-picture mt-16x9" background-image="{{card.Picture | gravtaar:card.Email:275:'mm'}}"></div>
+        <div class="mt-overlay">
+            <ul class="mt-info">
+                <li ng-if="perm.users.write">
+                    <a class="btn default btn-outline" title="Edit {{title}} - {{card.Title}}" ui-sref="editUser({id:card.ID})">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.comments.write">
+                    <a class="btn default btn-outline" title="Comments on {{title}} - {{card.Title}}" ng-click="comment(card)">
+                        <i class="fa fa-comment"></i><span ng-if="card.CommentTotal" class="badge">{{card.CommentTotal}}</span>
+                    </a>
+                </li>
+                <li ng-if="canImpersonate">
+                    <a class="btn default btn-outline" title="Impersonate {{title}} - {{card.Title}}" href="/admin/security/impersonate/{{card.ID}}">
+                        <i class="fa fa-user-secret"></i>
+                    </a>
+                </li>
+                <li ng-if="canPermission">
+                    <a class="btn default btn-outline" title="Permissions for {{title}} - {{card.Title}}" ui-sref="permissions({by:'user',id:card.ID})">
+                        <i class="fa fa-lock"></i>
+                    </a>
+                </li>
+                <li ng-if="canPermission">
+                    <a class="btn default btn-outline" title="Reset Password for  {{title}} - {{card.Title}}" href="/account/reset/{{card.ID}}">
+                        <i class="fa fa-key"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mt-card-content" ng-click="toggleOne(card)">
+        <h3 class="mt-card-name">{{card.Title}}</h3>
+        <p class="mt-card-desc font-grey-mint">
+            <a href="mailto:{{card.Email}}">{{card.Email}}</a>
+        </p>
+    </div>
+    <div class="mt-card-badges">
+        <div ng-repeat="b in card.Badges" class="ribbon ribbon-color-{{$index|colorize}}">{{b}}</div>
+    </div>
+</div>

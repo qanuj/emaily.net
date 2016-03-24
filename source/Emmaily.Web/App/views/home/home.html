@@ -1,0 +1,175 @@
+﻿<div class="row">
+    <div class="col-md-4 col-xl-3">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-link font-blue"></i>
+                    <span class="caption-subject font-blue bold uppercase">Quick-Links</span>
+                </div>
+                <div class="tools">
+                    <a href="" class="fullscreen"> </a>
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="remove"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div slimscroll="{height:height}">
+                    <div class="row">
+                        <div class="col-sm-4" ng-repeat="n in dashboard">
+                            <a class="icon-btn" ui-sref="{{n.Route}}">
+                                <i class="fa fa-{{n.Icon}}"></i>
+                                <div>{{n.Title}}</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 col-xl-7">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-video-camera font-blue"></i>
+                    <span class="caption-subject font-blue bold uppercase">Recent Projects</span>
+                    <span class="caption-helper">{{programmes.Count}}</span>
+                </div>
+                <div class="tools">
+                    <a href="" class="fullscreen"> </a>
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="remove"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div additional-padding="111" debounce-wait="400" class="scroller" slimscroll="{height:height2}">
+                    <div class="row">
+                        <ul class="media-list">
+                            <li class="media col-xl-4" ng-repeat="n in programmes.Items">
+                                <a class="pull-left" ui-sref="editProject({id:n.ID})" style="max-width: 124px">
+                                    <img class="media-object" alt="{{n.Title}}" ng-src="{{n.Picture | gravtaar:'':64}}" />
+                                </a>
+                                <div class="media-body">
+                                    <h5 class="media-heading">{{n.Title}} <span class="text-muted">{{n.Duration | time}}</span></h5>
+                                    <p>{{n.Description}}</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="scroller-footer">
+                    <div class="pull-right">
+                        <a ui-sref="programmes">See All Programmes <i class="icon-arrow-right-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-xl-2">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-building-o font-green"></i>
+                    <span class="caption-subject font-green bold uppercase">Companies</span>
+                    <span class="caption-helper">{{companies.Count}}</span>
+                </div>
+                <div class="tools">
+                    <a href="" class="fullscreen"> </a>
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="remove"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div slimscroll="{height:height2}">
+                    <ul class="chats">
+                        <li class="in" ng-repeat="n in companies.Items">
+                            <a ui-sref="editCompany({id:n.ID})"><img alt="{{n.Title}}" ng-src="{{n.Picture | gravtaar:n.Email:80}}" style="width: 100%"></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="scroller-footer">
+                    <div class="pull-right">
+                        <a ui-sref="companies">See All Companies <i class="icon-arrow-right-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-history font-blue"></i>
+                    <span class="caption-subject font-blue bold uppercase">Recent History</span>
+                    <span class="caption-helper">{{history.Count}}</span>
+                </div>
+                <div class="tools">
+                    <a href="" class="fullscreen"> </a>
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="remove"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div additional-padding="111" debounce-wait="400" class="scroller" slimscroll="{height:height2}">
+                    <ul class="chats">
+                        <li class="in" ng-repeat="n in history.Items">
+                            <img class="avatar" alt="" ng-src="{{n.UserPicture | gravtaar:n.UserEmail:80}}">
+                            <div class="message">
+                                <span class="arrow"> </span>
+                                <a href="javascript:;" class="name"> {{n.FullName}} </a>
+                                <span class="datetime"> at {{n.Date|fromNow}} </span>
+                                <span class="body"> <strong>{{n.Action}}</strong> {{n.Name}} <span class="text-muted">{{n.Title}}</span></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="scroller-footer">
+                    <div class="pull-right">
+                        <a ui-sref="history">See All History <i class="icon-arrow-right-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="portlet light bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="fa fa-feed font-green-sharp"></i>
+                    <span class="caption-subject font-green-sharp bold uppercase">News & System Updates</span>
+                </div>
+                <div class="tools">
+                    <a href="" class="fullscreen"> </a>
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a href="javascript:;" class="remove"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="scroller" slimscroll="{height:height}">
+                    <ul class="feeds">
+                        <li ng-repeat="n in news">
+                            <a ui-sref="news({id:n.ID})">
+                                <div class="col1">
+                                    <div class="cont">
+                                        <div class="cont-col1">
+                                            <div class="label label-sm label-success">
+                                                <i class="fa fa-bell-o"></i>
+                                            </div>
+                                        </div>
+                                        <div class="cont-col2">
+                                            <div class="desc">
+                                                {{n.Title}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col2 date">
+                                    <div class="date"> {{n.Published | amDate}} </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

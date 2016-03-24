@@ -1,0 +1,21 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-6 col-lg-4">
+            <div class="input-group input-icon">
+                <i class="fa fa-list-ul font-green"></i>
+                <input class="form-control" type="text" ng-model="newKeyword.word" vz-enter="saveKeyword(newKeyword)" maxlength="50" placeholder="Keyword" />
+                <div class="input-group-btn">
+                    <a href="#" title="Add" class="btn btn-info" ng-click="saveKeyword(newKeyword)" type="submit"><i class="fa fa-plus"></i> Add</a>
+                </div>
+            </div>
+            <div class="clearfix margin-bottom-10"></div>
+            <ul class="list-group list-editable">
+                <li class="list-group-item" ng-repeat="word in keywords">
+                    <a title="Delete" class="btn btn-danger btn-icon-only" href="#" ng-click="trashKeyword(word)"><i class="fa fa-trash"></i></a>
+                    <i class="fa fa-list-ul"></i>
+                    <a href="#" editable-text="word.Word" onaftersave="saveKeyword(word)">{{word.Word || "empty" }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

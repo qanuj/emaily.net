@@ -1,0 +1,23 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="dismiss()">&times;</button>
+    <h3 class="modal-title"><i class="fa fa-area-chart"></i> Usage <small>{{info.Title}}</small></h3>
+</div>
+<div class="modal-body">
+    <div class="scroller" slimscroll>
+        <div ng-if="!usages.length" class="note note-warning">
+            <h4 class="block">No usage found</h4>
+            <p> Once <strong>{{info.Title}}</strong>, is added to any playlist, those would appear here.</p>
+        </div>
+        <ul class="chats">
+            <li ng-repeat="c in usages" class="in">
+                <img class="avatar" alt="" ng-src="{{c.Sender.Picture | gravtaar:c.Sender.Email:45}}"/>
+                <div class="message">
+                    <span class="arrow"> </span>
+                    <a href="javascript:;" class="name"> {{c.Sender.Name}} </a>
+                    <span class="datetime"> {{c.Created | fromNow}} </span>
+                    <span class="body"> {{c.Message}} </span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

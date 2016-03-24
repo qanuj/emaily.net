@@ -1,0 +1,56 @@
+﻿<div class="mt-card-item mt-element-ribbon" ng-class="{active:card.selected}">
+    <div class="mt-card-avatar mt-overlay-1">
+        <div class="mt-picture  mt-16x9" background-image="{{card.Picture | gravtaar:card.Email:275:'notfound'}}">
+            <i ng-if="!card.Picture" ng-class="icon|fileIcon:'5x'"></i>
+            <h4 ng-if="card.IsRejected" class="across bg-red-thunderbird uppercase">Rejected</h4>
+        </div>
+        <div class="mt-overlay">
+            <ul class="mt-info">
+                <li ng-if="perm.company.write">
+                    <a class="btn default btn-outline" title="Details - {{card.Title}}" ui-sref="editCompany({id:card.ID})">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                </li>
+                <li ng-if="!perm.company.write && perm.company.read">
+                    <a class="btn default btn-outline" title="Details - {{card.Title}}" ui-sref="viewCompany({id:card.ID})">
+                        <i class="fa fa-info"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.company.write">
+                    <a class="btn default btn-outline" title="Delete {{title}} - {{card.Title}}" ng-click="trash(card)">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.title.read">
+                    <a class="btn default btn-outline" title="Titles of {{title}} - {{card.Title}}" ui-sref="titles({parent:card.ID})">
+                        <i class="fa fa-desktop"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.playlist.read">
+                    <a class="btn default btn-outline" title="Playlists of {{title}} - {{card.Title}}" ui-sref="playlists({parent:card.ID})">
+                        <i class="fa fa-list-ul"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.website.read">
+                    <a class="btn default btn-outline" title="Web Channels for {{title}} - {{card.Title}}" ui-sref="libraries({parent:card.ID})">
+                        <i class="fa fa-globe"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.blog.read">
+                    <a class="btn default btn-outline" title="News for {{title}} - {{card.Title}}" ui-sref="blogs({parent:card.ID})">
+                        <i class="fa fa-newspaper-o"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.users.read">
+                    <a class="btn default btn-outline" title="Contacts for {{title}} - {{card.Title}}" ui-sref="users({parent:card.ID})">
+                        <i class="fa fa-users"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mt-card-content" ng-click="toggleOne(card)">
+        <h3 class="mt-card-name">{{card.Title}}</h3>
+        <p class="mt-card-desc font-grey-mint">{{card.Description}}&nbsp;</p>
+    </div>
+</div>

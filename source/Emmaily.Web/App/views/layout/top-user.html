@@ -1,0 +1,16 @@
+﻿<a href="#" class="dropdown-toggle visible-xl" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
+    <img alt="{{me.FirstName || me.UserName}}" class="img-circle" ng-src="{{me.Picture | gravtaar:me.Email:90:'mm'}}"/>
+    <span class="username username-hide-on-mobile">
+        {{me.FirstName || me.UserName}}
+    </span>
+    <i class="fa fa-angle-down"></i>
+</a>
+<a href="#" class="dropdown-toggle hidden-xl" dropdown-menu-hover data-toggle="dropdown" data-close-others="true">
+    <img alt="{{me.FirstName || me.UserName}}" class="img-circle" ng-src="{{me.Picture | gravtaar:me.Email:90:'mm'}}" />&nbsp;<i class="fa fa-angle-down"></i>
+</a>
+<ul class="dropdown-menu dropdown-menu-default">
+    <li><a ui-sref="account"><i class="icon-settings"></i> Manage Account</a></li>
+    <li><a ui-sref="password"><i class="icon-key"></i> Change Password</a></li>
+    <li class="divider"></li>
+    <li><a ng-click="logout()"><i class="icon-logout"></i> Log Out</a></li>
+</ul>

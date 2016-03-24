@@ -1,0 +1,17 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div class="mt-element-card mt-element-overlay">
+    <div class="portlet light">
+        <div class="portlet-title">
+            <div class="caption caption-md">
+                <i class="fa fa-{{icon}} theme-font"></i>
+                <span class="caption-subject theme-font bold uppercase">{{news.Title}}</span>
+                <span class="caption-helper" ng-if="!news">loading...</span>
+                <span class="caption-helper" ng-if="news">{{news.Published | date:'yyyy-MM-dd'}}</span>
+            </div>
+            <div class="tools" ng-if="news.Link">
+                <a href="{{news.Link}}" target="_blank" class="fullscreen"> </a>
+            </div>
+        </div>
+        <div class="portlet-body" ng-bind-html="news.Description"></div>
+    </div>
+</div>

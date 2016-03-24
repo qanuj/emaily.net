@@ -1,0 +1,26 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div class="portlet light">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="fa fa-user theme-font"></i>
+            <span class="caption-subject theme-font bold uppercase">{{record.FirstName}} {{record.Surname}}</span>
+            <span class="caption-helper">{{record.Email}}</span>
+            <span class="caption-helper" ng-if="!record">loading...</span>
+        </div>
+        <ul class="nav nav-tabs" ng-if="record">
+            <li class="active"><a title="About" data-target="#about" data-toggle="tab"><i class="fa fa-info"></i><span class="hidden-md hidden-sm hidden-xs"> About</span></a></li>
+            <li><a title="Tags" data-target="#tags" data-toggle="tab"><i class="fa fa-tags"></i><span class="hidden-md hidden-sm hidden-xs"> Tags</span></a></li>
+            <li><a title="Addresses" data-target="#address" data-toggle="tab"><i class="fa fa-envelope-o"></i><span class="hidden-md hidden-sm hidden-xs"> Address</span></a></li>
+            <li><a title="Custom Data" data-target="#custom" data-toggle="tab"><i class="fa fa-cubes"></i><span class="hidden-md hidden-sm hidden-xs"> Custom</span></a></li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <div class="tab-content" ng-if="record">
+            <div ng-include="'App/views/user/user.about.html'" class="tab-pane fade active in" id="about"></div>
+            <div ng-include="'App/views/user/user.tags.html'" class="tab-pane fade" id="tags"></div>
+            <div ng-include="'App/views/user/user.address.html'" class="tab-pane fade" id="address"></div>
+            <div ng-include="'App/views/custom/custom.editor.html'" class="tab-pane fade" id="custom"></div>
+        </div>
+        <div class="clearfix margin-bottom-20"></div>
+    </div>
+</div>

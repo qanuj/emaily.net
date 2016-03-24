@@ -1,0 +1,118 @@
+﻿<div id="dropzone" data-file-upload="options" class="fileupload well col-sm-12 dropzone dz-clickable">
+    <input type="file" name="files[]" multiple><!-- directory webkitdirectory mozdirectory-->
+    <div class="dz-message">
+        <i class="fa fa-cloud-upload fa-5x label-success label-as-badge"></i>
+        <span class="dz-info">Drag & Drop or click to upload.</span>
+        <span class="text-muted">(Maximum of <strong>{{options.maxFileSize | gb}}GB</strong> allowed. Only Video / Audio / Pictures / Document File types allowed.)</span>
+    </div>
+</div>
+<div class="clearfix margin-bottom-10" ng-if="error"></div>
+<div class="note note-danger" ng-if="error">
+    <h4><i class="fa fa-exclamation"></i> Error</h4>
+    {{error}}
+</div>
+<div class="progress active" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" ng-style="{width:(overall.progress)+'%'}"></div></div>
+<div class="clearfix margin-bottom-10"></div>
+<div class="row" ng-repeat="file in queue" data-ng-class="{'processing': file.processing()}">
+    <div class="col-md-12" ng-if="!file.old.close">
+        <div class="clearfix margin-bottom-10"></div>
+        <div class="portlet light portlet-fit bordered">
+            <div class="progress active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar"
+                     ng-class="{'progress-bar-success':!file.error && !file.old.error,'progress-bar-danger':file.error || file.old.error}"
+                     ng-style="{width:(file.progress||file.old.progress)+'%'}"></div>
+            </div>
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-layers font-green"></i>
+                    <span class="caption-subject font-green bold">{{file.originalname || file.name}}</span>
+                    <span class="caption-helper">{{file.old.error  || file.error || file.old.status || file.old.msg  || file.msg || 'Uploading'}}</span>
+                </div>
+                <div class="tools">
+                    <a href="" class="fullscreen"> </a>
+                    <a href="javascript:;" class="collapse"> </a>
+                    <a ng-click="file.old.close=true;" ng-if="file.error||file.old.ready" class="remove"> </a>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="preview" file-upload-preview="file"></div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="mt-element-step small">
+                            <div class="row step-line">
+                                <div class="col-md-3 mt-step-col first" ng-class="{'done':file.valid || file.old.valid,'active':file.validating}">
+                                    <div class="mt-step-number bg-white" ng-class="{'fa-spin':file.old.validating && !file.old.valid}">
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                    <div class="mt-step-title uppercase font-grey-cascade">Validation</div>
+                                    <div class="mt-step-content font-grey-cascade">file sanity checkes</div>
+                                </div>
+                                <div class="col-md-3 mt-step-col" ng-class="{'done':file.uploaded || file.old.uploaded,'active':file.valid}">
+                                    <div class="mt-step-number bg-white" ng-class="{'fa-spin':file.valid && !file.old.uploaded}">
+                                        <i class="fa fa-cloud-upload"></i>
+                                    </div>
+                                    <div class="mt-step-title uppercase font-grey-cascade">Upload {{(file.progress||file.old.progress)|number:2}}%</div>
+                                    <div class="mt-step-content font-grey-cascade">{{(file.size || file.old.size) | filesize}}</div>
+                                </div>
+                                <div class="col-md-3 mt-step-col" ng-class="{'done':file.old.ready,'active':file.old.uploaded}">
+                                    <div class="mt-step-number bg-white" ng-class="{'fa-spin':file.old.uploaded && !file.old.ready}">
+                                        <i class="fa fa-fire"></i>
+                                    </div>
+                                    <div class="mt-step-title uppercase font-grey-cascade">Encode</div>
+                                    <div class="mt-step-content font-grey-cascade">Encode source file</div>
+                                </div>
+                                <div class="col-md-3 mt-step-col last" ng-class="{'done':file.old.ready,'active':file.old.encoded}">
+                                    <div class="mt-step-number bg-white" ng-class="{'fa-spin':file.old.encoded && !file.old.ready}">
+                                        <i class="fa fa-rocket"></i>
+                                    </div>
+                                    <div class="mt-step-title uppercase font-grey-cascade">Publish</div>
+                                    <div class="mt-step-content font-grey-cascade" ng-if="!file.old.ready">Publish the file</div>
+                                    <div class="mt-step-content font-grey-cascade" ng-if="file.old.ready"><a class="btn btn-xs btn-success" ui-sref="editProgramme({id:file.old.programme})">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="file.old.tasks.length" class="col-md-12">
+                        <div class="mt-element-list small encoding">
+                            <div class="mt-list-container list-todo">
+                                <ul>
+                                    <li class="mt-list-item" ng-repeat="t in file.old.tasks">
+                                        <div class="list-todo-icon">
+                                            <i ng-if="t.completed" class="fa" ng-class="{'fa-exclamation-circle font-yellow-crusta':t.err||t.hasError,'fa-check font-green-jungle':!t.err && !t.hasError}"></i>
+                                            <i ng-if="!t.completed" class="fa fa-spin fa-circle-o-notch font-blue"></i>
+                                        </div>
+                                        <div class="list-todo-item" ng-class="{'green-jungle':t.completed && !t.error && !t.hasError,'yellow-crusta':t.completed && (t.err||t.hasError),'grey':!t.completed && !t.err,'red-mint': !t.completed &&  (t.err||t.hasError)}">
+                                            <a class="list-toggle-container font-white" data-toggle="collapse" data-target="#task-{{t.name}}" aria-expanded="false">
+                                                <div class="list-toggle" ng-class="{'done':t.completed}">
+                                                    <div class="list-toggle-title bold"><i class="fa" ng-class="{'fa-music':t.name=='audio','fa-film':t.name!='audio'}"></i> {{t.name}} - {{t.description}}
+                                                    </div>
+                                                    <div class="badge badge-default pull-right bold">{{t.progress}}%</div>
+                                                    <div class="badge badge-info pull-right bold">{{t.eta | eta}}</div>
+                                                </div>
+                                                <div ng-if="t.progress" class="progress active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                                    <div class="progress-bar"
+                                                         ng-class="{'progress-bar-success':!t.err,'progress-bar-danger':t.err}"
+                                                         ng-style="{width:t.progress+'%'}"></div>
+                                                </div>
+                                            </a>
+                                            <div class="task-list panel-collapse collapse" id="task-{{t.name}}">
+                                                <ul>
+                                                    <li class="task-list-item">
+                                                        <p>{{t.reason}}</p>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

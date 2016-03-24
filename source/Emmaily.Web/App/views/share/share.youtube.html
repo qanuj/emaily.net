@@ -1,0 +1,40 @@
+﻿<div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <label class="control-label">YouTube Account</label>
+            <div class="input-group btn-addon">
+                <ui-select ng-model="youtube.account" title="Choose a youtube account...">
+                    <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                    <ui-select-choices group-by="'Client'" repeat="ts.ID as ts in claims | filter: {Provider:'google'}">
+                        <div ng-bind-html="ts.Name"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <div class="input-group-btn">
+                    <a href="/connect/Google?returnUrl=/%23share?mode=youtube" class="btn red-thunderbird">Connect <i class="fa fa-youtube"></i><i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <labell class="control-label">Category</labell>
+            <select class="form-control" ng-model="youtube.category"
+                    ng-options="item.id as item.label for item in ytcategories"
+                    placeholder="Category" name="Category"></select>
+        </div>
+        <div class="form-group">
+            <label>Privacy</label>
+            <select class="form-control" ng-model="youtube.privacy"
+                    ng-options="item.id as item.label for item in ytprivacies"
+                    placeholder="Privacy" name="Privacy"></select>
+        </div>
+        <div class="note note-danger" ng-if="yterror">
+            <h3>Error</h3>
+            <p>
+                {{yterror}}
+            </p>
+            <a href="/connect/google?returnUrl=/%23share?mode=youtube" class="btn red-thunderbird">Re-Connect <i class="fa fa-youtube"></i><i class="fa fa-plus"></i></a>
+        </div>
+        <div class="form-group">
+            <button ng-click="sendYouTube(youtube)" btn-loading="loading.youtube" data-loading-text="Adding..." class="btn btn-lg btn-success"><i class="fa fa-youtube"></i> Start Uploading</button>
+        </div>
+    </div>
+</div>

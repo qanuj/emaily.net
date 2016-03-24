@@ -1,0 +1,30 @@
+﻿<div ng-include="'App/views/layout/page-bar.html'"></div>       
+<div class="search-page search-content-3">
+    <div class="row">
+        <div class="col-md-4 col-lg-3 col-xl-2" ng-repeat="card in cards.Items">
+            <div class="tile-container">
+                <div class="tile-thumbnail">
+                    <a href="javascript:;">
+                        <img ng-src="{{card.Picture}}" />
+                    </a>
+                </div>
+                <div class="tile-title">
+                    <h3>
+                        <a href="javascript:;">{{card.Title}}</a>
+                    </h3>
+                    <a ui-sref="editCompany({id:card.ID})">
+                        <i class="icon-question font-blue"></i>
+                    </a>
+                    <a href="javascript:;">
+                        <i class="icon-plus font-green-meadow"></i>
+                    </a>
+                    <div class="tile-desc">
+                        <p>
+                            {{card.Description}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

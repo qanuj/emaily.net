@@ -1,0 +1,20 @@
+﻿<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="false">
+    <i class="icon-list"></i>
+    <span class="badge badge-warning">{{cart||''}}</span>
+</a>
+<ul class="dropdown-menu">
+    <li class="external" ng-if="!cart">
+        <h3>
+            List is <span class="bold">empty</span>
+        </h3>
+    </li>
+    <li class="external" ng-if="cart">
+        <h3>
+            List has <span class="bold">{{cart}} item{{cart>0?'s':''}}</span>
+        </h3>
+        <a ui-sref="send"><i class="fa fa-share-alt"></i> Send {{cart}} item{{cart>0?'s':''}}</a>
+    </li>
+    <li ng-if="cart">
+        <a mwl-confirm title="Clear List" message="Confirm Clear List?" placement="bottom" class="btn font-red" on-confirm="clearList()"><i class="fa font-red fa-trash"></i> Clear List</a>
+    </li>
+</ul>

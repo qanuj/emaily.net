@@ -3,6 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Emaily.Web.Models
 {
+    public class ConsoleViewModel
+    {
+        public string Role { get; set; }
+    }
+
     public class ExternalLoginConfirmationViewModel
     {
         [Required]

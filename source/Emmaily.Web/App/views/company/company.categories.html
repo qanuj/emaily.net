@@ -1,0 +1,16 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-6 col-lg-4">
+            <a ng-click="createRootCategory()" class="btn btn-success"><i class="fa fa-plus"></i> Add Root Category</a>
+            <div class="clearfix margin-bottom-10"></div>
+            <div js-tree="categoryConfig" ng-model="categories" tree="categoryTree"
+                 tree-events="create_node:createCategory;loaded:loadedCategories;rename_node:renameCategory;move_node:moveCategory;delete_node:trashCategory;"></div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="alert alert-info">
+                <h4>Note</h4>
+                <p><strong>Right click</strong> (on mobile device, a <strong>long hold</strong>) on category tree to add / rename / move / delete categories.</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="page-sidebar navbar-collapse collapse">
+    <div class="page-sidebar-wrapper">
+        <ul class="page-sidebar-menu visible-sm visible-xs page-header-fixed">
+            <li class="sidebar-search-wrapper">
+                <form class="sidebar-search sidebar-search-bordered" ng-submit="search(q)" method="POST">
+                    <a href="javascript:;" class="remove">
+                        <i class="icon-close"></i>
+                    </a>
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="q" placeholder="Search...">
+                        <span class="input-group-btn">
+                            <button class="btn submit" ng-click="search(q)">
+                                <i class="icon-magnifier"></i>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </li>
+            <li class="nav-item" ng-repeat="n in navigations">
+                <a ng-if="n.Childs.length==0" class="nav-link" ui-sref="{{n.Route}}"><i class="fa fa-{{n.Icon}}"></i> {{n.Title}}</a>
+                <a ng-if="n.Childs.length>0" href="javascript:;" class="nav-link nav-toggle">
+                    <span class="title"><i class="fa fa-{{n.Icon}}"></i> {{n.Title}}</span>
+                    <span class="arrow"></span>
+                </a>
+                <ul class="sub-menu">
+                    <li ng-repeat-start="c in n.Childs" ng-if="c.IsSeperator" class="divider"></li>
+                    <li ng-repeat-end class="nav-item">
+                        <a ng-if="c.Childs.length==0" class="nav-link" ui-sref="{{c.Route}}"><i class="fa fa-{{c.Icon}}"></i> {{c.Title}}</a>
+                        <a ng-if="c.Childs.length>0" class="nav-link nav-toggle" href="javascript:;">
+                            <span class="title"><i class="fa fa-{{c.Icon}}"></i> {{c.Title}}</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li ng-repeat-start="x in c.Childs" ng-if="x.IsSeperator" class="divider"></li>
+                            <li ng-repeat-end class="nav-item">
+                                <a ui-sref="{{x.Route}}"><span class="title"><i class="fa fa-{{x.Icon}}"></i> {{x.Title}}</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

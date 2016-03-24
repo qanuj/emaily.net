@@ -1,0 +1,18 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-6 col-lg-4">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <a href="#" title="Add" id="btn-company-social-add" class="btn btn-info" ng-click="createTag(social)" type="submit"><i class="fa fa-link"></i> Connect</a>
+                </div>
+            </div>
+            <div class="clearfix margin-bottom-10"></div>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="item in socials">
+                    <i class="fa fa-share-alt"></i> {{item.Name}}
+                    <a title="Delete" class="btn btn-danger pull-right" href="#" ng-click="deleteSocial(item)"><i class="fa fa-trash"></i><span class="hidden-xs"> Delete</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

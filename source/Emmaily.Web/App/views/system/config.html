@@ -1,0 +1,28 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer" class="scroller" slimscroll>
+    <div class="portlet light">
+        <div class="portlet-title tabbable-line">
+            <div class="caption caption-md">
+                <i class="fa fa-cogs theme-font"></i>
+                <span class="caption-subject theme-font bold">{{record.General.Name}} - Configuration</span>
+                <span class="caption-helper" ng-if="!record">loading...</span>
+            </div>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-target="#about" data-toggle="tab"><i class="fa fa-cog"></i> About</a></li>
+                <li><a data-target="#welcome" data-toggle="tab"><i class="fa fa-file-text-o"></i> Welcome</a></li>
+                <li><a data-target="#domains" data-toggle="tab"><i class="fa fa-globe"></i> Domains</a></li>
+                <li><a data-target="#social" data-toggle="tab"><i class="fa fa-link"></i> Connections</a></li>
+                <li><a data-target="#websites" data-toggle="tab"><i class="fa fa-shopping-cart"></i> Websites</a></li>
+            </ul>
+        </div>
+        <div class="portlet-body" ng-if="record">
+            <div class="tab-content">
+                <div ng-include="'App/views/system/config.about.html'" class="tab-pane fade active in" id="about"></div>
+                <div ng-include="'App/views/system/config.welcome.html'" class="tab-pane fade" id="welcome"></div>
+                <div ng-include="'App/views/system/config.domains.html'" class="tab-pane fade" id="domains"></div>
+                <div ng-include="'App/views/system/config.social.html'" class="tab-pane fade" id="social"></div>
+                <div ng-include="'App/views/system/config.websites.html'" class="tab-pane fade" id="websites"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+﻿<div class="row">
+    <div class="col-md-3 col-lg-3">
+        <div class="form-group">
+            <label class="control-label">Name</label>
+            <input class="form-control" name="Name" placeholder="Name" type="text" ng-model="record.General.Name" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Copyright</label>
+            <input class="form-control" name="Copyright" placeholder="Copyright" type="text" ng-model="record.General.About.Copyright" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Copyright Url</label>
+            <input class="form-control" name="CopyrightUrl" placeholder="Copyright Url" type="text" ng-model="record.General.About.Url" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Copyright Start Year</label>
+            <input class="form-control" name="CopyrightYear" placeholder="Copyright Start Year" type="text" ng-model="record.General.About.Year" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Powered By</label>
+            <input class="form-control" name="PoweredBy" placeholder="Powered By" type="text" ng-model="record.General.About.Powered" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Powered Url</label>
+            <input class="form-control" name="PoweredLink" placeholder="Copyright Url" type="text" ng-model="record.General.About.PoweredUrl" />
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="form-group">
+            <label class="control-label">Ui Version</label>
+            <select class="form-control" name="Theme" ng-model="record.General.Version">
+                <option value="V8">Version 8</option>
+                <option value="V9">Version 9 *New</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Navigation</label>
+            <select class="form-control" name="Nagivation" ng-model="record.General.TopNav">
+                <option value="top">Version 8</option>
+                <option value="globelynx">Version 9 *New</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Quick-Links Navigation</label>
+            <select class="form-control" name="Nagivation" ng-model="record.General.DashboardNav">
+                <option value="dashboard">Version 8</option>
+                <option value="gl-dashboard">Version 9 *New</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Package Group</label>
+            <input class="form-control" placeholder="Package Group" type="text" ng-model="record.General.PackageGroup" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Picture Resizer Service</label>
+            <input class="form-control" placeholder="Image Resizer Service" type="url" ng-model="record.General.Picture" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Recording Service Url</label>
+            <input class="form-control" placeholder="Image Resizer Service" type="url" ng-model="record.General.Recorder" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">File Upload Server</label>
+            <input class="form-control" placeholder="VidZapper Encoder Server" type="url" ng-model="record.General.Encoder" />
+        </div>
+        <div class="form-group">
+            <label class="control-label">Cache Timeout</label>
+            <input class="form-control" name="CacheTimeout" type="number" ng-model="record.General.Cache" />
+        </div>
+    </div>
+    <div class="col-md-3 col-lg-2">
+        <div class="form-group dark">
+            <ng-upload-form ng-model="record.logo"
+                            url="{{encoder}}"
+                            size="90"
+                            quick="true"
+                            storage="-1"
+                            user="{{user}}"
+                            auto-upload="true"
+                            title="Logo"
+                            max-chunk-size="10"
+                            multiple="false"
+                            size-limit="5000000">
+            </ng-upload-form>
+        </div>
+        <div class="form-group">
+            <ng-upload-form ng-model="record.banner"
+                            url="{{encoder}}"
+                            size="90"
+                            quick="true"
+                            storage="-1"
+                            user="{{user}}"
+                            auto-upload="true"
+                            title="Banner"
+                            max-chunk-size="10"
+                            multiple="false"
+                            size-limit="5000000">
+            </ng-upload-form>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" ng-model="record.General.CanRegister" bs-switch data-on-text="Registration On" data-off-text="Registration Off">
+        </div>
+    </div>
+</div>

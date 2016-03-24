@@ -1,0 +1,20 @@
+﻿<div class="mt-card-item mt-element-ribbon" ng-repeat="card in cards.Items" ng-class="{active:card.selected}">
+    <div class="mt-card-avatar mt-overlay-1">
+        <div class="mt-picture  mt-16x9" background-image="{{card.Picture | gravtaar:card.Email:275:'notfound'}}">
+            <i ng-if="!card.Picture" ng-class="icon|fileIcon:'5x':card.ContentType"></i>
+        </div>
+        <div class="mt-overlay">
+            <ul class="mt-info at-top">
+                <li>
+                    <a class="btn default btn-outline" title="Remove - {{card.Title}}" ng-click="trash(card)">
+                        <i class="fa fa-remove"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mt-card-content" ng-click="toggleOne(card)">
+        <h4 class="mt-card-name">{{card.Title}}</h4>
+        <p class="mt-card-desc font-grey-mint">{{card.Description}}&nbsp;</p>
+    </div>
+</div>

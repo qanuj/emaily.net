@@ -1,0 +1,144 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-4 col-lg-3">
+            <div class="form-group">
+                <label class="control-label">Company</label>
+                <ui-select ng-model="record.ClientID" title="Choose a Company...">
+                    <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                    <ui-select-choices repeat="reseller.ID as reseller in resellers  | propsFilter: {Name: $select.search}">
+                        <div ng-bind-html="reseller.Name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">First Name</label>
+                <input type="text" class="form-control" ng-model="record.FirstName" required placeholder="First Name" name="FirstName" />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Last Name</label>
+                <input type="text" class="form-control" ng-model="record.Surname" required placeholder="Last Name" name="LastName" />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Job Title</label>
+                <input type="text" class="form-control" ng-model="record.JobTitle" required placeholder="Job Title" name="JobTitle" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Date of Birth</label>
+                <div class="dropdown">
+                    <a class="dropdown-toggle" id="userBirthday" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        <div class="input-group">
+                            <input class="form-control" type="text" value="{{record.Birthday | date:'yyyy-MM-dd'}}" required placeholder="Date of Birth" name="Birthday" />
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>                                  
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker ng-model="record.Birthday" datetimepicker-config="{ startView:'day', dropdownSelector: '#userBirthday',minView:'day' }" />
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Telephone</label>
+                <div class="input-icon">
+                    <i class="fa fa-phone font-green"></i>
+                    <input class="form-control" type="tel" ng-model="record.Telephone" required pattern="^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$" placeholder="Telephone" name="Telephone" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Mobile</label>
+                <div class="input-icon">
+                    <i class="fa fa-phone font-green"></i>
+                    <input class="form-control" type="tel" ng-model="record.Mobile" required pattern="^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$" placeholder="Mobile" name="Mobile" />
+                </div>
+            </div>
+
+           <div class="form-group">
+                <label class="control-label">Email</label>
+                <div class="input-icon">
+                    <i class="fa fa-envelope-o font-green"></i>
+                    <input class="form-control" type="email" ng-model="record.Email" required placeholder="Email" name="Email" />
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-4 col-lg-3">
+            <div class="form-group">
+                <label class="control-label">Language</label>
+                <ui-select ng-model="record.LanguageID" title="Choose a Language...">
+                    <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                    <ui-select-choices repeat="lang.ID as lang in languages | propsFilter: {Name: $select.search}">
+                        <div ng-bind-html="lang.Name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">House Number</label>
+                <input class="form-control" type="text" ng-model="record.HouseNumber" required placeholder="House Number" name="HouseNumber"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Area</label>
+                <input class="form-control" type="text" ng-model="record.Area" required placeholder="Area" name="SAreatreet"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Street</label>
+                <input class="form-control" type="text" ng-model="record.Street" required placeholder="Street" name="Street"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">City</label>
+                <input class="form-control" type="text" ng-model="record.City" required placeholder="City" name="City"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Postcode</label>
+                <input class="form-control" type="text" ng-model="record.Postcode" required placeholder="Postcode" name="Postcode"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Region</label>
+                <input class="form-control" type="text" ng-model="record.Region" required placeholder="Region" name="Region"/>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Country</label>
+                <ui-select ng-model="record.CountryID" title="Choose a Country...">
+                    <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                    <ui-select-choices repeat="country.ID as country in countries | propsFilter: {Name: $select.search}">
+                        <div ng-bind-html="country.Name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="col-md-3 col-lg-2">
+            <div class="form-group">
+                <ng-upload-form ng-model="record.picture"
+                                url="{{encoder}}"
+                                size="200"
+                                quick="true"
+                                storage="-1"
+                                user="{{user}}"
+                                auto-upload="true"
+                                title="User Picture..."
+                                max-chunk-size="10"
+                                multiple="false"
+                                size-limit="5000000">
+                </ng-upload-form>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Username</label>
+                <input class="form-control" disabled type="text" value="{{record.UserName}}" required placeholder="Username" name="Username" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Registration Url</label>
+                <input class="form-control" disabled type="text" value="{{record.RegistrationUrl}}" required placeholder="Registration Url" name="RegistrationUrl" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Registered By</label>
+                <input class="form-control" disabled type="text" value="{{record.RegisteredByName}}" required placeholder="Registered By" name="RegisteredBy" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">Created</label>
+                <input class="form-control" disabled type="text" value="{{record.Created | fromNow }}" required placeholder="Created" name="Created" />
+            </div>
+        </div>
+    </div>
+</div>

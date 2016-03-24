@@ -1,0 +1,16 @@
+﻿<ul class="page-breadcrumb">
+    <li>
+        <a ui-sref="home"><i class="fa fa-home"></i> Home</a>
+        <i class="fa fa-circle"></i>
+    </li>
+    <li ng-repeat="b in breads">
+        <a ui-sref="{{b.link}}" target="{{b.target||'_top'}}"><i ng-if="b.icon" class="fa fa-{{b.icon}}"></i> {{b.title}}</a>
+        <i class="fa fa-circle"></i>
+    </li>
+    <li>
+        <span>
+            <img ng-src="{{ record.picture.url | gravtaar:record.picture.email:20:(record.picture.missing||'notfound')}}" />
+            <i ng-if="icon && !(record.picture.url | gravtaar:record.picture.email:20:'notfound')" class="fa fa-{{icon}}"></i> {{record.picture.title || title}}
+        </span>
+    </li>
+</ul>

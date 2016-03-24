@@ -1,0 +1,20 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-6 col-lg-4">
+            <div class="input-group">
+                <input type="text" ng-model="tag" maxlength="50" required placeholder="Name" class="form-control" name="Name">
+                <div class="input-group-btn">
+                    <a href="#" title="Add" id="btn-company-tag-add" class="btn btn-info" ng-click="createTag(tag)" type="submit"><i class="fa fa-plus"></i> Add</a>
+                </div>
+            </div>
+            <div class="clearfix margin-bottom-10"></div>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="tag in tags">
+                    <i class="fa fa-tag"></i> {{tag.Tag}}
+                    <a title="Delete" class="btn btn-danger pull-right" href="#" ng-click="deleteTag(tag)"><i class="fa fa-trash"></i><span class="hidden-xs"> Delete</span></a>
+                    <a title="Edit" class="btn btn-default pull-right" href="#" ng-click="editTag(tag)"><i class="fa fa-pencil"></i><span class="hidden-xs"> Edit</span></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

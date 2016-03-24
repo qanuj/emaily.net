@@ -1,0 +1,19 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-6 col-lg-5">
+            <label>Show Welcome Text</label>
+            <div class="form-group">
+                <input type="checkbox" ng-model="record.General.ShowWelcomeText" bs-switch data-on-text="On" data-off-text="Off">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <textarea class="form-control" ui-tinymce="tinymceOptions"
+                          ng-model="record.General.WelcomeText"
+                          placeholder="Welcome Text" name="WelcomeText"></textarea>
+            </div>
+        </div>
+    </div>
+</div>

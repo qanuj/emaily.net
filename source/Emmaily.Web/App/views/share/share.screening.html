@@ -1,0 +1,39 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-xl-9 col-lg-7 col-md-5">
+            <div class="form-group">
+                <ui-select multiple ng-model="screen.to">
+                    <ui-select-match placeholder="Select contacts...">
+                        <span><i class="{{$item.Image}}"></i>{{$item.Name}} {{$item.Surname}} ({{$item.Email}})</span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="usr.ShareID as usr in foundUsers" refresh="refreshUsers($select.search)" refresh-delay="0">
+                        <span><i class="{{usr.Image}}"></i>{{usr.Name}} {{usr.Surname}} ({{usr.Email}})</span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="col-xl-2 col-lg-3 col-md-4">
+            <div class="form-group">
+                <input type="checkbox" ng-model="screen.ispublic" bs-switch data-on-text="Public" data-off-text="Private">
+            </div>
+        </div>
+        <div class="col-xl-1 col-lg-2 col-md-3 text-right">
+            <button ng-click="sendScreening(email)"
+                    btn-loading="loading.screen" 
+                    data-loading-text="Sharing..." 
+                    class="btn btn-lg btn-success"><i class="fa fa-send"></i> Share </button>
+        </div>
+    </div>
+    <div class="clearfix margin-bottom-20"></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <textarea class="form-control"
+                          ui-tinymce="tinymceOptions"
+                          ng-model="screen.message" rows="20"
+                          placeholder="Message"
+                          name="Message"></textarea>
+            </div>
+        </div>
+    </div>
+</div>

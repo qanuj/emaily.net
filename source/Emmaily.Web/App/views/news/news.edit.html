@@ -1,0 +1,58 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer" class="scroller" slimscroll>
+    <div class="mt-element-card mt-element-overlay">
+        <div class="portlet light">
+            <div class="portlet-title">
+                <div class="caption caption-md">
+                    <i class="fa fa-{{icon}} theme-font"></i>
+                    <span class="caption-subject theme-font bold uppercase">{{record.Title}}</span>
+                    <span class="caption-helper" ng-if="!record">loading...</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Website</label>
+                            <ui-select ng-model="record.LibraryID" title="Choose a Website...">
+                                <ui-select-match>{{$select.selected.Title}}</ui-select-match>
+                                <ui-select-choices repeat="lang.ID as lang in libraries | propsFilter: {Title: $select.search}">
+                                    {{lang.Title}}
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Title</label>
+                            <input type="text" class="form-control" ng-model="record.Title" required placeholder="Title" name="Title" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Published</label>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="newsPublished" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                    <div class="input-group">
+                                        <input class="form-control" type="text" value="{{record.Published | date:'yyyy-MM-dd'}}" required placeholder="Published Date" name="PublishDate" />
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <datetimepicker ng-model="record.Published" datetimepicker-config="{ startView:'day', dropdownSelector: '#newsPublished',minView:'day' }" />
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Link</label>
+                            <input type="text" class="form-control" ng-model="record.Link" required placeholder="Link" name="Link" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" ui-tinymce="tinymceOptions"
+                              ng-model="record.Description"
+                              placeholder="Description" name="Description"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

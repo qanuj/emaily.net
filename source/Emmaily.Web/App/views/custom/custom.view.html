@@ -1,0 +1,76 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-4 col-lg-3" ng-if="(extra | propsFilter: {Mode: 'Checkbox'}).length">
+            <div class="form-group" ng-repeat="item in extra | propsFilter: {Mode: 'Checkbox'}">
+                <input type="checkbox" disabled ng-if="item.Mode=='Checkbox'"
+                       ng-model="record.Custom.Bag[item.Title]" apply-uniform> {{item.Title}}
+            </div>
+        </div>
+        <div class="col-md-8 col-lg-9">
+            <div class="row">
+                <div class="col-md-6 col-lg-4" ng-repeat="item in extra| toArray | orderBy:'Mode'" ng-if="['Picture','Html','Checkbox'].indexOf(item.Mode)==-1">
+                    <div class="form-group">
+                        <label class="control-label">{{item.Title}}</label>
+                        <input type="text" readonly ng-if="item.Mode=='Text'" class="form-control"
+                               ng-model="record.Custom.Bag[item.Title]"
+                               required name="{{item.Title}}" />
+                        <input type="number" readonly ng-if="item.Mode=='Number'" class="form-control"
+                               ng-model="record.Custom.Bag[item.Title]"
+                               required name="{{item.Title}}" />
+                        <input type="email" readonly ng-if="item.Mode=='Email'" class="form-control"
+                               ng-model="record.Custom.Bag[item.Title]"
+                               required name="{{item.Title}}" />
+
+                        <input type="tel" readonly ng-if="item.Mode=='Tel'" class="form-control"
+                               ng-model="record.Custom.Bag[item.Title]"
+                               required name="{{item.Title}}" />
+
+                        <input type="url" readonly ng-if="item.Mode=='Url'" class="form-control"
+                               ng-model="record.Custom.Bag[item.Title]"
+                               required name="{{item.Title}}" />
+
+                        <input type="text" readonly class="form-control"  ng-if="item.Mode=='Color'"
+                               ng-model="record.Custom.Bag[item.Title]">
+
+                        <input type="text" readonly class="form-control"  ng-if="item.Mode=='Date'"
+                               ng-model="record.Custom.Bag[item.Title]">
+
+                        <input type="text" readonly class="form-control" ng-if="item.Mode=='Time'"
+                               ng-model="record.Custom.Bag[item.Title]">
+
+                        <input type="text" readonly class="form-control" ng-if="item.Mode=='Month'"
+                               ng-model="record.Custom.Bag[item.Title]">
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-lg-3" ng-repeat="item in extra | propsFilter: {Mode: 'Picture'}">
+                    <div class="form-group">
+                        <ng-upload-form ng-model="record.Custom.Bag[item.Title]"
+                                        url="{{encoder}}"
+                                        size="275"
+                                        quick="true"
+                                        storage="-1"
+                                        readonly="true"
+                                        user="{{user}}"
+                                        auto-upload="true"
+                                        title="{{item.Title}}"
+                                        max-chunk-size="10"
+                                        multiple="false"
+                                        size-limit="5000000">
+                        </ng-upload-form>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-repeat="item in extra | propsFilter: {Mode: 'Html'}">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label">{{item.Title}}</label>
+                        <div ng-bind-html="record.Custom.Bag[item.Title]"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿<div class="page-bar">
+    <div ng-include="'App/views/layout/bread-bar.html'"></div>
+    <div class="page-toolbar">
+        <div class="btn-group">
+            <a class="btn blue btn-sm btn-outline" ng-click="refresh()"><i class="fa fa-refresh" ng-class="{'fa-spin':refreshing}"></i> {{paging.size}}</a>
+            <button type="button" class="btn blue btn-sm btn-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-angle-down"></i>&nbsp;
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li ng-repeat="n in sizes" ng-class="{active:paging.size==n}"><a ui-sref="{pageSize:n}"> {{n}} Records </a></li>
+            </ul>
+        </div>
+        <cc-pager total-pages="pages" current-page="currentPage"></cc-pager>
+        <div class="btn-group" ng-if="perm.current.write || perm.sharing.read || perm.moderation.write || perm.playlist.write">
+            <button type="button" class="btn green btn-sm btn-outline dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-wrench"></i> {{action||'Actions'}}
+                <i class="fa fa-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                <li ng-if="perm.current.write && addNew">
+                    <a ng-click="addNew()"><i class="fa fa-plus"></i> Add New {{title}}</a>
+                </li>
+                <li ng-if="perm.sharing.read && !selectAll">
+                    <a ng-click="all(true)"><i class="fa fa-check-square-o"></i> Select All</a>
+                </li>
+                <li ng-if="perm.sharing.read && selectAll">
+                    <a ng-click="all(false)"><i class="fa fa-square-o"></i> Unselect All</a>
+                </li>
+                <li ng-if="perm.current.write &&  (records | filter:{selected:true}).length" class="divider"></li>
+                <li ng-if="addTo">
+                    <a ng-click="addTo()"><i class="fa fa-plus"></i> Add To {{addToName}}</a>
+                </li>
+                <li ng-if="perm.sharing.write && addToList">
+                    <a ng-click="addToList()">
+                        <i class="fa fa-shopping-cart"></i> Add To List
+                        <span class="badge badge-warning">{{(records | filter:{selected:true}).length}}</span>
+                    </a>
+                </li>
+                <li ng-if="perm.moderation.write && moderateSelected && (records | filter:{selected:true}).length">
+                    <a ng-click="moderateSelected()">
+                        <i class="fa fa-check"></i> Moderate
+                        <span class="badge badge-info">{{(records | filter:{selected:true}).length}}</span>
+                    </a>
+                </li>
+                <li ng-if="perm.playlist.write && maddToPlaylist && (records | filter:{selected:true}).length">
+                    <a ng-click="addToPlaylist()">
+                        <i class="fa fa-list-ul"></i> Add To Playlist
+                        <span class="badge badge-info">{{(records | filter:{selected:true}).length}}</span>
+                    </a>
+                </li>
+                <li ng-if="perm.current.write && copySelected && (records | filter:{selected:true}).length">
+                    <a ng-click="copySelected()">
+                        <i class="fa fa-copy"></i> Copy
+                        <span class="badge badge-info">{{(records | filter:{selected:true}).length}}</span>
+                    </a>
+                </li>
+                <li ng-if="perm.current.write && moveSelected && (records | filter:{selected:true}).length">
+                    <a ng-click="moveSelected()">
+                        <i class="fa fa-arrows-alt"></i> Move
+                        <span class="badge badge-info">{{(records | filter:{selected:true}).length}}</span>
+                    </a>
+                </li>
+                <li ng-if="perm.current.write && tagSelected && (records | filter:{selected:true}).length">
+                    <a ng-click="tagSelected()">
+                        <i class="fa fa-tag"></i> Add Tags
+                        <span class="badge badge-info">{{(records | filter:{selected:true}).length}}</span>
+                    </a>
+                </li>
+                <li ng-if="perm.current.write && trashSelected && (records | filter:{selected:true}).length">
+                    <a ng-click="trashSelected()">
+                        <i class="fa fa-trash font-red-flamingo"></i> Delete
+                        <span class="badge badge-danger">{{(records | filter:{selected:true}).length}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="clearfix margin-bottom-30"></div>

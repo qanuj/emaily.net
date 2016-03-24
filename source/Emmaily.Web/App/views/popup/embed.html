@@ -1,0 +1,40 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="dismiss()">&times;</button>
+    <h3 class="modal-title"><i class="fa fa-puzzle-piece"></i> Embed <small>{{info.Title}}</small></h3>
+</div>
+<div class="modal-body">
+    <div class="form-body">
+        <pre nag-prism source="{{code()}}" class="language-markup" style="max-height: 100px"></pre>
+        <div class="row">
+            <div class="col-md-3" ng-if="!isIframe">
+                <div class="form-group">
+                    <label class="control-label">Skin</label>
+                    <select id="skin" bs-select class="form-control" ng-model="skin">
+                        <option value="">Default</option>
+                        <option value="lulu">lulu</option>
+                        <option value="basic">basic</option>
+                        <option value="skin3">Skin3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Width</label>
+                    <input type="number" class="form-control" ng-model="width" min="320" max="1920" maxlength="4">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Height</label>
+                    <input type="number" class="form-control" ng-model="height" min="180" max="1080" maxlength="4">
+                </div>
+            </div>
+            <div class="col-md-3" ng-if="!isIframe">
+                <div class="form-group">
+                    <label class="control-label">Auto Start</label>
+                    <input type="checkbox" ng-model="autostart" bs-switch data-on-text="Enabled" data-off-text="Disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

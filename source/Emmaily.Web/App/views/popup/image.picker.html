@@ -1,0 +1,29 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="dismiss()">&times;</button>
+    <h3 class="modal-title"><i class="fa fa-area-chart"></i> Image Picker <small>{{info.Title}}</small></h3>
+</div>
+<div class="modal-body">
+    <div class="scroller" slimscroll="{height:'300px'}">
+        <div class="mt-element-card mt-element-overlay">
+            <div class="row">
+                <div class="col-md-4 col-lg-3" ng-repeat="c in items">
+                    <div class="mt-card-item" ng-click="ok(c.Url)">
+                        <div class="mt-card-avatar mt-overlay-1">
+                            <img alt="{{c.Title}}"  ng-src="{{c.Url | gravtaar:'':100}}" />
+                        </div>
+                        <div class="mt-card-content">
+                            <h4 class="mt-card-name">{{c.Title}}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="note note-info pull-left">
+        <p>Click on Picture to choose.</p>
+    </div>
+    <button class="btn btn-info" ng-click="dismiss()"><i class="fa fa-check"></i> OK </button>
+    <button class="btn btn-default" ng-click="dismiss()"><i class="fa fa-close"></i> Cancel</button>
+</div>

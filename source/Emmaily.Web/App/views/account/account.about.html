@@ -1,0 +1,174 @@
+﻿<div class="portlet light">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">Profile Account</span>
+        </div>
+        <ul class="nav nav-tabs">
+            <li ng-class="{'active':!args.mode}"><a data-target="#personal" data-toggle="tab">Personal Info</a></li>
+            <li ng-class="{'active':args.mode=='password'}" ><a data-target="#password" data-toggle="tab">Change Password</a></li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <div class="tab-content">
+            <div class="tab-pane" ng-class="{'active':!args.mode}" id="personal">
+                <div class="row">
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">First Name</label>
+                            <input type="text" class="form-control" ng-model="record.FirstName" required placeholder="First Name" name="FirstName" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Last Name</label>
+                            <input type="text" class="form-control" ng-model="record.Surname" required placeholder="Last Name" name="LastName" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Job Title</label>
+                            <input type="text" class="form-control" ng-model="record.JobTitle" required placeholder="Job Title" name="JobTitle" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Date of Birth</label>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" id="userBirthday" role="button" data-toggle="dropdown" data-target="#" href="#">
+                                    <div class="input-group">
+                                        <input class="form-control" type="text" value="{{record.Birthday | date:'yyyy-MM-dd'}}" required placeholder="Date of Birth" name="Birthday" />
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <datetimepicker ng-model="record.Birthday" datetimepicker-config="{ startView:'day', dropdownSelector: '#userBirthday',minView:'day' }" />
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Telephone</label>
+                            <div class="input-icon">
+                                <i class="fa fa-phone font-green"></i>
+                                <input class="form-control" type="tel" ng-model="record.Telephone" required pattern="^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$" placeholder="Telephone" name="Telephone" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Mobile</label>
+                            <div class="input-icon">
+                                <i class="fa fa-phone font-green"></i>
+                                <input class="form-control" type="tel" ng-model="record.Mobile" required pattern="^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$" placeholder="Mobile" name="Mobile" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Email</label>
+                            <div class="input-icon">
+                                <i class="fa fa-envelope-o font-green"></i>
+                                <input class="form-control" type="email" ng-model="record.Email" required placeholder="Email" name="Email" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div class="form-group">
+                            <label class="control-label">Language</label>
+                            <ui-select ng-model="record.LanguageID" title="Choose a Language...">
+                                <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                                <ui-select-choices repeat="lang.ID as lang in languages | propsFilter: {Name: $select.search}">
+                                    <div ng-bind-html="lang.Name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">House Number</label>
+                            <input class="form-control" type="text" ng-model="record.HouseNumber" required placeholder="House Number" name="HouseNumber" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Area</label>
+                            <input class="form-control" type="text" ng-model="record.Area" required placeholder="Area" name="SAreatreet" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Street</label>
+                            <input class="form-control" type="text" ng-model="record.Street" required placeholder="Street" name="Street" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">City</label>
+                            <input class="form-control" type="text" ng-model="record.City" required placeholder="City" name="City" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Postcode</label>
+                            <input class="form-control" type="text" ng-model="record.Postcode" required placeholder="Postcode" name="Postcode" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Region</label>
+                            <input class="form-control" type="text" ng-model="record.Region" required placeholder="Region" name="Region" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Country</label>
+                            <ui-select ng-model="record.CountryID" title="Choose a Country...">
+                                <ui-select-match>{{$select.selected.Name}}</ui-select-match>
+                                <ui-select-choices repeat="country.ID as country in countries | propsFilter: {Name: $select.search}">
+                                    <div ng-bind-html="country.Name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3" ng-if="perm.upload.write">
+                        <div class="form-group">
+                            <ng-upload-form ng-model="record.picture"
+                                            url="{{encoder}}"
+                                            size="200"
+                                            name="profilePicture"
+                                            quick="true"
+                                            storage="-1"
+                                            user="{{user}}"
+                                            auto-upload="true"
+                                            title="Avatar"
+                                            multiple="false"
+                                            size-limit="5000000">
+                            </ng-upload-form>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Username</label>
+                            <input class="form-control" disabled type="text" value="{{record.UserName}}" required placeholder="Username" name="Username" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Joined</label>
+                            <input class="form-control" disabled type="text" value="{{record.Created | fromNow }}" required placeholder="Created" name="Created" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" ng-class="{'active':args.mode=='password'}" id="password">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Current Password</label>
+                            <input type="password" class="form-control" ng-model="pwd.OldPassword" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">New Password</label>
+                            <input type="password" class="form-control" ng-model="pwd.NewPassword" />
+                        </div>
+                        <div ng-password-strength="pwd.NewPassword"
+                             strength="demo.passStrength"
+                             calculation-mode="{{pwd.calculationMode}}"
+                             goal="{{pwd.goal}}"
+                             inner-class="progress-bar"
+                             inner-class-prefix="progress-bar-"></div>
+                        <div class="form-group">
+                            <label class="control-label">Re-type New Password</label>
+                            <input type="password" class="form-control" ng-model="pwd.ConfirmPassword" />
+                        </div>
+                        <div class="note note-danger" ng-if="pwd.NewPassword!=pwd.ConfirmPassword && pwd.ConfirmPassword">
+                            <h4>Error</h4>
+                            <p>Password and confirm Password must match.</p>
+                        </div>
+                        <div class="margin-top-10">
+                            <a ng-click="changePassword(pwd)" ng-disabled="pwd.goal>80" class="btn green"> Change Password </a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

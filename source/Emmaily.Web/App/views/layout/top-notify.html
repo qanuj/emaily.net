@@ -1,0 +1,33 @@
+﻿<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+    <i class="icon-bell"></i>
+    <span class="badge badge-default">{{notifications.length||''}}</span>
+</a>
+<ul class="dropdown-menu extended tasks">
+    <li class="external">
+        <h3>
+            Processing <span class="bold">{{notifications.length || 'No'}}</span> Files
+        </h3>
+        <a ng-visible="notifications.length" ng-click="clearCompleted()">clear completed</a>
+    </li>
+    <li ng-visible="notifications.length">
+        <ul class="dropdown-menu-list" slimscroll="{height:'300px',handleColor:'#637283'}">
+            <li ng-repeat="n in notifications">
+                <a href="{{n.ready ? '#'+n.bx+'?parent='+n.link:'#'}}">
+                    <span class="task">
+                        <span class="desc">{{n.filename}}</span>
+                        <span class="percent">{{n.progress}}%</span>
+                    </span>
+                    <span class="progress">
+                        <span ng-style="{'width':n.progress+'%'}" class="progress-bar" ng-class="{'progress-bar-success':!error,'progress-bar-danger':error}"
+                              aria-valuenow="{{n.progress}}" aria-valuemin="0" aria-valuemax="100">
+                            <span class="sr-only">{{n.progress}}% Complete</span>
+                        </span>
+                    </span>
+                    <span class="task">
+                        <span class="desc"><i ng-class="{'fa fa-check font-green':n.ready}"></i> {{n.message}}</span>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>

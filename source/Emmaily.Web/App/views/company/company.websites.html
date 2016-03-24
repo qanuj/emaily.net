@@ -1,0 +1,23 @@
+﻿<div class="form-body">
+    <div class="row">
+        <div class="col-md-6 col-lg-4">
+            <div class="input-group input-icon">
+                <i class="fa fa-cloud font-green"></i>
+                <input class="form-control" type="url" ng-model="newSite.website" vz-enter="saveWebsite(newSite)" maxlength="255" placeholder="http://"/>
+                <div class="input-group-btn">
+                    <a href="#" title="Add" class="btn btn-info" ng-click="saveWebsite(newSite)" type="submit"><i class="fa fa-plus"></i> Add</a>
+                </div>
+            </div>
+            <div class="clearfix margin-bottom-10"></div>
+            <ul class="list-group list-editable">
+                <li class="list-group-item" ng-repeat="site in websites">
+                    <a title="Delete" class="btn btn-danger btn-icon-only" href="#" ng-click="trashWebsite(site)"><i class="fa fa-trash"></i></a>
+                    <i class="fa fa-cloud"></i>
+                    <a href="#" editable-text="site.Website" onaftersave="saveWebsite(site)">{{site.Website || "empty" }}</a>
+                    <a href="{{site.Website}}" target="_blank"><i class="fa fa-external-link-square"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+

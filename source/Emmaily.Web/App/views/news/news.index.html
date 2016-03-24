@@ -1,0 +1,40 @@
+﻿<div ng-include="'App/views/layout/page-bar.html'"></div>
+<div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer" class="scroller" slimscroll>
+    <div class="table-responsive">
+        <div class="table-container">
+            <table datatable="ng" dt-options="dtOptions" class="table table-striped table-bordered table-hover table-checkable order-column">
+                <thead>
+                    <tr role="row" class="heading">
+                        <th width="2%">
+                            <input type="checkbox" apply-uniform ng-model="selectAll" class="group-checkable">
+                        </th>
+                        <th width="10%"> Client </th>
+                        <th width="10%"> Library </th>
+                        <th width="25%"> Title </th>
+                        <th width="20%"> Link </th>
+                        <th width="10%"> Published </th>
+                        <th width="10%"> Modified </th>
+                        <th width="10%"> Actions </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="c in records">
+                        <td><input type="checkbox" apply-uniform class="group-checkable" ng-model="c.selected"></td>
+                        <td>{{c.Client}}</td>
+                        <td>{{c.Library}}</td>
+                        <td>{{c.Title}}</td>
+                        <td><a href="{{c.Link}}" target="_blank">{{c.Link}}</a></td>
+                        <td>{{c.Published | fromNow}}</td>
+                        <td>{{c.Modified | fromNow}}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-icon-only btn-default" ui-sref="editBlog({id:c.ID})"><i class="fa fa-pencil-square-o"></i></a>
+                                <a class="btn btn-icon-only btn-danger" ng-click="trash(c)"><i class="fa fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

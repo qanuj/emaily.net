@@ -1,0 +1,45 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer" class="scroller" slimscroll>
+    <div class="row">
+        <div class="col-lg-10 col-xl-offset-2 col-lg-offset-1 col-xl-8 col-md-12 col-sm-12">
+            <form class="form-body" enctype="multipart/form-data" id="fileupload" method="post">
+                <div class="form-group" ng-if="storages.length>1">
+                    <label class="control-label">Storage</label>
+                    <ui-select ng-model="uploadConfig.storage" title="Choose a Storage...">
+                        <ui-select-match>{{$select.selected.ServiceProvider}}</ui-select-match>
+                        <ui-select-choices group-by="'Client'" repeat="ts.ID as ts in storages track by $index">
+                            {{ts.ServiceProvider}}
+                        </ui-select-choices>
+                    </ui-select>
+                    <span class="help-block">select where you want to store your assets</span>
+                </div>
+                <div class="form-group" ng-hide="hideContainer">
+                    <label class="control-label">{{containerTitle}}</label>
+                    <ui-select ng-model="uploadConfig.container" reset-search-input="false" title="Choose an {{containerTitle}}">
+                        <ui-select-match allow-clear="true" placeholder="Choose an {{containerTitle}}...">{{$select.selected.Title}}</ui-select-match>
+                        <ui-select-choices repeat="c.ID as c in intellects track by $index" refresh="refreshIntellect($select.search)" refresh-delay="0">
+                            <span class="title" ng-bind-html="c.Title | highlight: $select.search"></span>
+                            <span class="pull-right"><i>{{containerTitle}}</i></span>
+                            <br/>{{c.Client}}
+                        </ui-select-choices>
+                    </ui-select>
+                    <span class="help-block">Select if you want to upload to an existing {{containerTitle}}</span>
+                </div>
+                <ng-upload-form ng-model="files"
+                                url="{{encoder}}"
+                                storage="{{uploadConfig.storage}}"
+                                container="{{uploadConfig.container}}"
+                                resume-upload="true"
+                                user="{{user}}"
+                                size="275"
+                                dropzone="#dropzone"
+                                template-url="/App/views/upload/dropzone.html"
+                                accept-file-types="'any'"
+                                max-chunk-size="10"
+                                multiple="false"
+                                size-limit="{{maxFileSize}}">
+                </ng-upload-form>
+            </form>
+        </div>
+    </div>
+</div>
