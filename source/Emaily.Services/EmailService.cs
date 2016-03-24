@@ -96,8 +96,8 @@ namespace Emaily.Services
                 AppId = x.AppId,
                 Custom = x.Custom,
                 Id = x.Id,
-                Title = x.Name,
-                HtmlText = x.PlainText,
+                Name = x.Name,
+                HtmlText = x.HtmlText,
                 PlainText = x.PlainText,
                 QueryString = x.QueryString,
                 Sender = new SenderViewModel

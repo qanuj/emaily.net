@@ -10,17 +10,14 @@
         $scope.readonly = $state.current.data.readonly;
 
         $scope.update = function (record, keepPage) {
-            record.Picture = record.picture.url || record.Picture;
-            record.NavLogo = record.navLogo.url || record.NavLogo;
-            record.Custom.Data = JSON.stringify(record.Custom.Bag);
             return db.post('template', record).then(function (result) {
-                if (result.RowsAffected) {
-                    logger.info('Template ' + record.Name, 'modification success.');
+                if (result.id>0) {
+                    logger.info('Template ' + record.name, 'modification success.');
                     if (!keepPage) {
                         $state.go('templates');
                     }
                 } else {
-                    logger.err('Template ' + record.Name, 'modification failed. '+result.Error);
+                    logger.err('Template ' + record.name, 'modification failed. '+result.Error);
                 }
             });
         }
@@ -33,7 +30,7 @@
 
         function bindEntity(result) {
             $scope.record = result;
-            $scope.record.picture = { url: result.picture, email: result.email, title: result.title };
+            $scope.record.picture = { url: result.picture, email: result.email, title: result.name };
         }
 
         function loadTemplate() {

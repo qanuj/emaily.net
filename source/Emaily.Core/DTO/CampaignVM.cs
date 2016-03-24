@@ -37,7 +37,7 @@ namespace Emaily.Core.DTO
     public class TemplateInfoVM
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
         public DateTime? Created { get; set; }
         public string Custom { get; set; }
         public IEnumerable<int> Lists { get; set; }
