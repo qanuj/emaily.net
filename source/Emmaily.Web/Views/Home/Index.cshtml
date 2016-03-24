@@ -1,15 +1,11 @@
-﻿@model Emaily.Web.Models.ConsoleViewModel
-@{
+﻿@{
     Layout = null;
-    var app = new {Name="Emaily",Theme="emaily"};
-    var folder = "layout";
-    if (Model.Role == "Client" || Model.Role == "ClientAdmin") { folder = "layout/client"; }
-    else if (Model.Role == "User") { folder = "layout/user"; }
+    var app = new {Name="Emaily",Theme="emaily",Role="Admin"};
 }
-<html lang="en" ng-app="app" data-app-name="@app.Name" data-app-theme="@app.Theme" data-app-roles="@Model.Role.ToLower()">
+<html lang="en" ng-app="app" data-app-name="@app.Name" data-app-theme="@app.Theme" data-app-roles="@app.Role.ToLower()">
 <head>
     <title>@app.Name</title>
-    <link href="~/content/themes/@app.Theme/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,20 +24,20 @@
         <div class="bounce2"></div>
         <div class="bounce3"></div>
     </div>
-    <div ng-include="'App_2/views/@folder/header.html'" ng-controller="HeaderController" class="page-header navbar navbar-fixed-top"></div>
+    <div ng-include="'App/views/layout/header.html'" ng-controller="HeaderController" class="page-header navbar navbar-fixed-top"></div>
     <div class="clearfix"></div>
     <div class="page-container">
-        <div ng-if="!sidebar" ng-include="'App_2/views/@folder/sidebar.html'" ng-controller="SidebarController" class="page-sidebar-wrapper"></div>
-        <div ng-if="sidebar" ng-include="'App_2/views/@folder/sidebar-left.html'" ng-controller="SidebarController" class="page-sidebar-wrapper"></div>
+        <div ng-if="!sidebar" ng-include="'App/views/layout/sidebar.html'" ng-controller="SidebarController" class="page-sidebar-wrapper"></div>
+        <div ng-if="sidebar" ng-include="'App/views/layout/sidebar-left.html'" ng-controller="SidebarController" class="page-sidebar-wrapper"></div>
         <div class="page-content-wrapper">
             <div class="page-content">
                 <div ui-view fill-height additional-padding="-10" debounce-wait="400" footer-element-id="page-footer"></div>
             </div>
         </div>
         <a ng-click="toggleQuick()" class="page-quick-sidebar-toggler"><i class="icon-login"></i></a>
-        <div ng-include="'App_2/views/layout/quick-sidebar.html'" class="page-quick-sidebar-wrapper"></div>
+        <div ng-include="'App/views/layout/quick-sidebar.html'" class="page-quick-sidebar-wrapper"></div>
     </div>
-    <div ng-include="'App_2/views/@folder/footer.html'" ng-controller="FooterController" id="page-footer" class="page-footer">
+    <div ng-include="'App/views/layout/footer.html'" ng-controller="FooterController" id="page-footer" class="page-footer">
     </div>
     @Scripts.Render("~/script/vendors")
     <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>

@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 
 namespace Emaily.Services
 {
-    
     public class EmailService : IEmailService
     {
         private readonly IRepository<App> _appRepository;

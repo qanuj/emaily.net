@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="AWSSDK.Core, Version=3.1.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
       <HintPath>..\packages\AWSSDK.Core.3.1.4.0\lib\net45\AWSSDK.Core.dll</HintPath>
       <Private>True</Private>
@@ -55,10 +59,14 @@
   <ItemGroup>
     <Compile Include="AmazonCloudService.cs" />
     <Compile Include="EmailService.cs" />
+    <Compile Include="IAmazonConfigProvider.cs" />
+    <Compile Include="ICloudConfigProvider.cs" />
     <Compile Include="ICloudProvider.cs" />
     <Compile Include="IEmailProvider.cs" />
     <Compile Include="IStorageProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionHelper.cs" />
+    <Compile Include="UtilService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Emaily.Core\Emaily.Core.csproj">

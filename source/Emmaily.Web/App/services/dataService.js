@@ -1,6 +1,6 @@
 ﻿app.factory('dataService',['$q', '$http', function (q,$http) {
     var cache = { config: null, enumText: {} };
-    var BASE = '/api/v2/my/';
+    var BASE = '/api/v1/';
     var pgSize = 24;
     var vm = {
         uri: function (ctrl) {

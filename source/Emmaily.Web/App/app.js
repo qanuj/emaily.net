@@ -273,7 +273,6 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
 
     $rootScope.cols = 'col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12';
     $rootScope.uploadList = {};
-    $rootScope.viewmode = viewMode;
     $rootScope.fields = [
         { id: 1, name: 'Text' },
         { id: 3, name: 'Number' },
@@ -311,6 +310,7 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
 
     function getAbout() {
         return about.get().then(function (result) {
+            result = result || { App:{Logo:'',Name:'Emaily'} }
             _sys = result;
             $rootScope.logo = result.App.Logo;
             $rootScope.name = result.App.Name;

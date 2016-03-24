@@ -11,20 +11,6 @@ using Emaily.Core.DTO;
 
 namespace Emaily.Services
 {
-    public interface ICloudConfigProvider
-    {
-        
-    }
-
-    public interface IAmazonConfigProvider : ICloudConfigProvider
-    {
-        string Region { get; }
-        string AccessKey { get;}
-        string Secret { get;}
-        string BounceTopic { get;}
-        string ComplaintTopic { get;}
-    }
-
     public class AmazonCloudService : ICloudProvider, IEmailProvider
     {
         private readonly AmazonSimpleEmailServiceClient _amazon;

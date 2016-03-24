@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Emaily.Core.Data;
 
 namespace Emaily.Web.Models
 {
@@ -16,6 +17,8 @@ namespace Emaily.Web.Models
             // Add custom user claims here
             return userIdentity;
         }
+        public ApplicationUserProfile Profile { get; set; }
+        public long? ProfileId { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

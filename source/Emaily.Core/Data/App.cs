@@ -7,6 +7,11 @@ using Emaily.Core.Enumerations;
 
 namespace Emaily.Core.Data
 {
+    public class ApplicationUserProfile : CustomEntity
+    {
+        public string Picture { get; set; }
+    }
+
     public class App : CustomEntity
     {
         public string OwnerId { get; set; } 

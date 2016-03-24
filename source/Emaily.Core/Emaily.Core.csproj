@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Abstraction\Events\IEventManager.cs" />
     <Compile Include="Abstraction\Persistence\IRepository.cs" />
+    <Compile Include="Abstraction\Services\IUtilService.cs" />
     <Compile Include="Data\App.cs" />
     <Compile Include="Data\AutoEmail.cs" />
     <Compile Include="Data\AutoResponder.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="DTO\CustomField.cs" />
     <Compile Include="DTO\CustomFieldVM.cs" />
     <Compile Include="DTO\EditCampaignVM.cs" />
+    <Compile Include="DTO\EnumList.cs" />
     <Compile Include="DTO\ListEmail.cs" />
     <Compile Include="DTO\ListVM.cs" />
     <Compile Include="DTO\RenameCustomFieldVM.cs" />
