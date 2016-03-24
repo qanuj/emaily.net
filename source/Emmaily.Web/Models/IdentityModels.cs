@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;  
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
@@ -8,9 +7,16 @@ using Emaily.Core.Abstraction;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Emaily.Core.Data;
+using Emaily.Core.Enumerations;
 
 namespace Emaily.Web.Models
 {
+    public class Role : IdentityRole
+    {
+        public ApiAccessEnum Write { get; set; }
+        public ApiAccessEnum Read { get; set; }
+    }
+
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class User : IdentityUser
     {

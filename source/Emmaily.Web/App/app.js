@@ -316,7 +316,7 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
     };
 
     function findPermission(me, name) {
-        return { write: me.Write.indexOf(name) > -1, read: me.Read.indexOf(name) > -1 || me.Write.indexOf(name) > -1 };
+        return { write: me.write.indexOf(name) > -1, read: me.read.indexOf(name) > -1 || me.write.indexOf(name) > -1 };
     }
     function buildPermission(me) {
         var perms = {}
@@ -329,7 +329,8 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
         return about.me().then(function (me) {
             $rootScope.user = me.ID;
             $rootScope.me = me;
-            if (me.Role == 'Admin') {
+            $rootScope.brands = me.apps;
+            if (me.role == 'Admin') {
                 me.Write = enums.apiaccessenum.join(' ');//HACK?
             }
             $rootScope.perm = buildPermission(me);

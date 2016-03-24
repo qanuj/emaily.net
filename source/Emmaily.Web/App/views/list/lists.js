@@ -1,8 +1,8 @@
 ﻿app.controller('listIndexController', [
     '$scope', 'dataService', '$stateParams', '$state', 'Popup', 'logger', function ($scope, db, $stateParams, $state, Popup, logger) {
         var table = 'list';
-        var more = 'Companies';
-        var title = "Companies";
+        var more = 'Lists';
+        var title = "Lists";
 
         $scope.title = "List";
         $scope.current = 'lists';
@@ -39,7 +39,7 @@
         }
 
         function trashOne(card) {
-            return db.trash(table, card.ID).then(function (result) {
+            return db.trash(table, card.Id).then(function (result) {
                 logger.log(title, 'Delete "' + card.Title + '" Successful', result);
             });
         }

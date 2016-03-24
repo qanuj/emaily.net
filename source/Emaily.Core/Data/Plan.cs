@@ -20,7 +20,7 @@ namespace Emaily.Core.Data
         public int? DiscountedPrice { get; set; }
 
         public Promo Promo { get; set; }
-        public int PromoId { get; set; }
+        public int? PromoId { get; set; }
 
         public CurrencyEnum Currency { get; set; }
 

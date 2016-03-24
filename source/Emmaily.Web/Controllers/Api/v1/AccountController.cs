@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Http;
 using Emaily.Core.Abstraction.Persistence;
 using Emaily.Core.Data;
+using Emaily.Core.Enumerations;
 using Emaily.Services.Extensions;
 using Emaily.Web.Models;
 using Microsoft.AspNet.Identity;
@@ -19,13 +20,17 @@ namespace Emaily.Web.Controllers.Api.v1
     [RoutePrefix("api/v1/account")]
     public class AccountController : BasicApiController
     {
-        private readonly ApplicationUserManager _userManager; 
+        private readonly ApplicationUserManager _userManager;
+        private readonly ApplicationRoleManager _roleManager;
         private readonly IRepository<UserProfile> _userProfileRepository;
+        private readonly IRepository<UserApps> _userAppRepository;
 
-        public AccountController(ApplicationUserManager userManager, IRepository<UserProfile> userProfileRepository)
+        public AccountController(ApplicationUserManager userManager, IRepository<UserProfile> userProfileRepository, ApplicationRoleManager roleManager, IRepository<UserApps> userAppRepository)
         {
             _userManager = userManager;
             _userProfileRepository = userProfileRepository;
+            _roleManager = roleManager;
+            _userAppRepository = userAppRepository;
         }
 
 
@@ -61,23 +66,29 @@ namespace Emaily.Web.Controllers.Api.v1
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("me/profile")]
-        public UserProfileViewModel Profile()
+        public async Task<UserProfileViewModel> Profile()
         {
             var user= _userManager.FindById(User.Identity.GetUserId());
             var profile = _userProfileRepository.ById(user.ProfileId??0);
             user.Profile = profile;
+            var roleInfo=user.Roles.FirstOrDefault();
+            var role = roleInfo==null ? null : await _roleManager.FindByIdAsync(roleInfo.RoleId);
             return new UserProfileViewModel
             {
-                Name = user.Profile?.Name,
-                Picture = user.Profile?.Picture,
+                Role = role?.Name,
+                Read = role?.Read ?? ApiAccessEnum.None,
+                Write = role?.Write ?? ApiAccessEnum.None,
                 Email = user.Email,
                 PhoneNumber=user.PhoneNumber,
                 EmailConfirmed = user.EmailConfirmed,
                 PhoneNumberConfirmed =  user.PhoneNumberConfirmed,
-                Address = user.Profile?.Address,
-                Birthday = user.Profile?.Birthday,
-                Country = user.Profile?.Country,
-                Postcode = user.Profile?.Postcode
+                Name =    profile?.Name,
+                Picture = profile?.Picture,
+                Address =  profile?.Address,
+                Birthday = profile?.Birthday,
+                Country =  profile?.Country,
+                Postcode = profile?.Postcode,
+                Apps = _userAppRepository.All.Where(x=>x.UserId==user.Id && !x.Deleted.HasValue).Select(x=> new NameId { Id=x.App.Id, Name=x.App.Name })
             };
         }
 

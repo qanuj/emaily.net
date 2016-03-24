@@ -75,10 +75,15 @@ namespace Emaily.Web
                 TokenLifespan = TimeSpan.FromHours(3)
             };
         }
+
+        public void AddAppToUser(int appId, string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    public class ApplicationRoleManager : RoleManager<IdentityRole> {
-        public ApplicationRoleManager(RoleStore<IdentityRole> store) : base(store){}
+    public class ApplicationRoleManager : RoleManager<Role> {
+        public ApplicationRoleManager(RoleStore<Role> store) : base(store){}
         
         public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
         {
@@ -92,7 +97,7 @@ namespace Emaily.Web
         public ApplicationUserStore(ApplicationDbContext context) : base(context) { }
     }
 
-    public class ApplicationRoleStore : RoleStore<IdentityRole>
+    public class ApplicationRoleStore : RoleStore<Role>
     {
         public ApplicationRoleStore(ApplicationDbContext context) : base(context) { }
     }

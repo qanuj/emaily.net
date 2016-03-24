@@ -9,7 +9,7 @@ namespace Emaily.Services
     {
         public EnumList Enums()
         {
-            var types = ReflectionHelper.GetEnumTypesInNamespace("Emaily.Core.Data");
+            var types = ReflectionHelper.GetEnumTypesInNamespace("Emaily.Core.Enumerations");
             var vals = new EnumList();
             foreach (var type in types)
             {

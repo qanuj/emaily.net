@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Emaily.Core.Data;
+using Emaily.Core.Enumerations;
 
 namespace Emaily.Web.Models
 {
@@ -32,7 +34,16 @@ namespace Emaily.Web.Models
     {
         public bool EmailConfirmed { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
-        
+        public string Role { get; set; }
+        public ApiAccessEnum Read { get; set; }
+        public ApiAccessEnum Write { get; set; }
+        public IEnumerable<NameId> Apps { get; set; } 
+    }
+
+    public class NameId
+    {
+        public string Name { get; set; }
+        public int Id { get; set; }
     }
 
     public class ExternalLoginListViewModel

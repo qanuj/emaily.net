@@ -13,7 +13,7 @@ namespace Emaily.Web
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<ApplicationRoleStore>().AsSelf().As<RoleStore<IdentityRole>>().InstancePerRequest();
+            builder.RegisterType<ApplicationRoleStore>().AsSelf().As<RoleStore<Role>>().InstancePerRequest();
             builder.RegisterType<ApplicationUserStore>().AsSelf().As<UserStore<User>>().InstancePerRequest();
 
             builder.RegisterType<ApplicationUserManager>().AsSelf().InstancePerRequest();

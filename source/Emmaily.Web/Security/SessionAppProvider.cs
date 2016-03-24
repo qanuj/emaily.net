@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Web;
 using Emaily.Core.Abstraction.Persistence;
@@ -36,44 +37,47 @@ namespace Emaily.Web.Security
     {
         public void VerifyEmail(string email)
         {
-            throw new System.NotImplementedException();
+           // throw new System.NotImplementedException();
         }
 
         public string VerifyDomain(string domain)
         {
-            throw new System.NotImplementedException();
+            return "do-later";
+            //throw new System.NotImplementedException();
         }
 
         public void RemoveEmail(string email)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
 
         public void RemoveDomain(string domain)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
         }
         public CloudServiceInfo Info { get; }
     }
     public class SessionAppProvider : IAppProvider
     {
-        private readonly IRepository<UserApps> _repository; 
-        public SessionAppProvider(IRepository<UserApps> repository)
+        private readonly IRepository<UserApps> _repository;
+        private readonly IIdentity _user; 
+        public SessionAppProvider(IRepository<UserApps> repository, IIdentity user)
         {
             _repository = repository;
+            _user = user;
         }
 
         private int[] _apps;
         public int[] Apps
         {
             get {
-                return _apps ?? (_apps = _repository.All.Where(x => x.UserId == OwnerId).Select(x => x.AppId).ToArray());
+                return _apps ?? (_apps = _repository.All.Where(x => !x.Deleted.HasValue && x.UserId == OwnerId).Select(x => x.AppId).ToArray());
             }
         }
 
         public string OwnerId
         {
-            get { return HttpContext.Current?.User?.Identity?.GetUserId(); }
+            get { return _user.GetUserId(); }
         }
     }
 }

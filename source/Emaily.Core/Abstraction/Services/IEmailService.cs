@@ -47,6 +47,6 @@ namespace Emaily.Core.Abstraction.Services
         bool DeleteTemplate(int id);
         ListInfoVM ListById(int id);
         bool DeleteList(int id);
-        IQueryable<CampaignReportVM> CampaignReports();
+        IQueryable<CampaignReportVM> CampaignReports(); 
     }
 }

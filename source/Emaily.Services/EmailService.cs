@@ -191,6 +191,7 @@ namespace Emaily.Services
                 UniqueOpens = x.Results.Select(y => y.SubscriberId).Distinct().Count()
             });
         }
+
         public IQueryable<TemplateVM> Templates()
         {
             return _templateRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new TemplateVM
@@ -222,8 +223,10 @@ namespace Emaily.Services
         }
         private void CheckIsMine(int appId)
         {
-            if (_appProvider.Apps.Any(x => appId == x)) throw new Exception("Access Denied");
+            if (appId <= 0) throw new ArgumentOutOfRangeException(nameof(appId));
+            if (!_appProvider.Apps.Any(x => appId == x)) throw new Exception("Access Denied");
         }
+
         private CampaignResult CreateResult(CampaignResultVM model, string userAgent, string country)
         {
             return _campaignResultRepository.Create(new CampaignResult
@@ -790,11 +793,7 @@ namespace Emaily.Services
             _listRepository.Update(list);
             _listRepository.SaveChanges();
         }
-
-        public IQueryable<CampaignVM> Campaigns(string userId)
-        {
-            throw new NotImplementedException();
-        }
+            
     }
 
     

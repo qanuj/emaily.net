@@ -253,6 +253,14 @@
     <Compile Include="Migrations\201603241251107_Templates have more fields.Designer.cs">
       <DependentUpon>201603241251107_Templates have more fields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603241335413_Role Permissions Added.cs" />
+    <Compile Include="Migrations\201603241335413_Role Permissions Added.Designer.cs">
+      <DependentUpon>201603241335413_Role Permissions Added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603241422093_Promo may not be needed.cs" />
+    <Compile Include="Migrations\201603241422093_Promo may not be needed.Designer.cs">
+      <DependentUpon>201603241422093_Promo may not be needed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -381,6 +389,8 @@
     <Content Include="App\views\account\account.about.html" />
     <Content Include="App\views\account\account.html" />
     <Content Include="App\views\account\accounts.js" />
+    <Content Include="App\views\list\list.create.html" />
+    <Content Include="App\views\list\list.create.js" />
     <Content Include="App\views\list\list.card.html" />
     <Content Include="App\views\list\list.cards.html" />
     <Content Include="App\views\list\lists.js" />
@@ -1249,6 +1259,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603241251107_Templates have more fields.resx">
       <DependentUpon>201603241251107_Templates have more fields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241335413_Role Permissions Added.resx">
+      <DependentUpon>201603241335413_Role Permissions Added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241422093_Promo may not be needed.resx">
+      <DependentUpon>201603241422093_Promo may not be needed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

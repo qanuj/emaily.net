@@ -102,7 +102,10 @@
             return post(url, model);
         },
         post: function (url, model) {
-            return post(BASE+url, model);
+            return post(BASE + url, model);
+        },
+        put: function (url, model) {
+            return post(BASE + url, model,'PUT');
         },
         getEx: function (url) {
             return get(url);
@@ -170,10 +173,10 @@
         }
     }
 
-    function post(url, model) {
+    function post(url, model,httpMethod) {
         var deferred = q.defer();
         $.ajax({
-            type: 'POST',
+            type: httpMethod||'POST',
             data: model,
             url: url,
             error: function (e) {

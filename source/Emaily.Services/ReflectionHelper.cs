@@ -10,6 +10,7 @@ namespace Emaily.Services
 {
     public static class ReflectionHelper
     {
+        private static string Name = "Emaily";
         public static IList<Type> GetTypesThatImplementingType(Type type)
         {
             IList<Type> types = AppDomain.CurrentDomain.GetAssemblies()
@@ -23,7 +24,7 @@ namespace Emaily.Services
         {
             try
             {
-                var mine = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith("Assetry")).SelectMany(s => s.GetTypes());
+                var mine = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith(Name)).SelectMany(s => s.GetTypes());
                 return mine.Where(x =>
                     x.IsInNamespace(_namespace) && x.IsEnum)
                     .ToList();
@@ -59,7 +60,7 @@ namespace Emaily.Services
 
         public static Type GetModelByName(string name)
         {
-            return AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith("Assetry"))
+            return AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith(Name))
                 .SelectMany(s => s.GetTypes())
                 .FirstOrDefault(x => String.Equals(x.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }

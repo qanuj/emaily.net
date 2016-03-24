@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Emaily.Core.Abstraction;
 
 namespace Emaily.Core.Data
 {
+    
     public class Link : Entity
     {
         public Campaign Campaign { get; set; }
