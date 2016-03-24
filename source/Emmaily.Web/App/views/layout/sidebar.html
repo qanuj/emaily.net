@@ -17,23 +17,23 @@
                 </form>
             </li>
             <li class="nav-item" ng-repeat="n in navigations">
-                <a ng-if="n.Childs.length==0" class="nav-link {{menuclass}}" ui-sref="{{n.Route}}"><i class="fa fa-{{n.Icon}}"></i> {{n.Title}}</a>
-                <a ng-if="n.Childs.length>0" href="javascript:;" class="nav-link nav-toggle">
-                    <span class="title {{menuclass}}"><i class="fa fa-{{n.Icon}}"></i> {{n.Title}}</span>
+                <a ng-if="n.childs.length==0" class="nav-link {{menuclass}}" ui-sref="{{n.route}}"><i class="fa fa-{{n.icon}}"></i> {{n.title}}</a>
+                <a ng-if="n.childs.length>0" href="javascript:;" class="nav-link nav-toggle">
+                    <span class="title {{menuclass}}"><i class="fa fa-{{n.icon}}"></i> {{n.title}}</span>
                     <span class="arrow"></span>
                 </a>
                 <ul class="sub-menu">
-                    <li ng-repeat="c in n.Childs" class="nav-item">
-                        <a ng-if="c.Childs.length==0 && c.Route" ui-sref="{{c.Route}}"><i class="fa fa-{{c.Icon}}"></i> {{c.Title}}</a>
-                        <a ng-if="c.Childs.length==0 && c.Href" href="{{c.Href}}" target="_blank"><i class="fa fa-{{c.Icon}}"></i> {{c.Title}}</a>
-                        <a ng-if="c.Childs.length>0" class="nav-link nav-toggle" href="javascript:;">
-                            <span class="title"><i class="fa fa-{{c.Icon}}"></i> {{c.Title}}</span>
+                    <li ng-repeat="c in n.childs" class="nav-item">
+                        <a ng-if="c.childs.length==0 && c.route" ui-sref="{{c.route}}"><i class="fa fa-{{c.icon}}"></i> {{c.title}}</a>
+                        <a ng-if="c.childs.length==0 && c.href" href="{{c.href}}" target="_blank"><i class="fa fa-{{c.icon}}"></i> {{c.title}}</a>
+                        <a ng-if="c.childs.length>0" class="nav-link nav-toggle" href="javascript:;">
+                            <span class="title"><i class="fa fa-{{c.icon}}"></i> {{c.title}}</span>
                             <span class="arrow"></span>
                         </a>
                         <ul class="sub-menu">
-                            <li ng-repeat-start="x in c.Childs" ng-if="x.IsSeperator" class="divider"></li>
+                            <li ng-repeat-start="x in c.childs" ng-if="x.isSeperator" class="divider"></li>
                             <li ng-repeat-end class="nav-item">
-                                <a ui-sref="{{x.Route}}"><span class="title"><i class="fa fa-{{x.Icon}}"></i> {{x.Title}}</span></a>
+                                <a ui-sref="{{x.route}}"><span class="title"><i class="fa fa-{{x.icon}}"></i> {{x.title}}</span></a>
                             </li>
                         </ul>
                     </li>

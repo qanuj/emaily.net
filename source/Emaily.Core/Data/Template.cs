@@ -7,7 +7,9 @@ namespace Emaily.Core.Data
         public App App { get; set; }
         public int AppId { get; set; }
 
-        public string Html { get; set; }
+        public string HtmlText { get; set; }
+        public string PlainText { get; set; }
+        public string QueryString { get; set; }
         public string OwnerId { get; set; }
     }
 }

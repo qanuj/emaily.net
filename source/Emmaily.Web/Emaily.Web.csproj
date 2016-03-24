@@ -223,6 +223,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BasicApiController.cs" />
     <Compile Include="Controllers\Api\v1\AccountController.cs" />
+    <Compile Include="Controllers\Api\v1\ListContoller.cs" />
+    <Compile Include="Controllers\Api\v1\TemplateContoller.cs" />
     <Compile Include="Controllers\Api\v1\CampaignContoller.cs" />
     <Compile Include="Controllers\Api\v1\UtilController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -246,6 +248,10 @@
     <Compile Include="Migrations\201603241224236_More Changes.cs" />
     <Compile Include="Migrations\201603241224236_More Changes.Designer.cs">
       <DependentUpon>201603241224236_More Changes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603241251107_Templates have more fields.cs" />
+    <Compile Include="Migrations\201603241251107_Templates have more fields.Designer.cs">
+      <DependentUpon>201603241251107_Templates have more fields.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -375,6 +381,15 @@
     <Content Include="App\views\account\account.about.html" />
     <Content Include="App\views\account\account.html" />
     <Content Include="App\views\account\accounts.js" />
+    <Content Include="App\views\list\list.card.html" />
+    <Content Include="App\views\list\list.cards.html" />
+    <Content Include="App\views\list\lists.js" />
+    <Content Include="App\views\reports\report.card.html" />
+    <Content Include="App\views\reports\report.cards.html" />
+    <Content Include="App\views\reports\reports.js" />
+    <Content Include="App\views\template\template.card.html" />
+    <Content Include="App\views\template\template.cards.html" />
+    <Content Include="App\views\template\templates.js" />
     <Content Include="App\views\campaign\campaigns.js" />
     <Content Include="App\views\campaign\campaign.card.html" />
     <Content Include="App\views\campaign\campaign.cards.html" />
@@ -411,7 +426,6 @@
     <Content Include="App\views\layout\header.html" />
     <Content Include="App\views\layout\page-bar.html" />
     <Content Include="App\views\layout\page-save.html" />
-    <Content Include="App\views\layout\sidebar-left.html" />
     <Content Include="App\views\layout\sidebar.html" />
     <Content Include="App\views\layout\top-nav.html" />
     <Content Include="App\views\layout\top-notify.html" />
@@ -438,12 +452,8 @@
     <Content Include="App\views\popup\trash.html" />
     <Content Include="App\views\popup\usage.html" />
     <Content Include="App\views\popup\video.html" />
-    <Content Include="App\views\reports\report.analytics.html" />
-    <Content Include="App\views\reports\report.analytics.js" />
-    <Content Include="App\views\reports\report.history.html" />
-    <Content Include="App\views\reports\report.history.js" />
-    <Content Include="App\views\reports\report.usage.html" />
-    <Content Include="App\views\reports\report.usage.js" />
+    <Content Include="App\views\reports\report.view.html" />
+    <Content Include="App\views\reports\report.view.js" />
     <Content Include="App\views\role\role.editor.html" />
     <Content Include="App\views\role\roles.js" />
     <Content Include="App\views\share\share.card.html" />
@@ -1236,6 +1246,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603241224236_More Changes.resx">
       <DependentUpon>201603241224236_More Changes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603241251107_Templates have more fields.resx">
+      <DependentUpon>201603241251107_Templates have more fields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

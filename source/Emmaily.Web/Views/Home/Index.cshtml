@@ -17,8 +17,7 @@
     @Styles.Render("~/Content/spa/css")
     @Styles.Render("~/content/spa/codemirror")
 </head>
-<body ng-controller="AppController" class="@app.Name.ToLower() page-header-fixed page-container-bg-solid page-content-white"
-      ng-class="{'page-quick-sidebar-open':quick,'page-full-width':!sidebar,'page-sidebar-closed':sidebarClosed}">
+<body ng-controller="AppController" class="@app.Name.ToLower() page-header-fixed page-sidebar-closed-hide-logo page-content-white page-full-width">
     <div ng-spinner-bar class="page-spinner-bar">
         <div class="bounce1"></div>
         <div class="bounce2"></div>
@@ -27,8 +26,7 @@
     <div ng-include="'App/views/layout/header.html'" ng-controller="HeaderController" class="page-header navbar navbar-fixed-top"></div>
     <div class="clearfix"></div>
     <div class="page-container">
-        <div ng-if="!sidebar" ng-include="'App/views/layout/sidebar.html'" ng-controller="SidebarController" class="page-sidebar-wrapper"></div>
-        <div ng-if="sidebar" ng-include="'App/views/layout/sidebar-left.html'" ng-controller="SidebarController" class="page-sidebar-wrapper"></div>
+        <div ng-include="'App/views/layout/sidebar.html'" ng-controller="SidebarController" class="page-sidebar-wrapper"></div>
         <div class="page-content-wrapper">
             <div class="page-content">
                 <div ui-view fill-height additional-padding="-10" debounce-wait="400" footer-element-id="page-footer"></div>

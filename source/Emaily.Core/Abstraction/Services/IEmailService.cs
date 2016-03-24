@@ -13,6 +13,7 @@ namespace Emaily.Core.Abstraction.Services
         ListVM UpdateList(UpdateListVM model);
         AppVM UpdateApp(UpdateAppVM model);
         void SendCampaign(SendCampaignVM model);
+
         CampaignVM CreateCampaign(CreateCampaignVM model);
         CampaignVM UpdateCampaign(EditCampaignVM model);
 
@@ -24,10 +25,13 @@ namespace Emaily.Core.Abstraction.Services
         void MarkSpam(CampaignResultVM model, string country, string userAgent);
         void MarkBounced(CampaignResultVM model, string country, string userAgent, bool IsSoftBounce);
         void CreateOrUpdateClick(CreateClickVM model, string country, string userAgent);
-        void CreateTemplate(CreateTemplateVM model);
-        void UpdateTemplate(UpdateTemplateVM model);
+
+        TemplateVM CreateTemplate(CreateTemplateVM model);
+        TemplateVM UpdateTemplate(UpdateTemplateVM model);
+
         void CreateAutoEmail(CreateAutoEmailVM model);
         void UpdateAutoEmail(UpdateAutoEmailVM model);
+
         void CreateAutoResponder(CreateAutoResponderVM model);
         void UpdateAutoResponder(UpdateAutoResponderVM model);
 
@@ -36,7 +40,13 @@ namespace Emaily.Core.Abstraction.Services
         void DeleteCustomField(CustomFieldVM model);
 
         IQueryable<CampaignVM> Campaigns();
+        IQueryable<TemplateVM> Templates();
         IQueryable<ListVM> Lists();
         IQueryable<AppVM> Apps();
+        TemplateInfoVM TemplateById(int id);
+        bool DeleteTemplate(int id);
+        ListInfoVM ListById(int id);
+        bool DeleteList(int id);
+        IQueryable<CampaignReportVM> CampaignReports();
     }
 }

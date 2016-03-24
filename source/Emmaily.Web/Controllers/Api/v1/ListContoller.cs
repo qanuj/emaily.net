@@ -1,7 +1,5 @@
 ﻿using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Query;
@@ -14,93 +12,82 @@ namespace Emaily.Web.Controllers.Api.v1
     ///  Manages system accounts.
     /// </summary>
     [Authorize]
-    [RoutePrefix("api/v1/campaign")]
-    public class CampaignController : BasicApiController
+    [RoutePrefix("api/v1/list")]
+    public class ListController : BasicApiController
     {
         private readonly IEmailService _service;
 
-        public CampaignController(IEmailService service)
+        public ListController(IEmailService service)
         {
             _service = service;
         }
 
         /// <summary>
-        /// Returns campaign information
+        /// Returns template information
         /// </summary>
         /// <param name="options"></param>
         /// <returns></returns>
         [HttpGet, Route]
-        public PageResult<CampaignVM> GetAsOData(ODataQueryOptions<CampaignVM> options)
+        public PageResult<ListVM> GetAsOData(ODataQueryOptions<ListVM> options)
         {
-            return Page(_service.Campaigns(), options);
+            return Page(_service.Lists(), options);
         }
-
+        
         /// <summary>
-        /// Returns all campaign information
+        /// Returns all template information
         /// </summary>
         /// <returns></returns>
         [HttpGet, Route("all"), EnableQuery]
-        public IQueryable<CampaignVM> GetAll()
+        public IQueryable<ListVM> GetAll()
         {
-            return _service.Campaigns();
+            return _service.Lists();
         }
 
         /// <summary>
-        /// Returns campaign report information
-        /// </summary>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        [HttpGet, Route("report")]
-        public PageResult<CampaignReportVM> GetReportAsOData(ODataQueryOptions<CampaignReportVM> options)
-        {
-            return Page(_service.CampaignReports(), options);
-        }
-
-        /// <summary>
-        /// PUT command to insert a campaign
+        /// PUT command to insert a template
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut, Route]
-        public HttpResponseMessage Put(CreateCampaignVM model)
+        public HttpResponseMessage Put(CreateListVM model)
         {
             if (ModelState.IsValid)
             {
-                var item = _service.CreateCampaign(model); 
+                var item = _service.CreateList(model); 
                 return Accepted(item);
             }
             return Bad(ModelState);
         }
 
         /// <summary>
-        /// POST command to update a campaign
+        /// POST command to update a template
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, Route]
-        public HttpResponseMessage Post(EditCampaignVM model)
+        public HttpResponseMessage Post(UpdateListVM model)
         {
             if (ModelState.IsValid)
             {
-                var item = _service.UpdateCampaign(model);
+                var item = _service.UpdateList(model);
                 return Accepted(item);
             }
             return Bad(ModelState);
         }
 
         /// <summary>
-        /// Returns a campaign by id
+        /// Returns a template by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet, Route("{id}")]
-        public CampaignInfoVM Get([FromUri]int id)
+        public ListInfoVM Get([FromUri]int id)
         {
-            return _service.CampaignById(id);
+            return _service.ListById(id);
         }
 
         /// <summary>
-        /// Deletes a campaign by id
+        /// Deletes a template by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -109,7 +96,7 @@ namespace Emaily.Web.Controllers.Api.v1
         {
             if (ModelState.IsValid)
             {
-                var item = _service.DeleteCampaign(id);
+                var item = _service.DeleteList(id);
                 return Accepted(item);
             }
             return Bad(ModelState);

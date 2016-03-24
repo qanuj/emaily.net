@@ -87,6 +87,68 @@ namespace Emaily.Services
                 Used = x.Used
             });
         }
+
+        public TemplateInfoVM TemplateById(int id)
+        {
+            var template = _templateRepository.All.Where(x => x.Id == id && !x.Deleted.HasValue).Select(x =>
+            new TemplateInfoVM
+            {
+                AppId = x.AppId,
+                Custom = x.Custom,
+                Id = x.Id,
+                Title = x.Name,
+                HtmlText = x.PlainText,
+                PlainText = x.PlainText,
+                QueryString = x.QueryString
+            }).FirstOrDefault();
+            if (template == null) throw new Exception("Template not found");
+            CheckIsMine(template.AppId);
+            return template;
+        }
+
+        public bool DeleteTemplate(int id)
+        {
+            var template = _templateRepository.ById(id);
+            if (template == null) throw new Exception("Template not found");
+            CheckIsMine(template.AppId);
+
+            template.Deleted = DateTime.UtcNow;
+            _templateRepository.Update(template);
+            return _templateRepository.SaveChanges() > 0;
+        }
+
+        public ListInfoVM ListById(int id)
+        {
+            var list = _listRepository.All.Where(x => x.Id == id && !x.Deleted.HasValue).Select(x =>
+            new ListInfoVM
+            {
+                Id = x.Id,
+                Name = x.Name,
+                AppId = x.AppId,
+                ConfirmUrl = x.ConfirmUrl,
+                GoodBye = x.GoodBye,
+                Confirmation = x.Confirmation,
+                ThankYou = x.ThankYou,
+                IsOptIn = x.IsOptIn,
+                UnsubscribedUrl = x.UnsubscribedUrl,
+                Custom = x.Custom
+            }).FirstOrDefault();
+            if (list == null) throw new Exception("List not found");
+            CheckIsMine(list.AppId);
+            return list;
+        }
+
+        public bool DeleteList(int id)
+        {
+            var list = _listRepository.ById(id);
+            if (list == null) throw new Exception("List not found");
+            CheckIsMine(list.AppId);
+
+            list.Deleted = DateTime.UtcNow;
+            _listRepository.Update(list);
+            return _listRepository.SaveChanges() > 0;
+        }
+
         public IQueryable<ListVM> Lists()
         {
             return _listRepository.All.Where(x=> _appProvider.Apps.Contains(x.AppId)).Select(x => new ListVM
@@ -114,6 +176,27 @@ namespace Emaily.Services
                 Started = x.Started,
                 UniqueClicks = x.Links.Sum(z => z.Clicks.Select(y => y.SubscriberId).Distinct().Count()),
                 UniqueOpens = x.Results.Select(y => y.SubscriberId).Distinct().Count()
+            });
+        }
+        public IQueryable<CampaignReportVM> CampaignReports()
+        {
+            return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.Id) &&  x.Started.HasValue).Select(x => new CampaignReportVM
+            {
+                Id = x.Id,
+                Title = x.Label == "" || x.Label == null ? x.Name : x.Label,
+                Status = x.Status,
+                Recipients = x.Recipients,
+                Started = x.Started.Value,
+                UniqueClicks = x.Links.Sum(z => z.Clicks.Select(y => y.SubscriberId).Distinct().Count()),
+                UniqueOpens = x.Results.Select(y => y.SubscriberId).Distinct().Count()
+            });
+        }
+        public IQueryable<TemplateVM> Templates()
+        {
+            return _templateRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new TemplateVM
+            {
+                Id = x.Id,
+                Title = x.Name
             });
         }
 
@@ -522,36 +605,44 @@ namespace Emaily.Services
             _clickRepository.SaveChanges(); //incase the open has not fired.
 
         }
-        public void CreateTemplate(CreateTemplateVM model)
+        public TemplateVM CreateTemplate(CreateTemplateVM model)
         {
             var app = _appRepository.ById(model.AppId);
             if (app == null) throw new Exception("App not found");
             CheckIsMine(app.Id);
 
-            _templateRepository.Create(new Template
+            var template=_templateRepository.Create(new Template
             {
                AppId = model.AppId,
                Name = model.Name,
                Custom = JsonConvert.SerializeObject(model.Custom),
-               Html = model.Html,
-               OwnerId = _appProvider.OwnerId
+                HtmlText = model.HtmlText,
+                PlainText = model.PlainText,
+                QueryString = model.QueryString,
+                OwnerId = _appProvider.OwnerId
             });
             _templateRepository.SaveChanges();
 
+            return Templates().FirstOrDefault(x => x.Id == template.Id);
+
         }
-        public void UpdateTemplate(UpdateTemplateVM model)
+        public TemplateVM UpdateTemplate(UpdateTemplateVM model)
         {
             var template = _templateRepository.ById(model.Id);
             if (template == null) throw new Exception("Template not found");
             CheckIsMine(template.AppId);
 
             template.Name = model.Name;
-            template.Html = model.Html;
+            template.HtmlText = model.HtmlText;
+            template.PlainText = model.PlainText;
+            template.QueryString = model.QueryString;
             template.Custom = JsonConvert.SerializeObject(model.Custom);
 
             _templateRepository.Update(template);
 
             _templateRepository.SaveChanges();
+
+            return Templates().FirstOrDefault(x => x.Id == template.Id);
         }
         public void CreateAutoEmail(CreateAutoEmailVM model)
         {

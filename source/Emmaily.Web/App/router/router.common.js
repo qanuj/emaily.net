@@ -65,6 +65,20 @@
             controller: "campaignCreateController",
             resolve: {}
         })
+        .state('reports', {
+            url: "/reports?page&parent&pageSize&q&mode",
+            templateUrl: root + "reports/report.cards.html",
+            data: { title: 'Campaign Reports' },
+            controller: "reportIndexController",
+            resolve: {}
+        })
+        .state('viewReport', {
+            url: "/report/:id",
+            templateUrl: root + "reports/report.view.html",
+            data: { title: 'View Campaign Reports' },
+            controller: "reportViewController",
+            resolve: {}
+        })
         .state('lists', {
             url: "/lists?page&parent&pageSize&q&mode",
             templateUrl: root + "list/list.cards.html",
@@ -77,6 +91,20 @@
             templateUrl: root + "list/list.edit.html",
             data: { title: 'List' },
             controller: "listEditController",
+            resolve: {}
+        })
+        .state('templates', {
+            url: "/templates?page&parent&pageSize&q&mode",
+            templateUrl: root + "template/template.cards.html",
+            data: { title: 'Templates' },
+            controller: "templateIndexController",
+            resolve: {}
+        })
+        .state('edittTemplate', {
+            url: "/template/edit/:id",
+            templateUrl: root + "template/template.edit.html",
+            data: { title: 'List' },
+            controller: "templateEditController",
             resolve: {}
         })
         .state('customs', {

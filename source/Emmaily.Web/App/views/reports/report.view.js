@@ -1,4 +1,4 @@
-﻿app.controller('usageReportController', [
+﻿app.controller('reportViewController', [
      '$scope', 'dataService',  function ($scope, db) {
 
          var title = "Usage";
