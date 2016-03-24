@@ -79,8 +79,8 @@
     <Compile Include="DTO\UpdateSubscriptionVM.cs" />
     <Compile Include="DTO\UpdateTemplateVM.cs" />
     <Compile Include="Enumerations\AutoResponderEnum.cs" />
-    <Compile Include="Data\Campaign.cs" />
-    <Compile Include="Abstraction\CampaignBase.cs" />
+    <Compile Include="Data\NormalCampaign.cs" />
+    <Compile Include="Abstraction\Campaign.cs" />
     <Compile Include="Data\CampaignList.cs" />
     <Compile Include="Data\Click.cs" />
     <Compile Include="Data\Client.cs" />

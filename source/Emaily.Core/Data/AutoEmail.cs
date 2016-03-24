@@ -2,7 +2,7 @@
 
 namespace Emaily.Core.Data
 {
-    public class AutoEmail : CampaignBase
+    public class AutoEmail : Campaign
     {
         public AutoResponder AutoResponder { get; set; }
         public int AutoResponderId { get; set; }

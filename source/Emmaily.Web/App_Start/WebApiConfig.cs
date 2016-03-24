@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using System.Web.Http.OData.Extensions;
 using System.Web.Http.Routing;
 using Newtonsoft.Json;
 
@@ -90,9 +91,6 @@ namespace Emaily.Web
             config.MapHttpAttributeRoutes(constraintResolver, new CustomDirectRouteProvider());
             config.AddODataQueryFilter();
             config.Filters.Add(new UnhandledExceptionFilter());
-
-            // Web API routes
-            config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

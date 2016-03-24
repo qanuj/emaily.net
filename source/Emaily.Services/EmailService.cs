@@ -22,7 +22,7 @@ namespace Emaily.Services
         private readonly IRepository<Template> _templateRepository;
         private readonly IRepository<Click> _clickRepository;
         private readonly IRepository<Client> _clientRepository;
-        private readonly IRepository<Campaign> _campaignRepository;
+        private readonly IRepository<NormalCampaign> _campaignRepository;
         private readonly IRepository<CampaignList> _campaignListRepository;
         private readonly IRepository<CampaignResult> _campaignResultRepository;
         private readonly IRepository<Link> _linkRepository;
@@ -35,7 +35,7 @@ namespace Emaily.Services
         private readonly IAppProvider _appProvider;
 
 
-        public EmailService(IRepository<App> appRepository, IRepository<Plan> planRepository, IRepository<Client> clientRepository, IRepository<Campaign> campaignRepository, IRepository<List> listRepository, IRepository<AutoEmail> autoEmailRepository, IRepository<AutoResponder> autoResponderRepository, IRepository<Domain> domainRepository,
+        public EmailService(IRepository<App> appRepository, IRepository<Plan> planRepository, IRepository<Client> clientRepository, IRepository<NormalCampaign> campaignRepository, IRepository<List> listRepository, IRepository<AutoEmail> autoEmailRepository, IRepository<AutoResponder> autoResponderRepository, IRepository<Domain> domainRepository,
             IRepository<Template> templateRepository, IRepository<CampaignList> campaignListRepository, IRepository<CampaignResult> campaignResultRepository, IRepository<Link> linkRepository, IRepository<Subscriber> subscriberRepository, IRepository<Promo> promoRepository, IEmailProvider emailProvider, IStorageProvider storageProvider, ICloudProvider cloudProvider, IAppProvider appProvider, IRepository<Click> clickRepository)
         {
             _appRepository = appRepository;
@@ -286,7 +286,7 @@ namespace Emaily.Services
             campaign.Recipients = 0;
             campaign.Status = CampaignStatusEnum.Active;
             campaign.Future = model.Future;
-            campaign.Timezone = model.Timezone;
+            campaign.TimeZone = model.TimeZone;
 
             var lists = _listRepository.ById(model.Lists);
             foreach (var list in lists)
@@ -307,7 +307,7 @@ namespace Emaily.Services
             if (app == null) throw new Exception("App not found");
             CheckIsMine(app.Id);
 
-            var campaign = _campaignRepository.Create(new Campaign
+            var campaign = _campaignRepository.Create(new NormalCampaign
             {
                 Name = model.Name,
                 Label = model.Label,
@@ -374,7 +374,6 @@ namespace Emaily.Services
             {
                 PlanId = plan.Id,
                 PromoId = promoId,
-                OwnerId = _appProvider.OwnerId,
                 AppKey = GenerateRandomString(16),
                 Clients=new List<Client>
                 {

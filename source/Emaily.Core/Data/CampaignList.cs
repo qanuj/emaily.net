@@ -7,7 +7,7 @@ namespace Emaily.Core.Data
         public List List { get; set; }
         public int ListId { get; set; }
 
-        public Campaign Campaign { get; set; }
+        public NormalCampaign Campaign { get; set; }
         public int CampaignId { get; set; }
     }
 }

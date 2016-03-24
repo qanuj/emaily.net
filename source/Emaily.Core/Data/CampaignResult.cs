@@ -8,7 +8,7 @@ namespace Emaily.Core.Data
         public Subscriber Subscriber { get; set; }
         public int SubscriberId { get; set; }
 
-        public CampaignBase Campaign { get; set; }
+        public Campaign Campaign { get; set; }
         public int CampaignId { get; set; }
 
         public string Country { get; set; }

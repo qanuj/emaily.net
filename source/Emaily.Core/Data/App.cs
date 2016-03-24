@@ -2,20 +2,19 @@
 using System.Collections;
 using Emaily.Core.Abstraction;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Emaily.Core.Data.Complex;
 using Emaily.Core.Enumerations;
 
 namespace Emaily.Core.Data
 {
-    public class ApplicationUserProfile : CustomEntity
+    public class UserProfile : CustomEntity
     {
         public string Picture { get; set; }
     }
 
     public class App : CustomEntity
-    {
-        public string OwnerId { get; set; } 
-
+    {                
         public CurrencyEnum Currency { get; set; }
         public SmtpInfo Smtp { get; set; }
         public EmailAddress Sender { get; set; }
@@ -35,7 +34,7 @@ namespace Emaily.Core.Data
         public Promo Promo { get; set; }
         public int? PromoId { get; set; }
 
-        public IList<CampaignBase> Campaigns { get; set; }
+        public IList<Campaign> Campaigns { get; set; }
         public IList<Client> Clients { get; set; }
         public IList<List> Lists { get; set; }
         public IList<Subscriber> Subscribers { get; set; }
@@ -45,7 +44,7 @@ namespace Emaily.Core.Data
         {
             this.Smtp=new SmtpInfo();
             this.Sender=new EmailAddress();
-            this.Campaigns=new List<CampaignBase>();
+            this.Campaigns=new List<Campaign>();
             this.Clients=new List<Client>();
             this.Lists=new List<List>();
             this.Subscribers = new List<Subscriber>();

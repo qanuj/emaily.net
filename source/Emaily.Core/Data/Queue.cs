@@ -4,7 +4,7 @@ namespace Emaily.Core.Data
 {
     public class Queue : Entity
     {
-        public CampaignBase Campaign { get; set; }
+        public Campaign Campaign { get; set; }
         public int? CampaignId { get; set; }
 
         public Subscriber Subscriber { get; set; }
