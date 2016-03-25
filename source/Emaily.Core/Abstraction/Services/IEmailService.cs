@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Emaily.Core.DTO;
+using System.Threading.Tasks;
 
 namespace Emaily.Core.Abstraction.Services
 {
@@ -9,8 +10,8 @@ namespace Emaily.Core.Abstraction.Services
     {
         ListVM CreateList(CreateListVM model);
         void Subscribe(CreateSubscriber model);
-        ImportResult ImportSubscribers(string importData, int listId);
-        ImportResult ImportSubscribers(TextReader reader, int listId);
+        Task ImportSubscribers(string importData, int listId);
+        Task ImportSubscribers(TextReader reader, int listId);
 
         void ConfirmSubscription(UpdateSubscriptionVM model);
         void Unsubscribe(ListEmail model);

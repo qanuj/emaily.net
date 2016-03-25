@@ -69,8 +69,8 @@ namespace Emaily.Web.Controllers.Api.v1
                 var filePath = HostingEnvironment.MapPath(string.Format("~/App_Data/Uploads/{0}.csv", filename));
                 if (File.Exists(filePath))
                 {
-                    var item = _service.ImportSubscribers(File.OpenText(filePath) , list);
-                    return Accepted(item);
+                    _service.ImportSubscribers(File.OpenText(filePath) , list);
+                    return Accepted(new {started=true});
                 }
                 return Bad(new {error="File not found",filename= filePath });
             }

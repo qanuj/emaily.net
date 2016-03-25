@@ -13,7 +13,6 @@ namespace Emaily.Web.Hubs
         public string UserId { get; set; }
         public string Sender { get; set; }
         public DateTime At { get; set; }
-        public string Mode { get; set; }
 
         public SendMessageViewModel()
         {
@@ -31,8 +30,7 @@ namespace Emaily.Web.Hubs
     {
         public void Notify(string userId, NotificationTypeEnum mode, dynamic message)
         {
-            message.mode = mode.ToString();
-            GlobalHost.ConnectionManager.GetHubContext<NotificationHub>().Clients.Group(userId).Any(message);
+            GlobalHost.ConnectionManager.GetHubContext<NotificationHub>().Clients.Group(userId).Any(mode.ToString(),message);
         }
     }
 
@@ -47,7 +45,7 @@ namespace Emaily.Web.Hubs
 
     public class NotificationHub : Hub
     {
-        
+        private readonly string chat = NotificationTypeEnum.Chat.ToString();
         public override Task OnConnected()
         {
             var userId = Context.QueryString["userid"];
@@ -55,7 +53,7 @@ namespace Emaily.Web.Hubs
             if (!string.IsNullOrWhiteSpace(userId))
             {
                 Groups.Add(Context.ConnectionId, userId);
-                Say(string.Format("{0} is in room.", this.Context.User.Identity.Name), userId);
+                Say(string.Format("{0} connected", this.Context.User.Identity.Name), userId);
             }
             return base.OnConnected();
         }
@@ -67,10 +65,9 @@ namespace Emaily.Web.Hubs
 
         private void Say(string msg, string room = "")
         {
-            this.Clients.Group(room).Broadcast(new SendMessageViewModel<string>
+            this.Clients.Group(room).Any(chat, new SendMessageViewModel <string>
             {
                 Sender = "System",
-                Mode = NotificationTypeEnum.Chat.ToString(),
                 Message = msg,
                 UserId = room
             });
@@ -82,10 +79,10 @@ namespace Emaily.Web.Hubs
             msg.Sender = this.Context.User.Identity.Name;
             if (string.IsNullOrWhiteSpace(msg.Message.Room))
             {
-                this.Clients.AllExcept(this.Context.ConnectionId).Broadcast(msg);
+                this.Clients.AllExcept(this.Context.ConnectionId).Any(chat, msg);
             }
             else {
-                this.Clients.Group(msg.Message.Room).Broadcast(msg);
+                this.Clients.Group(msg.Message.Room).Any(chat, msg);
             }
         }
     }

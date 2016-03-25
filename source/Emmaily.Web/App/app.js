@@ -241,8 +241,8 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
         return perms;
     }
     
-    function onAnyMessage(msg) {
-        console.log('Next', msg);
+    function onAnyMessage(mode,msg) {
+        console.log('Next', mode,msg);
     }
 
     function getMySelf() {

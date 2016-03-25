@@ -82,7 +82,7 @@ namespace Emaily.Services
         private readonly IRepository<Plan> _planRepository;
         private readonly IRepository<AutoEmail> _autoEmailRepository;
         private readonly IRepository<AutoResponder> _autoResponderRepository;
-        private readonly IRepository<Domain> _domainRepository; 
+        private readonly IRepository<Domain> _domainRepository;
         private readonly IRepository<Template> _templateRepository;
         private readonly IRepository<Click> _clickRepository;
         private readonly IRepository<Client> _clientRepository;
@@ -98,29 +98,29 @@ namespace Emaily.Services
         private readonly ICloudProvider _cloudProvider;
         //private readonly IStorageProvider _storageProvider;
         private readonly IAppProvider _appProvider;
-        private readonly INotificationHub _notificationHub; 
+        private readonly INotificationHub _notificationHub;
 
 
         public EmailService(
-            IRepository<App> appRepository, 
-            IRepository<Plan> planRepository, 
-            IRepository<Client> clientRepository, 
-            IRepository<NormalCampaign> campaignRepository, 
+            IRepository<App> appRepository,
+            IRepository<Plan> planRepository,
+            IRepository<Client> clientRepository,
+            IRepository<NormalCampaign> campaignRepository,
             IRepository<List> listRepository,
             IRepository<SubscriberReport> subscriberReportRepository,
-            IRepository<AutoEmail> autoEmailRepository, 
-            IRepository<AutoResponder> autoResponderRepository, 
-            IRepository<Domain> domainRepository, 
-            IRepository<Template> templateRepository, 
-            IRepository<CampaignList> campaignListRepository, 
-            IRepository<CampaignResult> campaignResultRepository, 
-            IRepository<Link> linkRepository, 
-            IRepository<Subscriber> subscriberRepository, 
+            IRepository<AutoEmail> autoEmailRepository,
+            IRepository<AutoResponder> autoResponderRepository,
+            IRepository<Domain> domainRepository,
+            IRepository<Template> templateRepository,
+            IRepository<CampaignList> campaignListRepository,
+            IRepository<CampaignResult> campaignResultRepository,
+            IRepository<Link> linkRepository,
+            IRepository<Subscriber> subscriberRepository,
             IRepository<Promo> promoRepository,
             IRepository<Click> clickRepository,
-            IEmailProvider emailProvider, 
-            ICloudProvider cloudProvider, 
-            IAppProvider appProvider, 
+            IEmailProvider emailProvider,
+            ICloudProvider cloudProvider,
+            IAppProvider appProvider,
             INotificationHub notificationHub)
         {
             _appRepository = appRepository;
@@ -130,7 +130,7 @@ namespace Emaily.Services
             _listRepository = listRepository;
             _autoEmailRepository = autoEmailRepository;
             _autoResponderRepository = autoResponderRepository;
-            _domainRepository = domainRepository; 
+            _domainRepository = domainRepository;
             _templateRepository = templateRepository;
             _campaignListRepository = campaignListRepository;
             _campaignResultRepository = campaignResultRepository;
@@ -171,7 +171,7 @@ namespace Emaily.Services
                 PlainText = x.PlainText,
                 QueryString = x.QueryString,
                 Sender = new SenderViewModel
-                {                     
+                {
                     ReplyTo = x.Sender.ReplyTo,
                     Email = x.Sender.Email,
                     Name = x.Sender.Name
@@ -240,7 +240,7 @@ namespace Emaily.Services
         }
         public IQueryable<SubscriberVM> Subscribers(int listId)
         {
-            return _subscriberRepository.All.Where(x => x.ListId== listId && _appProvider.Apps.Contains(x.AppId)).Select(x => new SubscriberVM
+            return _subscriberRepository.All.Where(x => x.ListId == listId && _appProvider.Apps.Contains(x.AppId)).Select(x => new SubscriberVM
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -260,7 +260,7 @@ namespace Emaily.Services
             {
                 Errors = x.Errors,
                 Id = x.Id,
-                Title = x.Label=="" || x.Label==null ?  x.Name : x.Label,
+                Title = x.Label == "" || x.Label == null ? x.Name : x.Label,
                 Status = x.Status,
                 Recipients = x.Recipients,
                 Started = x.Started,
@@ -270,7 +270,7 @@ namespace Emaily.Services
         }
         public IQueryable<CampaignReportVM> CampaignReports()
         {
-            return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.Id) &&  x.Started.HasValue).Select(x => new CampaignReportVM
+            return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.Id) && x.Started.HasValue).Select(x => new CampaignReportVM
             {
                 Id = x.Id,
                 Title = x.Label == "" || x.Label == null ? x.Name : x.Label,
@@ -282,19 +282,20 @@ namespace Emaily.Services
             });
         }
 
-        private void UpdateSubcriberReport(List list, int addedOrRemoved)
+        private async Task UpdateSubcriberReport(List list, int addedOrRemoved)
         {
-            if (addedOrRemoved == 0) return;
-            var lastOne=_subscriberReportRepository.All.OrderByDescending(x => x.Id).FirstOrDefault(x => x.ListId == list.Id);
-            if (lastOne != null)
-            {
-                addedOrRemoved += lastOne.Total;
+            if (addedOrRemoved != 0) { 
+                var lastOne = _subscriberReportRepository.All.OrderByDescending(x => x.Id).FirstOrDefault(x => x.ListId == list.Id);
+                if (lastOne != null)
+                {
+                    addedOrRemoved += lastOne.Total;
+                }
+                list.TotalRecord = addedOrRemoved;
+                _listRepository.Update(list);
+                _subscriberReportRepository.Create(new SubscriberReport(addedOrRemoved, list.Id));
+                _notificationHub.Notify(list.OwnerId, NotificationTypeEnum.Import, new { list = list.Id, total = list.TotalRecord });
+                await _subscriberReportRepository.SaveChangesAsync();
             }
-            list.TotalRecord = addedOrRemoved;
-            _listRepository.Update(list);
-            _subscriberReportRepository.Create(new SubscriberReport(addedOrRemoved,list.Id));
-            _subscriberReportRepository.SaveChanges();
-            _notificationHub.Notify(list.OwnerId,NotificationTypeEnum.Import, new {list=list.Id, total=list.TotalRecord });
         }
 
         public SubscriberVM UpdateSubscriber(UpdateSubscriberVM model)
@@ -311,7 +312,7 @@ namespace Emaily.Services
         {
             var subscriber = _subscriberRepository.ById(id);
             var listOf = _listRepository.ById(list);
-            if (subscriber == null || subscriber.ListId!=list) throw new Exception("List not found");
+            if (subscriber == null || subscriber.ListId != list) throw new Exception("List not found");
             CheckIsMine(listOf.AppId);
 
             _subscriberRepository.Delete(subscriber);
@@ -374,7 +375,7 @@ namespace Emaily.Services
 
             if (_listRepository.All.Any(x => x.AppId == model.AppId && x.Name == model.Name)) throw new Exception("List already exists");
 
-            var list = _listRepository.Create(new List { AppId = model.AppId, Name = model.Name, Key=GenerateRandomString(model.Name) });
+            var list = _listRepository.Create(new List { AppId = model.AppId, Name = model.Name, Key = GenerateRandomString(model.Name) });
             _listRepository.SaveChanges();
 
             return Lists().FirstOrDefault(x => x.Id == list.Id);
@@ -389,8 +390,8 @@ namespace Emaily.Services
         {
             return !(string.IsNullOrWhiteSpace(email) || !new RegexUtilities().IsValidEmail(email));
         }
-       
-        private void SubscribeInternal(CreateSubscriber model,List list, bool updateCounts=true, bool sendEmail=true)
+
+        private void SubscribeInternal(CreateSubscriber model, List list, bool updateCounts = true, bool sendEmail = true)
         {
             if (list == null) throw new Exception("List not found");
 
@@ -398,7 +399,7 @@ namespace Emaily.Services
             if (!IsValidEmail(model.Email)) throw new Exception("Invalid Email address");
 
             var app = _appRepository.ById(list.AppId);
-            if (_subscriberRepository.All.Any(x => x.Email == model.Email && x.ListId==list.Id)) throw new Exception("Already subscribed");
+            if (_subscriberRepository.All.Any(x => x.Email == model.Email && x.ListId == list.Id)) throw new Exception("Already subscribed");
             if (_subscriberRepository.All.Any(x => x.Email == model.Email && x.IsBounced)) throw new Exception("Already bounced");
 
             var subscriber = _subscriberRepository.Create(new Subscriber
@@ -409,7 +410,7 @@ namespace Emaily.Services
                 Name = model.Name,
                 ListId = model.ListId,
                 OwnerId = _appProvider.OwnerId,
-                Token=GenerateRandomString(model.Email)
+                Token = GenerateRandomString(model.Email)
             });
 
             if (updateCounts)
@@ -431,7 +432,7 @@ namespace Emaily.Services
             }
         }
 
-        private const int ImportEvery=125;  
+        private const int ImportEvery = 125;
 
         private Stream GenerateStreamFromString(string text)
         {
@@ -443,70 +444,66 @@ namespace Emaily.Services
             return stream;
         }
 
-        public ImportResult ImportSubscribers(TextReader reader, int listId)
+        public async Task ImportSubscribers(TextReader reader, int listId)
         {
             var result = new ImportResult { };
             var list = _listRepository.ById(listId);
             if (list == null) throw new Exception("List not found");
-            Task.Run(()=>
-            {
-                using (var csv = new CsvReader(reader,
-                    new CsvConfiguration()
-                    {
-                        IsHeaderCaseSensitive = true,
-                        Encoding = Encoding.UTF8,
-                        IgnoreBlankLines = true,
-
-                    }))
+            using (var csv = new CsvReader(reader,
+                new CsvConfiguration()
                 {
-                    while (csv.Read())
+                    IsHeaderCaseSensitive = true,
+                    Encoding = Encoding.UTF8,
+                    IgnoreBlankLines = true,
+
+                }))
+            {
+                while (csv.Read())
+                {
+                    try
                     {
-                        try
+                        var item = csv.GetRecord<dynamic>();
+                        var record = new ListEmail
                         {
-                            var item = csv.GetRecord<dynamic>();
-                            var record = new ListEmail
-                            {
-                                Email = item.Email,
-                                Name = item.Name
-                            };
+                            Email = item.Email,
+                            Name = item.Name
+                        };
 
-                            if (!IsValidEmail(record.Email)) continue;
+                        if (!IsValidEmail(record.Email)) continue;
 
-                            var dict = (IDictionary<string, object>)item;
-                            if (dict.ContainsKey("Email")) dict.Remove("Email");
-                            if (dict.ContainsKey("Name")) dict.Remove("Name");
+                        var dict = (IDictionary<string, object>)item;
+                        if (dict.ContainsKey("Email")) dict.Remove("Email");
+                        if (dict.ContainsKey("Name")) dict.Remove("Name");
 
-                            SubscribeInternal(new CreateSubscriber
-                            {
-                                Name = record.Name,
-                                Email = record.Email,
-                                ListId = listId,
-                                Custom = item
-                            }, list, false, false);
-                            result.Added++;
-
-                            if (result.Added % ImportEvery == 0)
-                            {
-                                UpdateSubcriberReport(list, result.Added);
-                                _subscriberRepository.SaveChanges();
-                                result.Added = 0;
-                            }
-                        }
-                        catch (Exception ex)
+                        SubscribeInternal(new CreateSubscriber
                         {
-                            _notificationHub.Notify(list.OwnerId, NotificationTypeEnum.Import, new { list = list.Id, failed= result.Failed,error=ex.Message });
-                            result.Failed++;
+                            Name = record.Name,
+                            Email = record.Email,
+                            ListId = listId,
+                            Custom = item
+                        }, list, false, false);
+                        result.Added++;
+
+                        if (result.Added % ImportEvery == 0)
+                        {
+                            await UpdateSubcriberReport(list, result.Added);
+                            _subscriberRepository.SaveChanges();
+                            result.Added = 0;
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        _notificationHub.Notify(list.OwnerId, NotificationTypeEnum.Import, new { list = list.Id, failed = result.Failed, error = ex.Message });
+                        result.Failed++;
+                    }
                 }
-                UpdateSubcriberReport(list, result.Added);
-                _subscriberRepository.SaveChanges();
-            });
-           
-            return result;
+            }
+            await UpdateSubcriberReport(list, result.Added);
+            await _subscriberRepository.SaveChangesAsync();
+
         }
 
-        public ImportResult ImportSubscribers(string importData, int listId)
+        public Task ImportSubscribers(string importData, int listId)
         {
             return ImportSubscribers(new StreamReader(GenerateStreamFromString(importData)), listId);
         }
@@ -518,7 +515,7 @@ namespace Emaily.Services
 
             var subscriber = _subscriberRepository.ById(model.Id);
             if (subscriber == null) throw new Exception("Subscriber not found");
-            if (subscriber.Token != model.Token) throw  new Exception("Invalid token received");
+            if (subscriber.Token != model.Token) throw new Exception("Invalid token received");
 
             var app = _appRepository.ById(subscriber.AppId);
             var list = _listRepository.ById(subscriber.ListId);
@@ -535,10 +532,10 @@ namespace Emaily.Services
         public void Unsubscribe(ListEmail model)
         {
             model.Email = model.Email.ToLower().Trim();
-            if(string.IsNullOrWhiteSpace(model.Email)) throw new Exception("Invalid Email address");
+            if (string.IsNullOrWhiteSpace(model.Email)) throw new Exception("Invalid Email address");
 
             var subscriber = _subscriberRepository.All.FirstOrDefault(x => x.Email == model.Email && x.ListId == model.ListId && !x.IsBounced && !x.IsComplaint && !x.IsUnsubscribed);
-            if (subscriber==null) throw new Exception("Already unsubscribed");
+            if (subscriber == null) throw new Exception("Already unsubscribed");
 
             var list = _listRepository.ById(model.ListId);
 
@@ -549,7 +546,7 @@ namespace Emaily.Services
             if (list == null || !list.GoodBye.IsActive) return;
 
             var app = _appRepository.ById(list.AppId);
-            SendNote(list.GoodBye, app.Sender,new EmailAddress(subscriber.Email, subscriber.Name));
+            SendNote(list.GoodBye, app.Sender, new EmailAddress(subscriber.Email, subscriber.Name));
         }
         public ListVM RenameList(RenameListVM model)
         {
@@ -607,7 +604,7 @@ namespace Emaily.Services
             CheckIsMine(campaign.AppId);
 
             var domain = campaign.Sender.Email.Split('@')[1];
-            var verification = _domainRepository.All.FirstOrDefault(x=>x.Verified.HasValue && (x.Name == campaign.Sender.Email || x.Name== domain));
+            var verification = _domainRepository.All.FirstOrDefault(x => x.Verified.HasValue && (x.Name == campaign.Sender.Email || x.Name == domain));
             if (verification == null) throw new Exception("Domain / Email not verified");
 
             campaign.Started = DateTime.UtcNow;
@@ -622,8 +619,8 @@ namespace Emaily.Services
                 campaign.Recipients += list.TotalRecord;
                 _campaignListRepository.Create(new CampaignList
                 {
-                   CampaignId = campaign.Id,
-                   ListId = list.Id
+                    CampaignId = campaign.Id,
+                    ListId = list.Id
                 });
             }
 
@@ -687,7 +684,7 @@ namespace Emaily.Services
             CheckIsMine(campaign.AppId);
 
             _campaignRepository.Delete(campaign);
-            return _campaignRepository.SaveChanges()>0;
+            return _campaignRepository.SaveChanges() > 0;
         }
 
         public CampaignInfoVM CampaignById(int id)
@@ -695,7 +692,7 @@ namespace Emaily.Services
             var campaign = _campaignRepository.All.Where(x => x.Id == id).Select(x =>
             new CampaignInfoVM
             {
-                AppId=x.AppId,
+                AppId = x.AppId,
                 Custom = x.Custom,
                 Id = x.Id,
                 Title = x.Name,
@@ -703,13 +700,13 @@ namespace Emaily.Services
                 Future = x.Future,
                 HtmlText = x.HtmlText,
                 IsHtml = x.IsHtml,
-                Lists = x.Lists.Select(y=>y.ListId),
+                Lists = x.Lists.Select(y => y.ListId),
                 PlainText = x.PlainText,
                 Sender = new SenderViewModel
                 {
-                     Email = x.Sender.Email,
-                     Name = x.Sender.Name,
-                     ReplyTo = x.Sender.ReplyTo
+                    Email = x.Sender.Email,
+                    Name = x.Sender.Name,
+                    ReplyTo = x.Sender.ReplyTo
                 },
                 QueryString = x.QueryString
             }).FirstOrDefault();
@@ -732,7 +729,7 @@ namespace Emaily.Services
                             x.Code == model.PromoCode && (!x.Start.HasValue || x.Start < DateTime.UtcNow) &&
                             (!x.End.HasValue || x.End > DateTime.UtcNow));
 
-                if(promo==null) throw new Exception("Invalid Promo Code");
+                if (promo == null) throw new Exception("Invalid Promo Code");
 
                 promoId = promo.Id;
             }
@@ -742,7 +739,7 @@ namespace Emaily.Services
                 PlanId = plan.Id,
                 PromoId = promoId,
                 AppKey = GenerateRandomString(16),
-                Clients=new List<Client>
+                Clients = new List<Client>
                 {
                     new Client
                     {
@@ -755,7 +752,7 @@ namespace Emaily.Services
                 Name = model.Company,
                 Currency = model.Currency,
                 Smtp = model.Smtp,
-                Sender= model.Sender,
+                Sender = model.Sender,
                 Logo = model.Logo,
                 Quota = plan.Quota
             });
@@ -813,7 +810,7 @@ namespace Emaily.Services
             _campaignResultRepository.Update(campaignResult);
             _campaignResultRepository.SaveChanges();
         }
-        public void CreateOrUpdateClick(CreateClickVM model,string country,string userAgent)
+        public void CreateOrUpdateClick(CreateClickVM model, string country, string userAgent)
         {
             var campaign = _campaignRepository.ById(model.CampaignId);
             if (campaign == null) throw new Exception("Campaign not found");
@@ -838,11 +835,11 @@ namespace Emaily.Services
             if (app == null) throw new Exception("App not found");
             CheckIsMine(app.Id);
 
-            var template=_templateRepository.Create(new Template
+            var template = _templateRepository.Create(new Template
             {
-               AppId = model.AppId,
-               Name = model.Name,
-               Custom = JsonConvert.SerializeObject(model.Custom),
+                AppId = model.AppId,
+                Name = model.Name,
+                Custom = JsonConvert.SerializeObject(model.Custom),
                 HtmlText = model.HtmlText,
                 PlainText = model.PlainText,
                 QueryString = model.QueryString,
@@ -863,7 +860,7 @@ namespace Emaily.Services
             template.HtmlText = model.HtmlText;
             template.PlainText = model.PlainText;
             template.QueryString = model.QueryString;
-            template.Sender= new EmailAddress
+            template.Sender = new EmailAddress
             {
                 Email = model.Sender.Email,
                 Name = model.Sender.Name,
@@ -890,25 +887,25 @@ namespace Emaily.Services
 
             _autoEmailRepository.Create(new AutoEmail
             {
-               AutoResponderId = model.AutoResponderId,
-               AppId = list.AppId,
-               Name = model.Name,
-               Custom = JsonConvert.SerializeObject(model.Custom),
-               TimeCondition=model.TimeCondition,
-               TimeZone = model.TimeZone,
-               HtmlText = model.HtmlText,
-               IsHtml = model.IsHtml,
-               Label = model.Label,
-               PlainText = model.PlainText,
-               OwnerId = _appProvider.OwnerId,
-               QueryString = model.QueryString,
-               Sender = new EmailAddress
-               {
+                AutoResponderId = model.AutoResponderId,
+                AppId = list.AppId,
+                Name = model.Name,
+                Custom = JsonConvert.SerializeObject(model.Custom),
+                TimeCondition = model.TimeCondition,
+                TimeZone = model.TimeZone,
+                HtmlText = model.HtmlText,
+                IsHtml = model.IsHtml,
+                Label = model.Label,
+                PlainText = model.PlainText,
+                OwnerId = _appProvider.OwnerId,
+                QueryString = model.QueryString,
+                Sender = new EmailAddress
+                {
                     Name = model.FromName,
                     Email = app.Sender.Email,
                     ReplyTo = model.ReplyTo
-               },
-               Status = CampaignStatusEnum.Active
+                },
+                Status = CampaignStatusEnum.Active
             });
 
             _autoResponderRepository.SaveChanges();
@@ -946,10 +943,10 @@ namespace Emaily.Services
 
             _autoResponderRepository.Create(new AutoResponder
             {
-               Name = model.Name,
-               Custom = JsonConvert.SerializeObject(model.Custom),
-               ListId = model.ListId,
-               Mode = model.Mode
+                Name = model.Name,
+                Custom = JsonConvert.SerializeObject(model.Custom),
+                ListId = model.ListId,
+                Mode = model.Mode
             });
 
             _autoResponderRepository.SaveChanges();
@@ -1016,7 +1013,8 @@ namespace Emaily.Services
 
             var fields = string.IsNullOrWhiteSpace(list.Custom) ? new List<CustomField>() : JsonConvert.DeserializeObject<List<CustomField>>(list.Custom);
             var field = fields.FirstOrDefault(x => x.Name == model.Name);
-            if (field != null){
+            if (field != null)
+            {
                 fields.Remove(field);
             }
             list.Custom = JsonConvert.SerializeObject(fields);

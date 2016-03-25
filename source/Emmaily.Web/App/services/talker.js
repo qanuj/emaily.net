@@ -2,23 +2,17 @@
     //$.connection.hub.logging = true;
     var hub = $.connection.notificationHub;
     var responders = {
-        broadcast: [],
-        que: [],
-        recording: [],
         any: []
     };
-    hub.client.broadcast = callHanders('broadcast');
-    hub.client.que = callHanders('que');
-    hub.client.recording = callHanders('recording');
     hub.client.any = callHanders('any');
 
     function callHanders(name) {
-        return function (msg) {
-            console.log('MSG', name, msg);
+        return function (mode, msg) {
+            //console.log.apply(console, arguments);
             for (var x in responders[name]) {
                 var caller = responders[name][x];
                 if (caller && typeof (caller) === typeof (Function)) {
-                    caller(msg);
+                    caller(mode, msg);
                 }
             }
         }
@@ -60,12 +54,10 @@
             var that = this;
             var talkWatcher = setInterval(function () {
                 if (that.connected) {
-                    //console.log('sending', msg);
                     hub.server.talk(msg);
                     clearTimeout(talkWatcher);
                 }
             }, 2000);
-
         }
     };
 
