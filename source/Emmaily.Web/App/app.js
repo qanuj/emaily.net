@@ -114,94 +114,13 @@ app.factory('settings', [
     }
 ]);
 app.controller('AppController', [
-    '$scope', '$rootScope', 'Talker','$state', function ($scope, $rootScope, talker, $state) {
+    '$scope', function ($scope) {
         $scope.$on('$viewContentLoaded', function () {
             Metronic.initComponents();
         });
-        var n = 24;
-        $rootScope.sizes = [n * 1, n * 2, n * 3, n * 4, n * 5];
-        $rootScope.unreadAll = 0;
-        $rootScope.toggleQuick = function () {
-            $rootScope.quick = !$scope.quick;
-        }
-        $rootScope.toggleSidebar=function() {
-            $rootScope.sidebarClosed = !$scope.sidebarClosed;
-        }
-        var talkingTo = [];
-        $rootScope.openIm = function (who) {
-            var room = (who.Group[0] + '.' + who.ID);
-            if (who.Group == 'User') { room = (who.Group[0] + '.' + Math.min(who.ID, parseInt($scope.user)) + '.' + Math.max(who.ID, parseInt($scope.user))); }
-            room = room.toLowerCase();
-            $rootScope.chatbox = true;
-            $rootScope.roomie = who;
-            $rootScope.currentRoom = room;
-            if (talkingTo.indexOf(room) == -1) {
-                talkingTo.push(room);
-                talker.talk({ Room: 'lobby', Message: JSON.stringify({ join: room, who: who.ID }), Command: 'JOIN', Sender: 'System' });
-            }
-        }
-        $scope.toggleChatBox = function () {
-            $rootScope.chatbox = !$scope.chatbox;
-        }
-        $scope.sendChat = function (message) {
-            var msg = { Message: message, Room: $scope.currentRoom, Sender: $scope.user, At: moment().format() };
-            talker.talk(msg);
-            //console.log('sent', msg);
-            $rootScope.roomie.newmessage = '';
-        }
-        
-        function handleLobby(msg) {
-            if (msg.Command == 'JOIN') {
-                var where = JSON.parse(msg.Message);
-                if (where && where.join && where.who==$scope.user) {
-                    talker.join(where.join);
-                }
-            }
-        }
-
-        var usersInRoomMap;
-        function findUserByRoom(contacts,room) {
-            var userId = parseInt($scope.user);
-            if (!usersInRoomMap) {
-                usersInRoomMap = {};
-                for (var x in contacts) {
-                    var who = contacts[x];
-                    var uroom = (who.Group[0] + '.' + Math.min(who.ID, userId) + '.' + Math.max(who.ID, userId)).toLowerCase();
-                    if (who.ID != userId) {
-                        usersInRoomMap[uroom] = who;
-                    }
-                }
-            }
-            return usersInRoomMap[room];
-        }
-
-        function handleCommunication(msg) {
-            var room = $scope.contacts.companies[msg.Room] || $scope.contacts.teams[msg.Room] || findUserByRoom($scope.contacts.users, msg.Room);
-            var sender = $scope.contacts.users[msg.Sender];
-            msg.who = {Name:sender.Name,Email:sender.Email,Image:sender.Image,ID:sender.ID};
-            if (room) {
-                if ($scope.currentRoom == msg.Room) {
-                    $scope.unreadAll = $scope.unreadAll - room.unread;
-                    room.unread = 0;
-                } else {
-                    room.unread = room.unread + 1;
-                    $scope.unreadAll = $scope.unreadAll + 1;
-                }
-                room.messages.push(msg);
-            }
-        }
-
-        talker.on('broadcast', function (msg) {
-            //console.log('MSG!', msg);
-            if (msg.Room == 'lobby'){ handleLobby(msg);}
-            else if (msg.Sender == 'System'){}
-            else handleCommunication(msg);
-            $scope.$apply();
-        });
-
     }
 ]);
-app.factory('about', ['dataService', '$rootScope',function (db, $rootScope) {
+app.factory('about', ['dataService',function (db) {
     var appName = document.querySelector('html').dataset.appName;
     var theme = document.querySelector('html').dataset.appTheme;
 
@@ -260,6 +179,9 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
     editableOptions.theme = 'bs3';
     var enums;
     var role = document.querySelector('html').dataset.appRoles.toLowerCase();
+
+    var n = 24;
+    $rootScope.sizes = [n * 1, n * 2, n * 3, n * 4, n * 5];
     $rootScope.canImpersonate = role == 'admin';
     $rootScope.canPermission = role == 'admin';
 
@@ -333,7 +255,7 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
             }
             $rootScope.perm = buildPermission(me);
             talker.on('any', onAnyMessage);
-            talker.connect('msg-' + me.id); 
+            talker.connect(me.id);
         });
     }
 

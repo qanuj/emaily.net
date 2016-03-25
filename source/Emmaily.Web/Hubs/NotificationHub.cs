@@ -13,6 +13,7 @@ namespace Emaily.Web.Hubs
         public string UserId { get; set; }
         public string Sender { get; set; }
         public DateTime At { get; set; }
+        public string Mode { get; set; }
 
         public SendMessageViewModel()
         {
@@ -30,33 +31,49 @@ namespace Emaily.Web.Hubs
     {
         public void Notify(string userId, NotificationTypeEnum mode, dynamic message)
         {
-            message.mode = mode;
-            GlobalHost.ConnectionManager.GetHubContext<NotificationHub>().Clients.Group("msg-" + userId).Any(message);
+            message.mode = mode.ToString();
+            GlobalHost.ConnectionManager.GetHubContext<NotificationHub>().Clients.Group(userId).Any(message);
         }
+    }
+
+    public class NotificationMessage
+    {
+        public string Sender { get; set; }
+        public string Message { get; set; }
+        public string Room { get; set; }
+        public string Command { get; set; }
+        public DateTime At { get; set; }
     }
 
     public class NotificationHub : Hub
     {
-        readonly ILifetimeScope _hubLifetimeScope;
-
-        public NotificationHub(ILifetimeScope lifetimeScope)
+        
+        public override Task OnConnected()
         {
-            _hubLifetimeScope = lifetimeScope.BeginLifetimeScope();
+            var userId = Context.QueryString["userid"];
+            Groups.Add(Context.ConnectionId, "lobby");
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                Groups.Add(Context.ConnectionId, userId);
+                Say(string.Format("{0} is in room.", this.Context.User.Identity.Name), userId);
+            }
+            return base.OnConnected();
         }
-             
+
         public async Task Connect(string room)
         {
             await this.Groups.Add(this.Context.ConnectionId, room);
-            Talk(new SendMessageViewModel<RoomMessage> { Sender="System",
-                Message = new RoomMessage() { Room = room,
-                    Message = string.Format("{0} joined.", this.Context.User.Identity.Name) } });
         }
 
-        internal void Talk<T>(SendMessageViewModel<T> msg)
+        private void Say(string msg, string room = "")
         {
-            msg.At = DateTime.UtcNow;
-            msg.Sender = this.Context.User.Identity.Name;
-            this.Clients.AllExcept(this.Context.ConnectionId).Any(msg);
+            this.Clients.Group(room).Broadcast(new SendMessageViewModel<string>
+            {
+                Sender = "System",
+                Mode = NotificationTypeEnum.Chat.ToString(),
+                Message = msg,
+                UserId = room
+            });
         }
 
         public void Talk(SendMessageViewModel<RoomMessage> msg)
@@ -68,22 +85,8 @@ namespace Emaily.Web.Hubs
                 this.Clients.AllExcept(this.Context.ConnectionId).Broadcast(msg);
             }
             else {
-                this.Clients.Group(msg.Message.Room).Any(msg);
+                this.Clients.Group(msg.Message.Room).Broadcast(msg);
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            // Dipose the hub lifetime scope when the hub is disposed.
-            if (disposing && _hubLifetimeScope != null)
-                _hubLifetimeScope.Dispose();
-
-            base.Dispose(disposing);
-        }
-
-        public void Notify(string userId, dynamic message)
-        {
-            Talk(new SendMessageViewModel<dynamic> { Sender ="Sytem", Message = message, UserId = userId });
         }
     }
 }

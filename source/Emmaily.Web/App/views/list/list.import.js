@@ -9,7 +9,7 @@
 
         $scope.$watch("record.file", function(newVal) {
             if (newVal && newVal.key && newVal.url) {
-                db.get('list/' + $stateParams.id).then(function (result) {
+                db.get('subscriber/' + $stateParams.id + '/import/' + newVal.key).then(function (result) {
                     if (result.added>=0) {
                         $state.go('lists', { id: $stateParams.id });
                     }

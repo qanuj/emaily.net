@@ -12,7 +12,6 @@ using Emaily.Services;
 using Emaily.Web.Hubs;
 using Emaily.Web.Models;
 using Emaily.Web.Security;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
@@ -43,7 +42,7 @@ namespace Emaily.Web
             builder.Register(c => app.GetDataProtectionProvider()).InstancePerRequest();
 
             var container = builder.Build();
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
+            DependencyResolver.SetResolver(new Autofac.Integration.Mvc.AutofacDependencyResolver(container));
             GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
             GlobalHost.DependencyResolver = new Autofac.Integration.SignalR.AutofacDependencyResolver(container);
 

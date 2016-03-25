@@ -1,10 +1,16 @@
 ﻿app.factory('Talker', [function () {
+    //$.connection.hub.logging = true;
     var hub = $.connection.notificationHub;
     var responders = {
         broadcast: [],
         que: [],
-        recording:[]
+        recording: [],
+        any: []
     };
+    hub.client.broadcast = callHanders('broadcast');
+    hub.client.que = callHanders('que');
+    hub.client.recording = callHanders('recording');
+    hub.client.any = callHanders('any');
 
     function callHanders(name) {
         return function (msg) {
@@ -22,12 +28,6 @@
         on: function (name, cb) {
             responders[name] = responders[name] || [];
             responders[name].push(cb);
-            if (!hub.client[name]) {
-                hub.client[name] = callHanders(name);
-            }
-        },
-        received: function (msg) {
-            //console.log('msg-received', msg);
         },
         join: function (room) {
             var that = this;
@@ -40,19 +40,18 @@
                 }
             }, 2000);
         },
-        connect: function (room) {
+        connect: function (userid) {
             var that = this;
             if (!that.connected) {
+                $.connection.hub.qs = "userid="+userid;
                 $.connection.hub.start().done(function () {
                     that.connected = true;
-                    that.join(room);
-                    that.join('lobby');
                 })
                 .fail(function (a) {
                     console.log('failed to connect signalr : ' + a);
                 });
             } else {
-                console.trace('connecting twice? : ', room);
+                console.trace('connecting twice? : ', userid);
             }
             return true;
         },
@@ -69,14 +68,6 @@
 
         }
     };
-
-    //default handlers;
-    vm.on('broadcast', function (msg) {
-        console.log('in room', msg);
-    });
-    vm.on('any', function (msg) {
-        //console.log('que-msg', msg);
-    });
 
     return vm;
 

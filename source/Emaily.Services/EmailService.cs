@@ -494,6 +494,7 @@ namespace Emaily.Services
                         }
                         catch (Exception ex)
                         {
+                            _notificationHub.Notify(list.OwnerId, NotificationTypeEnum.Import, new { list = list.Id, failed= result.Failed,error=ex.Message });
                             result.Failed++;
                         }
                     }

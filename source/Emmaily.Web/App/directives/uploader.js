@@ -172,7 +172,7 @@
                         taskResult.loadChanges = res.where;
                     }
 
-                    console.log('Task', taskResult);
+                    //console.log('Task', taskResult);
                     $scope.$apply();
 
                 }
@@ -252,7 +252,7 @@
 
 
                 $scope.$on('fileuploadadd', function (e, data) {
-                    console.log('ADD',e, data);
+                    //console.log('ADD',e, data);
                     data.scope.option('url', $scope.url);
                     if ($scope.quick) {
                         data.scope.option('formData', parseFileData(data.files[0]));

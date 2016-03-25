@@ -13,7 +13,6 @@ using System.Collections.Generic;
 
 namespace Emaily.Web.Controllers
 {
-    //[Authorize]
     public class HomeController : Controller
     {
         private string _AdminRole = "Admin";
@@ -32,6 +31,7 @@ namespace Emaily.Web.Controllers
             _planRepository = planRepository;
         }
 
+        [Authorize]
         public ActionResult Index()
         {
             return View();
