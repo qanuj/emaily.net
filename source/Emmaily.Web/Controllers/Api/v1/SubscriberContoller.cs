@@ -12,12 +12,12 @@ namespace Emaily.Web.Controllers.Api.v1
     ///  Manages system accounts.
     /// </summary>
     [Authorize]
-    [RoutePrefix("api/v1/list")]
-    public class ListController : BasicApiController
+    [RoutePrefix("api/v1/subscriber/{list}")]
+    public class SubscriberController : BasicApiController
     {
         private readonly IEmailService _service;
 
-        public ListController(IEmailService service)
+        public SubscriberController(IEmailService service)
         {
             _service = service;
         }
@@ -25,35 +25,27 @@ namespace Emaily.Web.Controllers.Api.v1
         /// <summary>
         /// Returns template information
         /// </summary>
+        /// <param name="list">List Id</param>
         /// <param name="options"></param>
         /// <returns></returns>
         [HttpGet, Route]
-        public PageResult<ListVM> GetAsOData(ODataQueryOptions<ListVM> options)
+        public PageResult<SubscriberVM> GetAsOData(int list, ODataQueryOptions<SubscriberVM> options)
         {
-            return Page(_service.Lists(), options);
+            return Page(_service.Subscribers(list), options);
         }
         
         /// <summary>
-        /// Returns all template information
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet, Route("all"), EnableQuery]
-        public IQueryable<ListVM> GetAll()
-        {
-            return _service.Lists();
-        }
-
-        /// <summary>
         /// PUT command to insert a template
         /// </summary>
+        /// <param name="list"></param>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut, Route]
-        public HttpResponseMessage Put(CreateListVM model)
+        public HttpResponseMessage Put(int list,CreateSubscriberVM model)
         {
             if (ModelState.IsValid)
             {
-                var item = _service.CreateList(model);
+                var item = _service.ImportSubscribers(model.Data,list);
                 return Accepted(item);
             }
             return Bad(ModelState);
@@ -62,14 +54,15 @@ namespace Emaily.Web.Controllers.Api.v1
         /// <summary>
         /// POST command to update a template
         /// </summary>
+        /// <param name="list"></param>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost, Route]
-        public HttpResponseMessage Post(UpdateListVM model)
+        public HttpResponseMessage Post(int list, UpdateSubscriberVM model)
         {
             if (ModelState.IsValid)
             {
-                var item = _service.UpdateList(model);
+                var item = _service.UpdateSubscriber(model);
                 return Accepted(item);
             }
             return Bad(ModelState);
@@ -78,25 +71,27 @@ namespace Emaily.Web.Controllers.Api.v1
         /// <summary>
         /// Returns a template by id
         /// </summary>
+        /// <param name="list"></param>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet, Route("{id}")]
-        public ListInfoVM Get([FromUri]int id)
+        public SubscriberVM Get([FromUri]int id, [FromUri]int list)
         {
-            return _service.ListById(id);
+            return _service.SubscriberById(list,id);
         }
 
         /// <summary>
         /// Deletes a template by id
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="list"></param>
         /// <returns></returns>
         [HttpDelete, Route("{id}")]
-        public HttpResponseMessage Delete([FromUri]int id)
+        public HttpResponseMessage Delete([FromUri]int id, [FromUri]int list)
         {
             if (ModelState.IsValid)
             {
-                var item = _service.DeleteList(id);
+                var item = _service.DeleteSubscriber(list, id);
                 return Accepted(item);
             }
             return Bad(ModelState);

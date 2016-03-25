@@ -17,6 +17,7 @@ namespace Emaily.Core.Abstraction.Persistence
 
         TEntity Create(TEntity entity); //returns Rows Affected
         ICollection<TEntity> Create(ICollection<TEntity> entity); //returns Rows Affected
+
         TEntity Update(TEntity entity); //returns Rows Affected
         TEntity Delete(TEntity entity); //returns Rows Affected
         TEntity Delete(TKey id); //returns Rows Affected

@@ -223,6 +223,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BasicApiController.cs" />
     <Compile Include="Controllers\Api\v1\AccountController.cs" />
+    <Compile Include="Controllers\Api\v1\SubscriberContoller.cs" />
     <Compile Include="Controllers\Api\v1\ListContoller.cs" />
     <Compile Include="Controllers\Api\v1\TemplateContoller.cs" />
     <Compile Include="Controllers\Api\v1\CampaignContoller.cs" />
@@ -268,6 +269,10 @@
     <Compile Include="Migrations\201603241607035_Template has Sender Information.cs" />
     <Compile Include="Migrations\201603241607035_Template has Sender Information.Designer.cs">
       <DependentUpon>201603241607035_Template has Sender Information.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603250809422_List Id Moved.cs" />
+    <Compile Include="Migrations\201603250809422_List Id Moved.Designer.cs">
+      <DependentUpon>201603250809422_List Id Moved.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -1285,6 +1290,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603241607035_Template has Sender Information.resx">
       <DependentUpon>201603241607035_Template has Sender Information.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603250809422_List Id Moved.resx">
+      <DependentUpon>201603250809422_List Id Moved.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,11 +1,10 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
+using System.Linq; 
 using System.Threading.Tasks;
-using Emaily.Core.Abstraction;
-using Emaily.Core.Abstraction.Events;
+using Emaily.Core.Abstraction; 
 using Emaily.Core.Abstraction.Persistence;
 
 namespace Emaily.Data
@@ -83,7 +82,7 @@ namespace Emaily.Data
             Attach(entity);
             entity.Deleted = DateTime.UtcNow;
             return entity;
-        }
+        }     
 
         public virtual TEntity Update(TEntity entity)
         {

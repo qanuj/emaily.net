@@ -5,12 +5,76 @@ using Emaily.Core.Abstraction.Services;
 using Emaily.Core.Data;
 using Emaily.Core.DTO;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using Amazon.SimpleEmail.Model;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Emaily.Core.Data.Complex;
 using Emaily.Core.Enumerations;
 using Newtonsoft.Json;
 
 namespace Emaily.Services
 {
+    public class RegexUtilities
+    {
+        bool invalid = false;
+
+        public bool IsValidEmail(string strIn)
+        {
+            invalid = false;
+            if (String.IsNullOrEmpty(strIn))
+                return false;
+
+            // Use IdnMapping class to convert Unicode domain names.
+            try
+            {
+                strIn = Regex.Replace(strIn, @"(@)(.+)$", this.DomainMapper,
+                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
+            }
+
+            if (invalid)
+                return false;
+
+            // Return true if strIn is in valid e-mail format.
+            try
+            {
+                return Regex.IsMatch(strIn,
+                      @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                      @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
+                      RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                return false;
+            }
+        }
+
+        private string DomainMapper(Match match)
+        {
+            // IdnMapping class with default property values.
+            IdnMapping idn = new IdnMapping();
+
+            string domainName = match.Groups[2].Value;
+            try
+            {
+                domainName = idn.GetAscii(domainName);
+            }
+            catch (ArgumentException)
+            {
+                invalid = true;
+            }
+            return match.Groups[1].Value + domainName;
+        }
+    }
+
     public class EmailService : IEmailService
     {
         private readonly IRepository<App> _appRepository;
@@ -27,6 +91,7 @@ namespace Emaily.Services
         private readonly IRepository<Link> _linkRepository;
         private readonly IRepository<Subscriber> _subscriberRepository;
         private readonly IRepository<List> _listRepository;
+        private readonly IRepository<SubscriberReport> _subscriberReportRepository;
         private readonly IRepository<Promo> _promoRepository;
         private readonly IEmailProvider _emailProvider;
         private readonly ICloudProvider _cloudProvider;
@@ -52,7 +117,7 @@ namespace Emaily.Services
             IRepository<Click> clickRepository,
             IEmailProvider emailProvider, 
             ICloudProvider cloudProvider, 
-            IAppProvider appProvider)
+            IAppProvider appProvider, IRepository<SubscriberReport> subscriberReportRepository)
         {
             _appRepository = appRepository;
             _planRepository = planRepository;
@@ -72,6 +137,7 @@ namespace Emaily.Services
             //_storageProvider = storageProvider;
             _cloudProvider = cloudProvider;
             _appProvider = appProvider;
+            _subscriberReportRepository = subscriberReportRepository;
             _clickRepository = clickRepository;
         }
         public IQueryable<AppVM> Apps()
@@ -90,7 +156,7 @@ namespace Emaily.Services
 
         public TemplateInfoVM TemplateById(int id)
         {
-            var template = _templateRepository.All.Where(x => x.Id == id && !x.Deleted.HasValue).Select(x =>
+            var template = _templateRepository.All.Where(x => x.Id == id).Select(x =>
             new TemplateInfoVM
             {
                 AppId = x.AppId,
@@ -118,14 +184,13 @@ namespace Emaily.Services
             if (template == null) throw new Exception("Template not found");
             CheckIsMine(template.AppId);
 
-            template.Deleted = DateTime.UtcNow;
-            _templateRepository.Update(template);
+            _templateRepository.Delete(template);
             return _templateRepository.SaveChanges() > 0;
         }
 
         public ListInfoVM ListById(int id)
         {
-            var list = _listRepository.All.Where(x => x.Id == id && !x.Deleted.HasValue).Select(x =>
+            var list = _listRepository.All.Where(x => x.Id == id).Select(x =>
             new ListInfoVM
             {
                 Id = x.Id,
@@ -150,24 +215,39 @@ namespace Emaily.Services
             if (list == null) throw new Exception("List not found");
             CheckIsMine(list.AppId);
 
-            list.Deleted = DateTime.UtcNow;
-            _listRepository.Update(list);
+            _listRepository.Delete(list);
             return _listRepository.SaveChanges() > 0;
         }
 
         public IQueryable<ListVM> Lists()
         {
-            return _listRepository.All.Where(x=> _appProvider.Apps.Contains(x.AppId)).Select(x => new ListVM
+            return _listRepository.All.Where(x => _appProvider.Apps.Contains(x.AppId)).Select(x => new ListVM
             {
                 Id = x.Id,
                 Name = x.Name,
-                AppId=x.AppId,
+                AppId = x.AppId,
                 Key = x.Key,
                 Bounced = x.Subscribers.Count(y => y.IsBounced),
                 Spams = x.Subscribers.Count(y => y.IsComplaint),
                 Unsubscribed = x.Subscribers.Count(y => y.IsUnsubscribed),
                 Actives = x.Subscribers.Count(y => !y.IsBounced && !y.IsComplaint && !y.IsUnsubscribed),
                 Total = x.Subscribers.Count()
+            });
+        }
+        public IQueryable<SubscriberVM> Subscribers(int listId)
+        {
+            return _subscriberRepository.All.Where(x => x.ListId== listId && _appProvider.Apps.Contains(x.AppId)).Select(x => new SubscriberVM
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Email = x.Email,
+                Custom = x.Custom,
+                Created = x.Created,
+                IsBounced = x.IsBounced,
+                IsComplaint = x.IsComplaint,
+                IsConfirmed = x.IsConfirmed,
+                IsSoftBounce = x.IsSoftBounce,
+                IsUnsubscribed = x.IsUnsubscribed
             });
         }
         public IQueryable<CampaignVM> Campaigns()
@@ -196,6 +276,38 @@ namespace Emaily.Services
                 UniqueClicks = x.Links.Sum(z => z.Clicks.Select(y => y.SubscriberId).Distinct().Count()),
                 UniqueOpens = x.Results.Select(y => y.SubscriberId).Distinct().Count()
             });
+        }
+
+        private void UpdateSubcriberReport(int listId, int addedOrRemoved)
+        {
+            var lastOne=_subscriberReportRepository.All.OrderByDescending(x => x.Id).FirstOrDefault(x => x.ListId == listId);
+            if (lastOne != null)
+            {
+                addedOrRemoved += lastOne.Total;
+            }
+            _subscriberReportRepository.Create(new SubscriberReport(addedOrRemoved));
+            _subscriberReportRepository.SaveChanges();
+        }
+
+        public SubscriberVM UpdateSubscriber(UpdateSubscriberVM model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SubscriberVM SubscriberById(int list, int id)
+        {
+            return Subscribers(list).FirstOrDefault(x => x.Id == id);
+        }
+
+        public bool DeleteSubscriber(int list, int id)
+        {
+            var subscriber = _subscriberRepository.ById(id);
+            var listOf = _listRepository.ById(list);
+            if (subscriber == null || subscriber.ListId!=list) throw new Exception("List not found");
+            CheckIsMine(listOf.AppId);
+
+            _subscriberRepository.Delete(subscriber);
+            return _subscriberRepository.SaveChanges() > 0;
         }
 
         public IQueryable<TemplateVM> Templates()
@@ -259,16 +371,26 @@ namespace Emaily.Services
 
             return Lists().FirstOrDefault(x => x.Id == list.Id);
         }
+
         public void Subscribe(CreateSubscriber model)
         {
-            model.Email = model.Email.ToLower().Trim();
-            if (string.IsNullOrWhiteSpace(model.Email)) throw new Exception("Invalid Email address");
+            SubscribeInternal(model, _listRepository.ById(model.ListId));
+        }
 
-            var list = _listRepository.ById(model.ListId);
+        private bool IsValidEmail(string email)
+        {
+            return !(string.IsNullOrWhiteSpace(email) || !new RegexUtilities().IsValidEmail(email));
+        }
+       
+        private void SubscribeInternal(CreateSubscriber model,List list, bool updateCounts=true, bool sendEmail=true)
+        {
             if (list == null) throw new Exception("List not found");
 
+            model.Email = model.Email.ToLower().Trim();
+            if (!IsValidEmail(model.Email)) throw new Exception("Invalid Email address");
+
             var app = _appRepository.ById(list.AppId);
-            if (list.Subscribers.Any(x => x.Email == model.Email)) throw new Exception("Already subscribed");
+            if (_subscriberRepository.All.Any(x => x.Email == model.Email && x.ListId==list.Id)) throw new Exception("Already subscribed");
             if (_subscriberRepository.All.Any(x => x.Email == model.Email && x.IsBounced)) throw new Exception("Already bounced");
 
             var subscriber = _subscriberRepository.Create(new Subscriber
@@ -282,17 +404,116 @@ namespace Emaily.Services
                 Token=GenerateRandomString(model.Email)
             });
 
-            _subscriberRepository.SaveChanges();
-
-            if(list.IsOptIn && list.Confirmation.IsActive)
+            if (updateCounts)
             {
-                SendNote(list.Confirmation, app.Sender, new EmailAddress(subscriber.Email, subscriber.Name));
-            }else if (list.ThankYou.IsActive)
-            {
-                SendNote(list.ThankYou, app.Sender, new EmailAddress(subscriber.Email, subscriber.Name));
+                UpdateSubcriberReport(list.Id, 1);
+                _subscriberRepository.SaveChanges();
             }
 
+            if (sendEmail)
+            {
+                if (list.IsOptIn && list.Confirmation.IsActive)
+                {
+                    SendNote(list.Confirmation, app.Sender, new EmailAddress(subscriber.Email, subscriber.Name));
+                }
+                else if (list.ThankYou.IsActive)
+                {
+                    SendNote(list.ThankYou, app.Sender, new EmailAddress(subscriber.Email, subscriber.Name));
+                }
+            }
         }
+
+        public ImportResult ImportSubscribers(IDictionary<string,ListEmail> items,int listId)
+        {
+            var result = new ImportResult {};
+            var list=_listRepository.ById(listId);
+            foreach (var item in items)
+            {
+                try
+                {
+                    if (!IsValidEmail(item.Key)) continue;
+
+                    SubscribeInternal(new CreateSubscriber
+                    {
+                        Name = item.Value.Name,
+                        Email = item.Key,
+                        ListId = listId,
+                        Custom = item.Value.Custom
+                    }, list, false, false);
+                    result.Added++;
+                }
+                catch(Exception)
+                {
+                    result.Failed++;
+                }
+            }
+            if (result.Added > 0)
+            {
+                UpdateSubcriberReport(list.Id, result.Added);
+                _subscriberRepository.SaveChanges();
+            }
+            return result;
+        }
+
+        private Stream GenerateStreamFromString(string text)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(text);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+        public ImportResult ImportSubscribers(string importData, int listId)
+        {
+            var result = new ImportResult { };
+            var list = _listRepository.ById(listId);
+            if(list==null) throw new Exception("List not found");
+            using (var csv = new CsvReader(new StreamReader(GenerateStreamFromString(importData)),
+                new CsvConfiguration()
+                {
+                    IsHeaderCaseSensitive = true,
+                    Encoding = Encoding.UTF8,
+                    IgnoreBlankLines = true,
+                    
+                })) {                
+                while (csv.Read())
+                {
+                    try
+                    {
+                        var item = csv.GetRecord<dynamic>();
+                        var record = new ListEmail
+                        {
+                            Email = item.email,
+                            Name = item.name
+                        };
+
+                        if (!IsValidEmail(record.Email)) continue;
+                        record.Custom = JsonConvert.SerializeObject(item);
+
+                        SubscribeInternal(new CreateSubscriber
+                        {
+                            Name = record.Name,
+                            Email = record.Email,
+                            ListId = listId,
+                            Custom = item
+                        }, list, false, false);
+                        result.Added++;
+                    }
+                    catch (Exception)
+                    {
+                        result.Failed++;
+                    }
+                }
+            }
+            if (result.Added <= 0) return result;
+
+            UpdateSubcriberReport(list.Id, result.Added);
+            _subscriberRepository.SaveChanges();
+            return result;
+        }
+
         public void ConfirmSubscription(UpdateSubscriptionVM model)
         {
             model.Email = model.Email.ToLower().Trim();
@@ -468,14 +689,13 @@ namespace Emaily.Services
             if (campaign == null) throw new Exception("Campaign not found");
             CheckIsMine(campaign.AppId);
 
-            campaign.Deleted = DateTime.UtcNow;
-            _campaignRepository.Update(campaign);
+            _campaignRepository.Delete(campaign);
             return _campaignRepository.SaveChanges()>0;
         }
 
         public CampaignInfoVM CampaignById(int id)
         {
-            var campaign = _campaignRepository.All.Where(x => x.Id == id && !x.Deleted.HasValue).Select(x =>
+            var campaign = _campaignRepository.All.Where(x => x.Id == id).Select(x =>
             new CampaignInfoVM
             {
                 AppId=x.AppId,
@@ -806,8 +1026,5 @@ namespace Emaily.Services
             _listRepository.Update(list);
             _listRepository.SaveChanges();
         }
-            
     }
-
-    
 }

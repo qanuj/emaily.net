@@ -5,6 +5,17 @@ using Emaily.Core.Data.Complex;
 
 namespace Emaily.Core.Data
 {
+    public class SubscriberReport : Entity
+    {
+        public int Total { get; set; }
+        public List List { get; set; }
+        public int ListId { get; set; }
+        public SubscriberReport() { }
+        public SubscriberReport(int total)
+        {
+            this.Total = total;
+        }
+    }
     public class List : CustomEntity
     {
         public string Key { get; set; }
@@ -29,6 +40,7 @@ namespace Emaily.Core.Data
         public MailNote Confirmation { get; set; }
 
         public IList<CampaignList> Campaigns { get; set; }
+        public IList<SubscriberReport> Reports { get; set; }
         public IList<AutoResponder> AutoResponders { get; set; }
         public IList<Subscriber> Subscribers { get; set; }
 
@@ -41,6 +53,5 @@ namespace Emaily.Core.Data
             this.AutoResponders=new List<AutoResponder>();
             this.Subscribers=new List<Subscriber>();
         }
-
     }
 }
