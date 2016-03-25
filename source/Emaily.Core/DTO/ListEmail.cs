@@ -22,6 +22,11 @@ namespace Emaily.Core.DTO
         public string Data { get; set; } 
     }
 
+    public class ProcessSubscriberFileVM
+    {
+        public string FileName { get; set; }
+    }
+
     public class SubscriberVM : ListEmail
     {
         public int Id { get; set; }

@@ -228,8 +228,10 @@
     <Compile Include="Controllers\Api\v1\TemplateContoller.cs" />
     <Compile Include="Controllers\Api\v1\CampaignContoller.cs" />
     <Compile Include="Controllers\Api\v1\UtilController.cs" />
+    <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\UploadController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -282,6 +284,9 @@
     <Compile Include="Security\ApplicationOAuthProvider.cs" />
     <Compile Include="Security\SessionAppProvider.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\FilesStatus.cs" />
+    <Compile Include="Utils\MimeTypeMap.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App\app.js" />
@@ -374,7 +379,6 @@
     <Content Include="App\vendors\extra\jquery.Jcrop.js" />
     <Content Include="App\vendors\extra\jquery.uniform.js" />
     <Content Include="App\vendors\extra\jstree.js" />
-    <Content Include="App\vendors\extra\kendo.all.js" />
     <Content Include="App\vendors\extra\load-image-core.js" />
     <Content Include="App\vendors\extra\load-image-core.meta.js" />
     <Content Include="App\vendors\extra\load-image-exif.js" />
@@ -404,10 +408,13 @@
     <Content Include="App\views\account\accounts.js" />
     <Content Include="App\views\campaign\campaign.create.html" />
     <Content Include="App\views\campaign\campaign.create.js" />
+    <Content Include="App\views\list\csv.html" />
     <Content Include="App\views\list\list.create.html" />
     <Content Include="App\views\list\list.create.js" />
     <Content Include="App\views\list\list.card.html" />
     <Content Include="App\views\list\list.cards.html" />
+    <Content Include="App\views\list\list.import.html" />
+    <Content Include="App\views\list\list.import.js" />
     <Content Include="App\views\list\lists.js" />
     <Content Include="App\views\reports\report.card.html" />
     <Content Include="App\views\reports\report.cards.html" />

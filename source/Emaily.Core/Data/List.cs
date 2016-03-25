@@ -11,9 +11,10 @@ namespace Emaily.Core.Data
         public List List { get; set; }
         public int ListId { get; set; }
         public SubscriberReport() { }
-        public SubscriberReport(int total)
+        public SubscriberReport(int total,int listId)
         {
             this.Total = total;
+            this.ListId = listId;
         }
     }
     public class List : CustomEntity

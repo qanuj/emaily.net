@@ -133,7 +133,7 @@
         return null;
     }
 
-    var funcs={
+    var funcs = {
         pageSize: 10,
         calculatePaging: calculatePaging,
         orderBy: orderBy,
@@ -158,6 +158,27 @@
 
     angular
      .module('humenize', [])
+     .filter('short', function () {
+         return function (number) {
+             if (number) {
+                 var abs = Math.abs(number);
+                 if (abs >= Math.pow(10, 12)) {
+                     // trillion
+                     number = (number / Math.pow(10, 12)).toFixed(1) + "T";
+                 } else if (abs < Math.pow(10, 12) && abs >= Math.pow(10, 9)) {
+                     // billion
+                     number = (number / Math.pow(10, 9)).toFixed(1) + "B";
+                 } else if (abs < Math.pow(10, 9) && abs >= Math.pow(10, 6)) {
+                     // million
+                     number = (number / Math.pow(10, 6)).toFixed(1) + "M";
+                 } else if (abs < Math.pow(10, 6) && abs >= Math.pow(10, 3)) {
+                     // thousand
+                     number = (number / Math.pow(10, 3)).toFixed(1) + "K";
+                 }
+                 return number;
+             }
+         }
+     })
     .filter('uncamel', function () {
         function decamelize(str, sep) {
             if (typeof str !== 'string') {
@@ -203,7 +224,7 @@
             return (new Date()).getTime();
         };
     })
-    .directive('relativeTime',['$timeout', function ($timeout) {
+    .directive('relativeTime', ['$timeout', function ($timeout) {
 
         function getRelativeDateTimeString(date) {
             if (date && date.indexOf('+') == -1 && date.indexOf('Z') == -1) date += '+00:00';
@@ -212,14 +233,14 @@
 
         function update(scope, element) {
             element.text(getRelativeDateTimeString(scope.actualTime));
-            $timeout(function() { update(scope, element); }, 60000);
+            $timeout(function () { update(scope, element); }, 60000);
         }
 
         return {
             scope: {
                 actualTime: '=relativeTime'
             },
-            link: function(scope, element) {
+            link: function (scope, element) {
                 update(scope, element);
             }
         };
@@ -246,7 +267,7 @@
     .filter('comma', function () {
         return function (values, seperator) {
             seperator = seperator || ',';
-            return (values || "").split(seperator).filter(function (n) { return n != '' && n!='x'; });
+            return (values || "").split(seperator).filter(function (n) { return n != '' && n != 'x'; });
         }
     })
     .filter('colorize', function () {
@@ -347,7 +368,7 @@
         }
     })
     .filter('resize', function () {
-        return function (value, size,missing) {
+        return function (value, size, missing) {
             size = size || 150;
             if (!!value) {
                 if (value.indexOf('youtube.com') > -1) return value;

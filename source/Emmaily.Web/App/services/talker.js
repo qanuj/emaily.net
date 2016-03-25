@@ -72,13 +72,7 @@
 
     //default handlers;
     vm.on('broadcast', function (msg) {
-        //console.log('in room', msg);
-    });
-    vm.on('recording', function (msg) {
-        //console.log('recording-msg', msg);
-    });
-    vm.on('que', function (msg) {
-        //console.log('que-msg', msg);
+        console.log('in room', msg);
     });
     vm.on('any', function (msg) {
         //console.log('que-msg', msg);

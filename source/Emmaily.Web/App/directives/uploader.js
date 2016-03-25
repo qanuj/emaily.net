@@ -85,7 +85,7 @@
             controller: ['$rootScope', '$scope', '$element', 'fileUpload', '$http', 'Talker', 'dataService', function ($rootScope, $scope, $element, fileUpload, $http, talker, db) {
 
                 if (typeof ($scope.ngModel) == 'undefined') {
-                    $scope.ngModel = { url: '', email: '', title: $scope.title };
+                    $scope.ngModel = { url: '', email: '', title: $scope.title,key:'' };
                 }
                 var talking = {};
                 var savingTimeout;
@@ -264,6 +264,7 @@
                 $scope.$on('fileuploaddone', function (e, data) {
                     var f = data._response.result.files[0];
                     $scope.ngModel.url = f.url;
+                    $scope.ngModel.key = f.key;
                     $scope.result = f;
                     $scope.title = f.originalname;
                     $scope.error = f.error;

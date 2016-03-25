@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Emaily.Core.Enumerations;
+using Emaily.Services;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Emaily.Web.Hubs
 {
     public class SendMessageViewModel<T>
     {
         public T Message { get; set; }
-        public long User { get; set; }
+        public string UserId { get; set; }
         public string Sender { get; set; }
         public DateTime At { get; set; }
 
@@ -28,6 +26,15 @@ namespace Emaily.Web.Hubs
         public string Message { get; set; }
     }
 
+    public class NotificationHubNotifier : INotificationHub
+    {
+        public void Notify(string userId, NotificationTypeEnum mode, dynamic message)
+        {
+            message.mode = mode;
+            GlobalHost.ConnectionManager.GetHubContext<NotificationHub>().Clients.Group("msg-" + userId).Any(message);
+        }
+    }
+
     public class NotificationHub : Hub
     {
         readonly ILifetimeScope _hubLifetimeScope;
@@ -40,7 +47,9 @@ namespace Emaily.Web.Hubs
         public async Task Connect(string room)
         {
             await this.Groups.Add(this.Context.ConnectionId, room);
-            Talk(new SendMessageViewModel<RoomMessage> { Sender="System", Message = new RoomMessage() { Room = room, Message = string.Format("{0} joined.", this.Context.User.Identity.Name) } });
+            Talk(new SendMessageViewModel<RoomMessage> { Sender="System",
+                Message = new RoomMessage() { Room = room,
+                    Message = string.Format("{0} joined.", this.Context.User.Identity.Name) } });
         }
 
         internal void Talk<T>(SendMessageViewModel<T> msg)
@@ -70,6 +79,11 @@ namespace Emaily.Web.Hubs
                 _hubLifetimeScope.Dispose();
 
             base.Dispose(disposing);
+        }
+
+        public void Notify(string userId, dynamic message)
+        {
+            Talk(new SendMessageViewModel<dynamic> { Sender ="Sytem", Message = message, UserId = userId });
         }
     }
 }

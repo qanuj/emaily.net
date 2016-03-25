@@ -93,6 +93,13 @@
             controller: "listEditController",
             resolve: {}
         })
+        .state('importList', {
+            url: "/list/import/:id",
+            templateUrl: root + "list/list.import.html",
+            data: { title: 'Import via CSV file' },
+            controller: "listImportController",
+            resolve: {}
+        })
         .state('templates', {
             url: "/templates?page&parent&pageSize&q&mode",
             templateUrl: root + "template/template.cards.html",

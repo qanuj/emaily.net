@@ -32,6 +32,7 @@ namespace Emaily.Web.Models
 
     public class UserProfileViewModel  : UserProfileEditViewModel
     {
+        public string Id { get; set; }
         public bool EmailConfirmed { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public string Role { get; set; }

@@ -24,7 +24,6 @@
     'ui.bootstrap', // ui-bootstrap (ex: carousel, pagination, dialog)
     'blueimp.fileupload', //jQuery File Uploader Component
     'rzModule', //slider module
-    'kendo.directives',
     'angular.filter',
     'angular-google-analytics',
     'datatables',
@@ -233,17 +232,10 @@ app.factory('about', ['dataService', '$rootScope',function (db, $rootScope) {
     }
     return factory;
 }]);
-app.controller('HeaderController', ['$scope', '$rootScope', 'dataService', 'Talker', '$state','logger', function ($scope, $rootScope, db, talker, $state,logger) {
+app.controller('HeaderController', ['$scope',function ($scope) {
     $scope.$on('$includeContentLoaded', function () {
         Layout.initHeader(); // init header
     });
-
-    function onAnyMessage(msg) {
-        //console.log(msg);
-    }
-
-    talker.on('any', onAnyMessage);
-
 }]);
 
 /* Setup Layout Part - Sidebar */
@@ -271,6 +263,7 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
     $rootScope.canImpersonate = role == 'admin';
     $rootScope.canPermission = role == 'admin';
 
+    $rootScope.encoder = '/upload';
     $rootScope.cols = 'col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12';
     $rootScope.uploadList = {};
     $rootScope.fields = [
@@ -325,16 +318,22 @@ app.run(["$rootScope", "settings", "$state", 'about', '$urlRouter', 'Talker', 'e
         }
         return perms;
     }
+    
+    function onAnyMessage(msg) {
+        console.log('Next', msg);
+    }
+
     function getMySelf() {
         return about.me().then(function (me) {
-            $rootScope.user = me.ID;
-            $rootScope.me = me;
+            $rootScope.user = me.id;
+            $rootScope.me = me;    
             $rootScope.brands = me.apps;
             if (me.role == 'Admin') {
                 me.Write = enums.apiaccessenum.join(' ');//HACK?
             }
             $rootScope.perm = buildPermission(me);
-            talker.connect('que-' + me.ID); 
+            talker.on('any', onAnyMessage);
+            talker.connect('msg-' + me.id); 
         });
     }
 

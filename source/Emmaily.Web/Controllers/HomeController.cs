@@ -92,5 +92,6 @@ namespace Emaily.Web.Controllers
 
             return Json(1, JsonRequestBehavior.AllowGet);
         }
+                              
     }
 }

@@ -1,5 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.OData;
 using System.Web.Http.OData.Query;
@@ -33,7 +37,7 @@ namespace Emaily.Web.Controllers.Api.v1
         {
             return Page(_service.Subscribers(list), options);
         }
-        
+
         /// <summary>
         /// PUT command to insert a template
         /// </summary>
@@ -41,12 +45,34 @@ namespace Emaily.Web.Controllers.Api.v1
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut, Route]
-        public HttpResponseMessage Put(int list,CreateSubscriberVM model)
+        public HttpResponseMessage Put(int list, CreateSubscriberVM model)
         {
             if (ModelState.IsValid)
             {
-                var item = _service.ImportSubscribers(model.Data,list);
+                var item = _service.ImportSubscribers(model.Data, list);
                 return Accepted(item);
+            }
+            return Bad(ModelState);
+        }
+
+        /// <summary>
+        /// PUT command to insert a template
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        [HttpGet, Route("import/{filename}")]
+        public HttpResponseMessage GetImport(int list, string filename)
+        {
+            if (ModelState.IsValid)
+            {
+                var filePath = HostingEnvironment.MapPath(string.Format("~/App_Data/Uploads/{0}.csv", filename));
+                if (File.Exists(filePath))
+                {
+                    var item = _service.ImportSubscribers(File.OpenText(filePath) , list);
+                    return Accepted(item);
+                }
+                return Bad(new {error="File not found",filename= filePath });
             }
             return Bad(ModelState);
         }

@@ -75,6 +75,7 @@ namespace Emaily.Web.Controllers.Api.v1
             var role = roleInfo==null ? null : await _roleManager.FindByIdAsync(roleInfo.RoleId);
             return new UserProfileViewModel
             {
+                Id=user.Id,
                 Role = role?.Name,
                 Read = role?.Read ?? ApiAccessEnum.None,
                 Write = role?.Write ?? ApiAccessEnum.None,

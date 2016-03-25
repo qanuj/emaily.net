@@ -10,6 +10,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Amazon.SimpleEmail.Model;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -97,6 +98,7 @@ namespace Emaily.Services
         private readonly ICloudProvider _cloudProvider;
         //private readonly IStorageProvider _storageProvider;
         private readonly IAppProvider _appProvider;
+        private readonly INotificationHub _notificationHub; 
 
 
         public EmailService(
@@ -104,7 +106,8 @@ namespace Emaily.Services
             IRepository<Plan> planRepository, 
             IRepository<Client> clientRepository, 
             IRepository<NormalCampaign> campaignRepository, 
-            IRepository<List> listRepository, 
+            IRepository<List> listRepository,
+            IRepository<SubscriberReport> subscriberReportRepository,
             IRepository<AutoEmail> autoEmailRepository, 
             IRepository<AutoResponder> autoResponderRepository, 
             IRepository<Domain> domainRepository, 
@@ -117,7 +120,8 @@ namespace Emaily.Services
             IRepository<Click> clickRepository,
             IEmailProvider emailProvider, 
             ICloudProvider cloudProvider, 
-            IAppProvider appProvider, IRepository<SubscriberReport> subscriberReportRepository)
+            IAppProvider appProvider, 
+            INotificationHub notificationHub)
         {
             _appRepository = appRepository;
             _planRepository = planRepository;
@@ -130,14 +134,14 @@ namespace Emaily.Services
             _templateRepository = templateRepository;
             _campaignListRepository = campaignListRepository;
             _campaignResultRepository = campaignResultRepository;
+            _subscriberReportRepository = subscriberReportRepository;
             _linkRepository = linkRepository;
             _subscriberRepository = subscriberRepository;
             _promoRepository = promoRepository;
             _emailProvider = emailProvider;
-            //_storageProvider = storageProvider;
             _cloudProvider = cloudProvider;
             _appProvider = appProvider;
-            _subscriberReportRepository = subscriberReportRepository;
+            _notificationHub = notificationHub;
             _clickRepository = clickRepository;
         }
         public IQueryable<AppVM> Apps()
@@ -278,15 +282,19 @@ namespace Emaily.Services
             });
         }
 
-        private void UpdateSubcriberReport(int listId, int addedOrRemoved)
+        private void UpdateSubcriberReport(List list, int addedOrRemoved)
         {
-            var lastOne=_subscriberReportRepository.All.OrderByDescending(x => x.Id).FirstOrDefault(x => x.ListId == listId);
+            if (addedOrRemoved == 0) return;
+            var lastOne=_subscriberReportRepository.All.OrderByDescending(x => x.Id).FirstOrDefault(x => x.ListId == list.Id);
             if (lastOne != null)
             {
                 addedOrRemoved += lastOne.Total;
             }
-            _subscriberReportRepository.Create(new SubscriberReport(addedOrRemoved));
+            list.TotalRecord = addedOrRemoved;
+            _listRepository.Update(list);
+            _subscriberReportRepository.Create(new SubscriberReport(addedOrRemoved,list.Id));
             _subscriberReportRepository.SaveChanges();
+            _notificationHub.Notify(list.OwnerId,NotificationTypeEnum.Import, new {list=list.Id, total=list.TotalRecord });
         }
 
         public SubscriberVM UpdateSubscriber(UpdateSubscriberVM model)
@@ -406,7 +414,7 @@ namespace Emaily.Services
 
             if (updateCounts)
             {
-                UpdateSubcriberReport(list.Id, 1);
+                UpdateSubcriberReport(list, 1);
                 _subscriberRepository.SaveChanges();
             }
 
@@ -423,37 +431,7 @@ namespace Emaily.Services
             }
         }
 
-        public ImportResult ImportSubscribers(IDictionary<string,ListEmail> items,int listId)
-        {
-            var result = new ImportResult {};
-            var list=_listRepository.ById(listId);
-            foreach (var item in items)
-            {
-                try
-                {
-                    if (!IsValidEmail(item.Key)) continue;
-
-                    SubscribeInternal(new CreateSubscriber
-                    {
-                        Name = item.Value.Name,
-                        Email = item.Key,
-                        ListId = listId,
-                        Custom = item.Value.Custom
-                    }, list, false, false);
-                    result.Added++;
-                }
-                catch(Exception)
-                {
-                    result.Failed++;
-                }
-            }
-            if (result.Added > 0)
-            {
-                UpdateSubcriberReport(list.Id, result.Added);
-                _subscriberRepository.SaveChanges();
-            }
-            return result;
-        }
+        private const int ImportEvery=125;  
 
         private Stream GenerateStreamFromString(string text)
         {
@@ -465,53 +443,71 @@ namespace Emaily.Services
             return stream;
         }
 
-        public ImportResult ImportSubscribers(string importData, int listId)
+        public ImportResult ImportSubscribers(TextReader reader, int listId)
         {
             var result = new ImportResult { };
             var list = _listRepository.ById(listId);
-            if(list==null) throw new Exception("List not found");
-            using (var csv = new CsvReader(new StreamReader(GenerateStreamFromString(importData)),
-                new CsvConfiguration()
-                {
-                    IsHeaderCaseSensitive = true,
-                    Encoding = Encoding.UTF8,
-                    IgnoreBlankLines = true,
-                    
-                })) {                
-                while (csv.Read())
-                {
-                    try
+            if (list == null) throw new Exception("List not found");
+            Task.Run(()=>
+            {
+                using (var csv = new CsvReader(reader,
+                    new CsvConfiguration()
                     {
-                        var item = csv.GetRecord<dynamic>();
-                        var record = new ListEmail
-                        {
-                            Email = item.email,
-                            Name = item.name
-                        };
+                        IsHeaderCaseSensitive = true,
+                        Encoding = Encoding.UTF8,
+                        IgnoreBlankLines = true,
 
-                        if (!IsValidEmail(record.Email)) continue;
-                        record.Custom = JsonConvert.SerializeObject(item);
-
-                        SubscribeInternal(new CreateSubscriber
-                        {
-                            Name = record.Name,
-                            Email = record.Email,
-                            ListId = listId,
-                            Custom = item
-                        }, list, false, false);
-                        result.Added++;
-                    }
-                    catch (Exception)
+                    }))
+                {
+                    while (csv.Read())
                     {
-                        result.Failed++;
+                        try
+                        {
+                            var item = csv.GetRecord<dynamic>();
+                            var record = new ListEmail
+                            {
+                                Email = item.Email,
+                                Name = item.Name
+                            };
+
+                            if (!IsValidEmail(record.Email)) continue;
+
+                            var dict = (IDictionary<string, object>)item;
+                            if (dict.ContainsKey("Email")) dict.Remove("Email");
+                            if (dict.ContainsKey("Name")) dict.Remove("Name");
+
+                            SubscribeInternal(new CreateSubscriber
+                            {
+                                Name = record.Name,
+                                Email = record.Email,
+                                ListId = listId,
+                                Custom = item
+                            }, list, false, false);
+                            result.Added++;
+
+                            if (result.Added % ImportEvery == 0)
+                            {
+                                UpdateSubcriberReport(list, result.Added);
+                                _subscriberRepository.SaveChanges();
+                                result.Added = 0;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            result.Failed++;
+                        }
                     }
                 }
-            }
-            if (result.Added <= 0) return result;
-
-            UpdateSubcriberReport(list.Id, result.Added);
-            _subscriberRepository.SaveChanges();
+                UpdateSubcriberReport(list, result.Added);
+                _subscriberRepository.SaveChanges();
+            });
+           
             return result;
+        }
+
+        public ImportResult ImportSubscribers(string importData, int listId)
+        {
+            return ImportSubscribers(new StreamReader(GenerateStreamFromString(importData)), listId);
         }
 
         public void ConfirmSubscription(UpdateSubscriptionVM model)

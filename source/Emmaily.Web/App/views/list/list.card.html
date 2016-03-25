@@ -2,23 +2,27 @@
     <div class="mt-card-avatar mt-overlay-1">
         <div class="mt-picture  mt-16x9" background-image="{{card.picture | gravtaar:card.Email:275:'notfound'}}">
             <i ng-if="!card.picture" ng-class="icon|fileIcon:'5x'"></i>
-            <h4 ng-if="card.isSent" class="across bg-green uppercase">Sent</h4>
         </div>
         <div class="mt-overlay">
             <ul class="mt-info">
                 <li ng-if="!card.isSent">
-                    <a class="btn default btn-outline" title="Details - {{card.Title}}" ui-sref="editList({id:card.ID})">
+                    <a class="btn default btn-outline" title="Details - {{card.Title}}" ui-sref="editList({id:card.id})">
                         <i class="fa fa-pencil-square-o"></i>
                     </a>
                 </li>
                 <li ng-if="card.isSent">
-                    <a class="btn default btn-outline" title="Report - {{card.Title}}" ui-sref="report({id:card.ID})">
+                    <a class="btn default btn-outline" title="Report - {{card.Title}}" ui-sref="report({id:card.id})">
                         <i class="fa fa-pie-chart"></i>
                     </a>
                 </li>
-                <li ng-if="perm.company.write">
+                <li ng-if="perm.current.write">
                     <a class="btn default btn-outline" title="Delete {{title}} - {{card.Title}}" ng-click="trash(card)">
                         <i class="fa fa-trash-o"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.current.write">
+                    <a class="btn default btn-outline" title="Add Subscriber - {{card.Title}}" ui-sref="importList({id:card.id})">
+                        <i class="fa fa-plus"></i>
                     </a>
                 </li>
             </ul>
@@ -27,5 +31,8 @@
     <div class="mt-card-content" ng-click="toggleOne(card)">
         <h3 class="mt-card-name">{{card.name}}</h3>
         <p class="mt-card-desc font-grey-mint">{{card.description}}&nbsp;</p>
+    </div>
+    <div class="mt-card-badges">
+        <div ng-if="card.total" class="ribbon ribbon-color-success">{{card.total | short}}</div>
     </div>
 </div>

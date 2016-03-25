@@ -9,6 +9,7 @@ using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using Emaily.Core.Abstraction.Services;
 using Emaily.Services;
+using Emaily.Web.Hubs;
 using Emaily.Web.Models;
 using Emaily.Web.Security;
 using Microsoft.AspNet.Identity;
@@ -32,6 +33,7 @@ namespace Emaily.Web
             builder.Register<IIdentity>(c => HttpContext.Current.User.Identity).InstancePerRequest();
             builder.Register<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
             builder.Register<IDataProtectionProvider>(c => app.GetDataProtectionProvider()).InstancePerRequest();
+            builder.RegisterType<NotificationHubNotifier>().As<INotificationHub>();
             builder.RegisterType<UtilService>().As<IUtilService>();
             builder.RegisterType<Services.EmailService>().As<IEmailService>();
             builder.RegisterType<SessionAppProvider>().As<IAppProvider>();

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Emaily.Core.DTO;
 
@@ -8,8 +9,9 @@ namespace Emaily.Core.Abstraction.Services
     {
         ListVM CreateList(CreateListVM model);
         void Subscribe(CreateSubscriber model);
-        ImportResult ImportSubscribers(IDictionary<string, ListEmail> items, int listId);
         ImportResult ImportSubscribers(string importData, int listId);
+        ImportResult ImportSubscribers(TextReader reader, int listId);
+
         void ConfirmSubscription(UpdateSubscriptionVM model);
         void Unsubscribe(ListEmail model);
         ListVM RenameList(RenameListVM model);

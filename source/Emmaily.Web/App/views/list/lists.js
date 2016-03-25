@@ -20,6 +20,10 @@
             return Popup.open({ key: 'list/list.create', ctrl: 'listCreateController' }).then(loadRecords);
         }
 
+        $scope.import = function () {
+            return Popup.open({ key: 'list/list.import', ctrl: 'listImportController' }).then(loadRecords);
+        }
+
         $scope.trash = function (card) {
             Popup.trash({ items: [card], title: title }).then(function () {
                 return trashOne(card);

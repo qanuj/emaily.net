@@ -1,5 +1,6 @@
 using System.CodeDom;
 using Emaily.Core.DTO;
+using Emaily.Core.Enumerations;
 
 namespace Emaily.Services
 {
@@ -12,6 +13,10 @@ namespace Emaily.Services
         CloudServiceInfo Info { get; }
     }
 
+    public interface INotificationHub
+    {
+        void Notify(string userId, NotificationTypeEnum mode, dynamic message);
+    }
 
     public interface IAppProvider
     {
