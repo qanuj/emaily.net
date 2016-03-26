@@ -63,45 +63,6 @@
         return _inMB(bytes) / 1024;
     }
 
-    function findCurrentIP() {
-        var tmp = window.location.hash.split('#');
-        return tmp[tmp.length - 1].split('?')[0].split('/')[0];
-    }
-
-    function getIP(ips) {
-        if (!!ips) {
-            var o = {};
-            for (var i = 0; i < ips.length; i++) {
-                var x = {
-                    name: ips[i].Name,
-                    plural: ips[i].Plural,
-                    id: ips[i].ID,
-                    icon: ips[i].Icon
-                };
-                o[makeWebSafe(x.name)] = x;
-                o[makeWebSafe(x.plural)] = x;
-            }
-            this.IP = o;
-        }
-        return this.IP[findCurrentIP()];
-    }
-    function getAllIP() {
-        return this.allIP;
-    }
-
-    function getAllIntellectNav() {
-        return this.allIntellectNavs;
-    }
-
-    function setAllIP(ips) {
-        this.allIP = ips;
-        this.allIntellectNavs = JSON.parse(JSON.stringify(ips));
-        this.allIntellectNavs.push({ Mode: 'a', Name: "Video", Plural: "Videos", Icon: "film" });
-        this.allIntellectNavs.push({ Mode: 'a', Name: "Audio", Plural: "Audios", Icon: "music" });
-        this.allIntellectNavs.push({ Mode: 'a', Name: "Image", Plural: "Images", Icon: "picture-o" });
-        this.allIntellectNavs.push({ Mode: 'a', Name: "Document", Plural: "Documents", Icon: "file-o" });
-        this.allIntellectNavs.unshift({ Mode: 'c', Name: "Company", Plural: "Companies", Icon: "building" });
-    }
     function makeWebSafe(val) {
         if (val == null) return "";
         return val.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
@@ -112,35 +73,10 @@
         return re.test(email);
     }
 
-    function fixPicture(value, all) {
-        var size = 150, email = null;
-        if (all && !!all.size) { size = unwrap(all.size); }
-        value = unwrap(value);
-        if (typeof (value) === 'object') {
-            if (!value) { return value; }
-            email = value.Email;
-            value = value.Picture || value.Email;
-        }
-        value = unwrap(value);
-        if (isEmail(value)) { return '//www.gravatar.com/avatar/' + md5(email) + '?s=' + size + '&d=mm'; }
-        if (!!value) {
-            if (value.indexOf('youtube.com') > -1) return value;
-            if (value.indexOf('http://') === -1) value = 'http://images.vidzapper.com/' + value;
-            if (value.indexOf('www.gravatar.com') === -1 && value.indexOf("notfound") === -1 && value.indexOf('placehold.it/') === -1 && value !== "http://images.vidzapper.com/") return '//uplive.vzconsole.com/img/' + (value.replace('http://', '').replace('https://', '')) + '?h=' + size;
-        }
-        email = unwrap(email);
-        if (!!email) return '//www.gravatar.com/avatar/' + md5(email) + '?s=' + size + '&d=mm';
-        return null;
-    }
-
     var funcs = {
         pageSize: 10,
         calculatePaging: calculatePaging,
         orderBy: orderBy,
-        ip: getIP,
-        setAllIP: setAllIP,
-        getAllIP: getAllIP,
-        getAllIntellectNav: getAllIntellectNav,
         safe: makeWebSafe,
         format: {
             bit: _formatBitrate,

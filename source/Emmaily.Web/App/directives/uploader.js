@@ -121,9 +121,9 @@
                     var res = queue.Result.Bag || {};
 
                     var original = queue.Request.Bag.original || '';
-                    var taskResult = !!original ? map[original] : map[queue.ID];
+                    var taskResult = !!original ? map[original] : map[queue.id];
 
-                    if (!taskResult) return;
+                    if (!taskResult) return;                                         
 
                     if (queue.State === -1) {
                         if (!res.status) res.status = 'code-BLNK';

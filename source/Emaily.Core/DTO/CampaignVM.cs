@@ -8,7 +8,8 @@ namespace Emaily.Core.DTO
     {
         public int Id { get; set; }
         public string Errors { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
+        public string Label { get; set; }
         public int? Recipients { get; set; }
         public DateTime? Started { get; set; }
         public int? UniqueOpens { get; set; }
@@ -19,7 +20,8 @@ namespace Emaily.Core.DTO
     public class CampaignReportVM
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
+        public string Label { get; set; }
         public int? Recipients { get; set; }
         public DateTime Started { get; set; }
         public int? UniqueOpens { get; set; }
@@ -30,7 +32,7 @@ namespace Emaily.Core.DTO
     public class TemplateVM
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
         public DateTime? Created { get; set; }
     }
 
@@ -52,7 +54,7 @@ namespace Emaily.Core.DTO
     public class CampaignInfoVM
     {
         public int Id { get; set; }
-        public string Title { get; set; }
+        public string Name { get; set; }
         public string Label { get; set; }
         public string Custom { get; set; }
         public IEnumerable<int> Lists { get; set; }

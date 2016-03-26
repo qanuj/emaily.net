@@ -6,7 +6,7 @@
         <div class="mt-overlay">
             <ul class="mt-info at-top">
                 <li>
-                    <a class="btn default btn-outline" title="Remove - {{card.Title}}" ng-click="trash(card)">
+                    <a class="btn default btn-outline" title="Remove - {{card.name}}" ng-click="trash(card)">
                         <i class="fa fa-remove"></i>
                     </a>
                 </li>
@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="mt-card-content" ng-click="toggleOne(card)">
-        <h4 class="mt-card-name">{{card.Title}}</h4>
+        <h4 class="mt-card-name">{{card.name}}</h4>
         <p class="mt-card-desc font-grey-mint">{{card.Description}}&nbsp;</p>
     </div>
 </div>

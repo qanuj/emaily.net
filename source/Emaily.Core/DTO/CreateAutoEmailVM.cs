@@ -1,10 +1,12 @@
-﻿namespace Emaily.Core.DTO
+﻿using Emaily.Core.Enumerations;
+
+namespace Emaily.Core.DTO
 {
-    public class CreateAutoEmailVM : CreateCampaignVM
+    public class CreateAutoEmailVM
     {
-        public int AutoResponderId { get; set; }
-        public dynamic Custom { get; set; }
-        public string TimeCondition { get; set; }
-        public string TimeZone { get; set; }
+        public string Name { get; set; }
+        public int AppId { get; set; }
+        public int ListId { get; set; }
+        public AutoResponderEnum Mode { get; set; }
     }
 }

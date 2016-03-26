@@ -5,77 +5,20 @@ using Emaily.Core.Abstraction.Services;
 using Emaily.Core.Data;
 using Emaily.Core.DTO;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail.Model;
 using CsvHelper;
 using CsvHelper.Configuration;
+using Emaily.Core.Abstraction;
 using Emaily.Core.Data.Complex;
 using Emaily.Core.Enumerations;
 using Newtonsoft.Json;
 
 namespace Emaily.Services
 {
-    public class RegexUtilities
-    {
-        bool invalid = false;
-
-        public bool IsValidEmail(string strIn)
-        {
-            invalid = false;
-            if (String.IsNullOrEmpty(strIn))
-                return false;
-
-            // Use IdnMapping class to convert Unicode domain names.
-            try
-            {
-                strIn = Regex.Replace(strIn, @"(@)(.+)$", this.DomainMapper,
-                                      RegexOptions.None, TimeSpan.FromMilliseconds(200));
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-
-            if (invalid)
-                return false;
-
-            // Return true if strIn is in valid e-mail format.
-            try
-            {
-                return Regex.IsMatch(strIn,
-                      @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-                      @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
-                      RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                return false;
-            }
-        }
-
-        private string DomainMapper(Match match)
-        {
-            // IdnMapping class with default property values.
-            IdnMapping idn = new IdnMapping();
-
-            string domainName = match.Groups[2].Value;
-            try
-            {
-                domainName = idn.GetAscii(domainName);
-            }
-            catch (ArgumentException)
-            {
-                invalid = true;
-            }
-            return match.Groups[1].Value + domainName;
-        }
-    }
-
     public class EmailService : IEmailService
     {
         private readonly IRepository<App> _appRepository;
@@ -93,6 +36,7 @@ namespace Emaily.Services
         private readonly IRepository<Subscriber> _subscriberRepository;
         private readonly IRepository<List> _listRepository;
         private readonly IRepository<SubscriberReport> _subscriberReportRepository;
+        private readonly IRepository<Attachment> _attachmentRepository;
         private readonly IRepository<Promo> _promoRepository;
         private readonly IEmailProvider _emailProvider;
         private readonly ICloudProvider _cloudProvider;
@@ -121,7 +65,7 @@ namespace Emaily.Services
             IEmailProvider emailProvider,
             ICloudProvider cloudProvider,
             IAppProvider appProvider,
-            INotificationHub notificationHub)
+            INotificationHub notificationHub, IRepository<Attachment> attachmentRepository)
         {
             _appRepository = appRepository;
             _planRepository = planRepository;
@@ -142,6 +86,7 @@ namespace Emaily.Services
             _cloudProvider = cloudProvider;
             _appProvider = appProvider;
             _notificationHub = notificationHub;
+            _attachmentRepository = attachmentRepository;
             _clickRepository = clickRepository;
         }
         public IQueryable<AppVM> Apps()
@@ -256,11 +201,12 @@ namespace Emaily.Services
         }
         public IQueryable<CampaignVM> Campaigns()
         {
-            return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new CampaignVM
+            return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.AppId)).Select(x => new CampaignVM
             {
                 Errors = x.Errors,
                 Id = x.Id,
-                Title = x.Label == "" || x.Label == null ? x.Name : x.Label,
+                Name = x.Name,
+                Label = x.Label,
                 Status = x.Status,
                 Recipients = x.Recipients,
                 Started = x.Started,
@@ -270,10 +216,11 @@ namespace Emaily.Services
         }
         public IQueryable<CampaignReportVM> CampaignReports()
         {
-            return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.Id) && x.Started.HasValue).Select(x => new CampaignReportVM
+            return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.AppId) && x.Started.HasValue).Select(x => new CampaignReportVM
             {
                 Id = x.Id,
-                Title = x.Label == "" || x.Label == null ? x.Name : x.Label,
+                Name = x.Name,
+                Label = x.Label,
                 Status = x.Status,
                 Recipients = x.Recipients,
                 Started = x.Started.Value,
@@ -319,12 +266,35 @@ namespace Emaily.Services
             return _subscriberRepository.SaveChanges() > 0;
         }
 
+        public IQueryable<AttachmentVM> Attachments(int template)
+        {
+            return _attachmentRepository.All.Where(x=>x.TemplateId==template).Select(x => new AttachmentVM
+            {
+                   Id = x.Id,
+                   Name = x.Name,
+                   TemplateId = x.TemplateId,
+                   ContentType = x.ContentType,
+                   Size = x.Size,
+                   Url = x.Url
+            });
+        }
+
+        public AttachmentVM CreateAttachment(CreateAttachmentVM model, int template)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DeleteAttachment(int template, int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IQueryable<TemplateVM> Templates()
         {
-            return _templateRepository.All.Where(x => _appProvider.Apps.Contains(x.Id)).Select(x => new TemplateVM
+            return _templateRepository.All.Where(x => _appProvider.Apps.Contains(x.AppId)).Select(x => new TemplateVM
             {
                 Id = x.Id,
-                Title = x.Name,
+                Name = x.Name,
                 Created = x.Created
             });
         }
@@ -369,13 +339,11 @@ namespace Emaily.Services
 
         public ListVM CreateList(CreateListVM model)
         {
-            var app = _appRepository.ById(model.AppId);
-            if (app == null) throw new Exception("App not found");
-            CheckIsMine(model.AppId);
+            var app = FindApp(model.AppId);
 
             if (_listRepository.All.Any(x => x.AppId == model.AppId && x.Name == model.Name)) throw new Exception("List already exists");
 
-            var list = _listRepository.Create(new List { AppId = model.AppId, Name = model.Name, Key = GenerateRandomString(model.Name) });
+            var list = _listRepository.Create(new List { App = app, Name = model.Name, Key = GenerateRandomString(model.Name) });
             _listRepository.SaveChanges();
 
             return Lists().FirstOrDefault(x => x.Id == list.Id);
@@ -383,7 +351,8 @@ namespace Emaily.Services
 
         public void Subscribe(CreateSubscriber model)
         {
-            SubscribeInternal(model, _listRepository.ById(model.ListId));
+            var list = _listRepository.ById(model.ListId); 
+            SubscribeInternal(model, list, list==null? null : _appRepository.ById(list.AppId));
         }
 
         private bool IsValidEmail(string email)
@@ -391,18 +360,20 @@ namespace Emaily.Services
             return !(string.IsNullOrWhiteSpace(email) || !new RegexUtilities().IsValidEmail(email));
         }
 
-        private void SubscribeInternal(CreateSubscriber model, List list, bool updateCounts = true, bool sendEmail = true)
+        private void SubscribeInternal(CreateSubscriber model, List list, App app, bool updateCounts = true, bool sendEmail = true, IRepository<Subscriber> secondRepository=null)
         {
             if (list == null) throw new Exception("List not found");
+            if (app == null) throw new Exception("App not found");
 
             model.Email = model.Email.ToLower().Trim();
             if (!IsValidEmail(model.Email)) throw new Exception("Invalid Email address");
 
-            var app = _appRepository.ById(list.AppId);
-            if (_subscriberRepository.All.Any(x => x.Email == model.Email && x.ListId == list.Id)) throw new Exception("Already subscribed");
-            if (_subscriberRepository.All.Any(x => x.Email == model.Email && x.IsBounced)) throw new Exception("Already bounced");
+            if (secondRepository == null) secondRepository = _subscriberRepository;
 
-            var subscriber = _subscriberRepository.Create(new Subscriber
+            if (secondRepository.All.Any(x => x.Email == model.Email && x.ListId == list.Id)) throw new Exception("Already subscribed");
+            if (secondRepository.All.Any(x => x.Email == model.Email && x.IsBounced)) throw new Exception("Already bounced");
+
+            var subscriber = secondRepository.Create(new Subscriber
             {
                 AppId = list.AppId,
                 Custom = JsonConvert.SerializeObject(model.Custom),
@@ -416,7 +387,7 @@ namespace Emaily.Services
             if (updateCounts)
             {
                 UpdateSubcriberReport(list, 1);
-                _subscriberRepository.SaveChanges();
+                secondRepository.SaveChanges();
             }
 
             if (sendEmail)
@@ -449,6 +420,9 @@ namespace Emaily.Services
             var result = new ImportResult { };
             var list = _listRepository.ById(listId);
             if (list == null) throw new Exception("List not found");
+
+            var app = FindApp(list.AppId);
+
             using (var csv = new CsvReader(reader,
                 new CsvConfiguration()
                 {
@@ -481,7 +455,7 @@ namespace Emaily.Services
                             Email = record.Email,
                             ListId = listId,
                             Custom = item
-                        }, list, false, false);
+                        }, list, app, false, false);
                         result.Added++;
 
                         if (result.Added % ImportEvery == 0)
@@ -626,55 +600,76 @@ namespace Emaily.Services
 
             _campaignRepository.SaveChanges();
         }
-        public CampaignVM CreateCampaign(CreateCampaignVM model)
+
+        private App FindApp(int appId)
         {
-            var app = _appRepository.ById(model.AppId);
+            var app = _appRepository.ById(appId);
             if (app == null) throw new Exception("App not found");
             CheckIsMine(app.Id);
+            return app;
+        }
+
+        public CampaignVM CreateCampaign(CreateCampaignVM model)
+        {
+            var app = FindApp(model.AppId);
 
             var campaign = _campaignRepository.Create(new NormalCampaign
             {
                 Name = model.Name,
-                Label = model.Label,
+                Label = model.Name,
                 Status = CampaignStatusEnum.Draft,
-                Sender = new EmailAddress
-                {
-                    Name = model.FromName,
-                    Email = app.Sender.Email,
-                    ReplyTo = model.ReplyTo
-                },
-                AppId = app.Id,
-                HtmlText = model.HtmlText,
-                PlainText = model.PlainText,
-                IsHtml = model.IsHtml,
-                OwnerId = _appProvider.OwnerId,
-                QueryString = model.QueryString
+                Sender = app.Sender,
+                App = app,
+                OwnerId = _appProvider.OwnerId
             });
 
             _campaignRepository.SaveChanges();
 
             return Campaigns().FirstOrDefault(x => x.Id == campaign.Id);
         }
+
         public CampaignVM UpdateCampaign(EditCampaignVM model)
         {
-            var campaign = _campaignRepository.ById(model.CampaignId);
+            var campaign = _campaignRepository.ById(model.Id);
             if (campaign == null) throw new Exception("Campaign not found");
             CheckIsMine(campaign.AppId);
 
-            campaign.Name = model.Name;
+            UpdateBody(campaign, model);
             campaign.Label = model.Label;
             campaign.Status = CampaignStatusEnum.Draft;
-            campaign.Sender.Name = model.FromName;
-            campaign.Sender.ReplyTo = model.ReplyTo;
-            campaign.HtmlText = model.HtmlText;
-            campaign.PlainText = model.PlainText;
-            campaign.IsHtml = model.IsHtml;
-            campaign.QueryString = model.QueryString;
 
             _campaignRepository.Update(campaign);
             _campaignRepository.SaveChanges();
 
             return Campaigns().FirstOrDefault(x => x.Id == campaign.Id);
+        }
+
+        public TemplateVM UpdateTemplate(UpdateTemplateVM model)
+        {
+            var template = _templateRepository.ById(model.Id);
+            if (template == null) throw new Exception("Template not found");
+            CheckIsMine(template.AppId);
+
+            UpdateBody(template, model);
+            _templateRepository.Update(template);
+            _templateRepository.SaveChanges();
+
+            return Templates().FirstOrDefault(x => x.Id == template.Id);
+        }
+
+        private void UpdateBody(Template entity, EmailBody model)
+        {
+            entity.Name = model.Name;
+            entity.HtmlText = model.HtmlText;
+            entity.PlainText = model.PlainText;
+            entity.QueryString = model.QueryString;
+            entity.Sender = new EmailAddress
+            {
+                Email = model.Sender.Email,
+                Name = model.Sender.Name,
+                ReplyTo = model.Sender.ReplyTo
+            };
+            entity.Custom = JsonConvert.SerializeObject(model.Custom);
         }
 
         public bool DeleteCampaign(int id)
@@ -695,7 +690,7 @@ namespace Emaily.Services
                 AppId = x.AppId,
                 Custom = x.Custom,
                 Id = x.Id,
-                Title = x.Name,
+                Name = x.Name,
                 Label = x.Label,
                 Future = x.Future,
                 HtmlText = x.HtmlText,
@@ -831,86 +826,52 @@ namespace Emaily.Services
         }
         public TemplateVM CreateTemplate(CreateTemplateVM model)
         {
-            var app = _appRepository.ById(model.AppId);
-            if (app == null) throw new Exception("App not found");
-            CheckIsMine(app.Id);
+            var app = FindApp(model.AppId);
 
             var template = _templateRepository.Create(new Template
             {
-                AppId = model.AppId,
                 Name = model.Name,
-                Custom = JsonConvert.SerializeObject(model.Custom),
-                HtmlText = model.HtmlText,
-                PlainText = model.PlainText,
-                QueryString = model.QueryString,
+                Sender = app.Sender,
+                AppId = app.Id,
                 OwnerId = _appProvider.OwnerId
             });
-            _templateRepository.SaveChanges();
-
-            return Templates().FirstOrDefault(x => x.Id == template.Id);
-
-        }
-        public TemplateVM UpdateTemplate(UpdateTemplateVM model)
-        {
-            var template = _templateRepository.ById(model.Id);
-            if (template == null) throw new Exception("Template not found");
-            CheckIsMine(template.AppId);
-
-            template.Name = model.Name;
-            template.HtmlText = model.HtmlText;
-            template.PlainText = model.PlainText;
-            template.QueryString = model.QueryString;
-            template.Sender = new EmailAddress
-            {
-                Email = model.Sender.Email,
-                Name = model.Sender.Name,
-                ReplyTo = model.Sender.ReplyTo
-            };
-            template.Custom = JsonConvert.SerializeObject(model.Custom);
-
-            _templateRepository.Update(template);
 
             _templateRepository.SaveChanges();
 
             return Templates().FirstOrDefault(x => x.Id == template.Id);
+
         }
         public void CreateAutoEmail(CreateAutoEmailVM model)
         {
-            var autoResponder = _autoResponderRepository.ById(model.AutoResponderId);
-            if (autoResponder == null) throw new Exception("Auto Responder not found");
+            var app = FindApp(model.AppId);
 
-            var list = _listRepository.ById(autoResponder.ListId);
+            var list = _listRepository.ById(model.ListId);
             if (list == null) throw new Exception("List not found");
 
-            var app = _appRepository.ById(list.AppId);
-            if (app == null) throw new Exception("App not found");
+
+            var autoReponder = _autoResponderRepository.All.FirstOrDefault(x=>x.ListId==list.Id && x.Mode==model.Mode) ??
+                               new AutoResponder
+            {
+                Name = model.Name,
+                List = list,
+                Mode = model.Mode
+            };
 
             _autoEmailRepository.Create(new AutoEmail
             {
-                AutoResponderId = model.AutoResponderId,
+                AutoResponder = autoReponder,
                 AppId = list.AppId,
-                Name = model.Name,
-                Custom = JsonConvert.SerializeObject(model.Custom),
-                TimeCondition = model.TimeCondition,
-                TimeZone = model.TimeZone,
-                HtmlText = model.HtmlText,
-                IsHtml = model.IsHtml,
-                Label = model.Label,
-                PlainText = model.PlainText,
+                Name = model.Name, 
                 OwnerId = _appProvider.OwnerId,
-                QueryString = model.QueryString,
-                Sender = new EmailAddress
-                {
-                    Name = model.FromName,
-                    Email = app.Sender.Email,
-                    ReplyTo = model.ReplyTo
-                },
+                Sender = app.Sender,
                 Status = CampaignStatusEnum.Active
             });
 
             _autoResponderRepository.SaveChanges();
 
         }
+
+
         public void UpdateAutoEmail(UpdateAutoEmailVM model)
         {
             var autoEmail = _autoEmailRepository.ById(model.Id);
@@ -919,17 +880,10 @@ namespace Emaily.Services
             var autoResponder = _autoResponderRepository.ById(autoEmail.AutoResponderId);
             if (autoResponder == null) throw new Exception("Auto Responder not found");
 
-            autoEmail.Name = model.Name;
-            autoEmail.Label = model.Label;
-            autoEmail.Sender.Name = model.FromName;
-            autoEmail.Sender.ReplyTo = model.ReplyTo;
-            autoEmail.HtmlText = model.HtmlText;
-            autoEmail.PlainText = model.PlainText;
-            autoEmail.IsHtml = model.IsHtml;
-            autoEmail.QueryString = model.QueryString;
+            UpdateBody(autoEmail, model);
+
             autoEmail.TimeCondition = model.TimeCondition;
             autoEmail.TimeZone = model.TimeZone;
-            autoEmail.Custom = JsonConvert.SerializeObject(model.Custom);
 
             _autoEmailRepository.Update(autoEmail);
             _autoResponderRepository.SaveChanges();

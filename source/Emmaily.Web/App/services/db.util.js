@@ -61,46 +61,6 @@
     function _inGB(bytes) {
         return _inMB(bytes) / 1024;
     }
-
-    function findCurrentIP() {
-        var tmp = window.location.hash.split('#');
-        return tmp[tmp.length - 1].split('?')[0].split('/')[0];
-    }
-
-    function getIP(ips) {
-        if (!!ips) {
-            var o = {};
-            for (var i = 0; i < ips.length; i++) {
-                var x = {
-                    name: ips[i].Name,
-                    plural: ips[i].Plural,
-                    id: ips[i].ID,
-                    icon: ips[i].Icon
-                };
-                o[makeWebSafe(x.name)] = x;
-                o[makeWebSafe(x.plural)] = x;
-            }
-            this.IP = o;
-        }
-        return this.IP[findCurrentIP()];
-    }
-    function getAllIP() {
-        return this.allIP;
-    }
-
-    function getAllIntellectNav() {
-        return this.allIntellectNavs;
-    }
-
-    function setAllIP(ips) {
-        this.allIP = ips;
-        this.allIntellectNavs = JSON.parse(JSON.stringify(ips));
-        this.allIntellectNavs.push({ Mode: 'a', Name: "Video", Plural: "Videos", Icon: "film" });
-        this.allIntellectNavs.push({ Mode: 'a', Name: "Audio", Plural: "Audios", Icon: "music" });
-        this.allIntellectNavs.push({ Mode: 'a', Name: "Image", Plural: "Images", Icon: "picture-o" });
-        this.allIntellectNavs.push({ Mode: 'a', Name: "Document", Plural: "Documents", Icon: "file-o" });
-        this.allIntellectNavs.unshift({ Mode: 'c', Name: "Company", Plural: "Companies", Icon: "building" });
-    }
     function makeWebSafe(val) {
         if (val == null) return "";
         return val.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
@@ -110,10 +70,6 @@
         pageSize: 10,
         calculatePaging: calculatePaging,
         orderBy: orderBy,
-        ip: getIP,
-        setAllIP: setAllIP,
-        getAllIP: getAllIP,
-        getAllIntellectNav: getAllIntellectNav,
         safe: makeWebSafe,
         format: {
             bit: _formatBitrate,

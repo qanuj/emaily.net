@@ -23,14 +23,14 @@
         }
 
         function loadAttachments() {
-            return db.get('attachment/all?$orderby=ID desc&$filter=CampaignId eq ' + $stateParams.id).then(function (attachments) {
+            return db.get('attachment/'+$stateParams.id).then(function (attachments) {
                 $scope.attachments = attachments;
             });
         }
 
         function bindEntity(result) {
             $scope.record = result;
-            $scope.record.picture = { url: result.picture, email: result.email, title: result.name };
+            $scope.record.picture = { url: result.picture, email: result.email, title: result.title };
         }
 
         function loadCampaign() {

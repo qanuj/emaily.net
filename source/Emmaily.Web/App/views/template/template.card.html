@@ -7,17 +7,17 @@
         <div class="mt-overlay">
             <ul class="mt-info">
                 <li>
-                    <a class="btn default btn-outline" title="Details - {{card.Title}}" ui-sref="editTemplate({id:card.id})">
+                    <a class="btn default btn-outline" title="Details - {{card.name}}" ui-sref="editTemplate({id:card.id})">
                         <i class="fa fa-pencil-square-o"></i>
                     </a>
                 </li>
                 <li ng-if="perm.current.write">
-                    <a class="btn default btn-outline" title="Delete {{title}} - {{card.Title}}" ng-click="trash(card)">
+                    <a class="btn default btn-outline" title="Delete {{title}} - {{card.name}}" ng-click="trash(card)">
                         <i class="fa fa-trash-o"></i>
                     </a>
                 </li>
                 <li ng-if="perm.current.write">
-                    <a class="btn default btn-outline" title="Copy {{title}} - {{card.Title}}" ng-click="copy(card)">
+                    <a class="btn default btn-outline" title="Copy {{title}} - {{card.name}}" ng-click="copy(card)">
                         <i class="fa fa-copy"></i>
                     </a>
                 </li>
@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="mt-card-content" ng-click="toggleOne(card)">
-        <h3 class="mt-card-name">{{card.title}}</h3>
+        <h3 class="mt-card-name">{{card.name}}</h3>
         <p class="mt-card-desc font-grey-mint">{{card.description}}&nbsp;</p>
     </div>
 </div>

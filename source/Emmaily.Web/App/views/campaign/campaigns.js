@@ -39,11 +39,11 @@
         }
 
         function trashOne(card) {
-            return db.trash(table, card.ID).then(function (result) {
+            return db.trash(table, card.id).then(function (result) {
                 logger.log(title, 'Delete "' + card.Title + '" Successful', result);
             });
         }
-
+                                                
 
         loadRecords();
 

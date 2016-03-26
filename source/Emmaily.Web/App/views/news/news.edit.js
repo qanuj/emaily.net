@@ -14,13 +14,13 @@
             var entity = angular.copy(record);
             entity.Published = moment(entity.Published).format(); //Needs to be done for each date value.
             return db.save(table, entity).then(function (result) {
-                if (result.RowsAffected || result.ID) {
-                    logger.info('News ' + record.Title, 'modification success.');
+                if (result.RowsAffected || result.id) {
+                    logger.info('News ' + record.title, 'modification success.');
                     if (!keepPage) {
                         $state.go('blogs');
                     }
                 } else {
-                    logger.err('News ' + record.Title, 'modification failed. ' + result.Error);
+                    logger.err('News ' + record.title, 'modification failed. ' + result.Error);
                 }
             });
         }

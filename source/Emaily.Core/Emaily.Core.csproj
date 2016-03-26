@@ -52,6 +52,7 @@
     <Compile Include="Data\Complex\EmailAddress.cs" />
     <Compile Include="Data\Plan.cs" />
     <Compile Include="Data\Promo.cs" />
+    <Compile Include="Data\UserProfile.cs" />
     <Compile Include="DTO\AppVM.cs" />
     <Compile Include="DTO\CampaignResultVM.cs" />
     <Compile Include="DTO\CampaignVM.cs" />

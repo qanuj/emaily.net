@@ -99,7 +99,7 @@
             return '<iframe class="vz-player" allowfullscreen height="' + $scope.height +
                 '" width="' + $scope.width + '"' +
                 ' src="' + window.location.origin +
-                '/watch?v=7&' + opt.mode + '=' + opt.info.ID +
+                '/watch?v=7&' + opt.mode + '=' + opt.info.id +
                 '&height=' + $scope.height +
                 '&width=' + $scope.width +
                 ($scope.skin ? "&skin=" + $scope.skin : "") +

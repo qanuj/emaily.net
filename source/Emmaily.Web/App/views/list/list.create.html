@@ -8,7 +8,7 @@
             <label class="control-label">Brand</label>
             <ui-select ng-model="record.appId" title="Choose a Brand...">
                 <ui-select-match>{{$select.selected.Name}}</ui-select-match>
-                <ui-select-choices repeat="item.ID as item in brands  | propsFilter: {Name: $select.search}">
+                <ui-select-choices repeat="item.id as item in brands  | propsFilter: {name: $select.search}">
                     {{item.Name}}
                 </ui-select-choices>
             </ui-select>

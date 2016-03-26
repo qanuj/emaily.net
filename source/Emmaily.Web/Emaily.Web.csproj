@@ -235,6 +235,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\BasicApiController.cs" />
     <Compile Include="Controllers\Api\v1\AccountController.cs" />
+    <Compile Include="Controllers\Api\v1\AttachmentContoller.cs" />
     <Compile Include="Controllers\Api\v1\SubscriberContoller.cs" />
     <Compile Include="Controllers\Api\v1\ListContoller.cs" />
     <Compile Include="Controllers\Api\v1\TemplateContoller.cs" />
@@ -251,6 +252,14 @@
     <Compile Include="Migrations\201603260637130_EmailyDatabaseV1.cs" />
     <Compile Include="Migrations\201603260637130_EmailyDatabaseV1.Designer.cs">
       <DependentUpon>201603260637130_EmailyDatabaseV1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603260707513_More Attachment Details.cs" />
+    <Compile Include="Migrations\201603260707513_More Attachment Details.Designer.cs">
+      <DependentUpon>201603260707513_More Attachment Details.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603260735441_Removed Double App mapping.cs" />
+    <Compile Include="Migrations\201603260735441_Removed Double App mapping.Designer.cs">
+      <DependentUpon>201603260735441_Removed Double App mapping.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -1250,6 +1259,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201603260637130_EmailyDatabaseV1.resx">
       <DependentUpon>201603260637130_EmailyDatabaseV1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603260707513_More Attachment Details.resx">
+      <DependentUpon>201603260707513_More Attachment Details.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603260735441_Removed Double App mapping.resx">
+      <DependentUpon>201603260735441_Removed Double App mapping.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

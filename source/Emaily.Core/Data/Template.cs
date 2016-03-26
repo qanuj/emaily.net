@@ -18,6 +18,11 @@ namespace Emaily.Core.Data
 
         public int Price { get; set; }
 
-        public ICollection<Attachment> Attachments { get; set; } 
+        public ICollection<Attachment> Attachments { get; set; }
+
+        public Template()
+        {
+            Sender=new EmailAddress();
+        }
     }
 }

@@ -58,5 +58,9 @@ namespace Emaily.Core.Abstraction.Services
         SubscriberVM UpdateSubscriber(UpdateSubscriberVM model);
         SubscriberVM SubscriberById(int list, int id);
         bool DeleteSubscriber(int list, int id);
+
+        IQueryable<AttachmentVM> Attachments(int template);
+        AttachmentVM CreateAttachment(CreateAttachmentVM model, int template);
+        bool DeleteAttachment(int template, int id);
     }
 }

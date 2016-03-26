@@ -13,15 +13,6 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="control-label">Website</label>
-                            <ui-select ng-model="record.LibraryID" title="Choose a Website...">
-                                <ui-select-match>{{$select.selected.Title}}</ui-select-match>
-                                <ui-select-choices repeat="lang.ID as lang in libraries | propsFilter: {Title: $select.search}">
-                                    {{lang.Title}}
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label">Title</label>
                             <input type="text" class="form-control" ng-model="record.Title" required placeholder="Title" name="Title" />
                         </div>

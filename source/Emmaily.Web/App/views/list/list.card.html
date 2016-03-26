@@ -6,22 +6,22 @@
         <div class="mt-overlay">
             <ul class="mt-info">
                 <li ng-if="!card.isSent">
-                    <a class="btn default btn-outline" title="Details - {{card.Title}}" ui-sref="editList({id:card.id})">
+                    <a class="btn default btn-outline" title="Details - {{card.name}}" ui-sref="editList({id:card.id})">
                         <i class="fa fa-pencil-square-o"></i>
                     </a>
                 </li>
                 <li ng-if="card.isSent">
-                    <a class="btn default btn-outline" title="Report - {{card.Title}}" ui-sref="report({id:card.id})">
+                    <a class="btn default btn-outline" title="Report - {{card.name}}" ui-sref="report({id:card.id})">
                         <i class="fa fa-pie-chart"></i>
                     </a>
                 </li>
                 <li ng-if="perm.current.write">
-                    <a class="btn default btn-outline" title="Delete {{title}} - {{card.Title}}" ng-click="trash(card)">
+                    <a class="btn default btn-outline" title="Delete {{title}} - {{card.name}}" ng-click="trash(card)">
                         <i class="fa fa-trash-o"></i>
                     </a>
                 </li>
                 <li ng-if="perm.current.write">
-                    <a class="btn default btn-outline" title="Add Subscriber - {{card.Title}}" ui-sref="importList({id:card.id})">
+                    <a class="btn default btn-outline" title="Add Subscriber - {{card.name}}" ui-sref="importList({id:card.id})">
                         <i class="fa fa-plus"></i>
                     </a>
                 </li>

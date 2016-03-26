@@ -27,21 +27,6 @@
                 return getUtil('config');
             }
         },
-        enumText: function () {
-            return cache.enumText;
-        },
-        enums: function (name, v) {
-            return getUtil('enums').then(function (d) {
-                for (var x in d) {
-                    cache.enumText[x] = {};
-                    for (var y in d[x]) {
-                        d[x][y].Label = d[x][y].Label.replace(/([a-z])([A-Z])/g, '$1 $2');
-                        cache.enumText[x][d[x][y].ID] = d[x][y].Label;
-                    }
-                }
-                return !v ? d[name] : cache.enumText[name];
-            });
-        },
         get: function(url, page, pageSize, counts, orderBy, filter) {
             return get(BASE+url, page, pageSize, counts, orderBy, filter);
         },
