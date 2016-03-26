@@ -2,7 +2,7 @@
 <div class="portlet light">
     <div class="portlet-title tabbable-line">
         <div class="caption caption-md">
-            <i class="fa fa-code theme-font"></i>
+            <i class="fa fa-paper-plane-o theme-font"></i>
             <span class="caption-subject theme-font bold uppercase">{{record.name}}</span>
             <span class="caption-helper" ng-if="!record">loading...</span>
         </div>
@@ -43,35 +43,32 @@
                         </ui-select-choices>
                     </ui-select>
                 </div>
-                <div class="form-group">
-                    <ul class="list-group">
-                        <li class="list-group-item">
-                            <div class="row">
-                                <div class="col-xs-9">
-                                    <ng-upload-form ng-model="record.attachment"
-                                                    url="{{encoder}}/attachment"
-                                                    quick="true"
-                                                    container="{{record.id}}"
-                                                    user="{{user}}"
-                                                    picture="false"
-                                                    auto-upload="true"
-                                                    title="Attachment"
-                                                    max-chunk-size="10"
-                                                    multiple="true"
-                                                    size-limit="5000000">
-                                    </ng-upload-form>
-                                </div>
-                                <div class="col-xs-3 text-right">                                    
-                                    <span class="badge badge-info">{{totalSize | filesize }}</span>
-                                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-xs-6" ng-if="totalSize<maxAttachmentSize">
+                                <ng-upload-form ng-model="record.attachment"
+                                                url="{{encoder}}/attachment"
+                                                quick="true"
+                                                container="{{record.id}}"
+                                                user="{{user}}"
+                                                picture="false"
+                                                auto-upload="true"
+                                                title="Attachment"
+                                                max-chunk-size="10"
+                                                multiple="true"
+                                                size-limit="5000000">
+                                </ng-upload-form>
                             </div>
-                        </li>
-                        <li class="list-group-item" ng-repeat="att in attachments">
-                            <button class="btn btn-xs btn-danger btn-icon-only" ng-click="removeAttachment(att)"><i class="fa fa-trash-o"></i></button> {{att.name}} <span class="badge badge-info">{{att.size | filesize }}</span>
-                        </li>
-                    </ul>
-                </div>
-                
+                            <div class="col-xs-6 text-right">
+                                <span class="badge badge-info">{{totalSize | filesize }} of {{maxAttachmentSize|filesize}}</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item" ng-repeat="att in attachments">
+                        <button class="btn btn-xs btn-danger btn-icon-only" ng-click="removeAttachment(att)"><i class="fa fa-trash-o"></i></button> {{att.name}} <span class="badge badge-info">{{att.size | filesize }}</span>
+                    </li>
+                </ul>
             </div>
             <div class="col-md-9">
                 <div class="form-group">

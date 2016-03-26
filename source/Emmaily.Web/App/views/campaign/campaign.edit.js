@@ -2,10 +2,10 @@
     '$scope', 'dataService', '$stateParams', '$state', 'logger', function ($scope, db, $stateParams, $state, logger) {
         $scope.title = "Campaign";
         $scope.current = 'campaigns';
-        $scope.icon = "code";
+        $scope.icon = "paper-plane-o";
         $scope.action = "Save";
         $scope.breads = [
-          {link:'campaigns',icon:'code',title:'Campaign'}
+          { link: 'campaigns', icon: 'paper-plane-o', title: 'Campaign' }
         ];
         $scope.readonly = $state.current.data.readonly;
 

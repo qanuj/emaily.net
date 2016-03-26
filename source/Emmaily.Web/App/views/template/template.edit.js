@@ -22,14 +22,48 @@
             });
         }
 
+        $scope.removeAttachment = function (att) {
+            db.trash('attachment/' + $stateParams.id, att.id).then(loadAttachments);
+        }
+
+        $scope.$watch("record.attachment.url", function (newVal) {
+            if (newVal) {
+                console.log('Url', newVal);
+                loadAttachments();
+            }
+        });
+
+        $scope.update = function (record, keepPage) {
+            return db.post('campaign', record).then(function (result) {
+                if (result.id > 0) {
+                    logger.info('Campaign ' + record.name, 'modification success.');
+                    if (!keepPage) {
+                        $state.go('campaigns');
+                    }
+                } else {
+                    logger.err('Campaign ' + record.name, 'modification failed. ' + result.Error);
+                }
+            });
+        }
+
+        function buildTotalSize(attachments) {
+            var totalSize = 0;
+            for (var x in attachments) {
+                totalSize += attachments[x].size;
+            }
+            $scope.totalSize = totalSize;
+        }
+
         function loadAttachments() {
-            return db.get('attachment/'+$stateParams.id).then(function (attachments) {
+            return db.get('attachment/' + $stateParams.id).then(function (attachments) {
                 $scope.attachments = attachments;
+                buildTotalSize(attachments);
             });
         }
 
         function bindEntity(result) {
             $scope.record = result;
+            $scope.record.attachment = { url: '' };
             $scope.record.picture = { url: result.picture, email: result.sender.email, title: result.name };
         }
 
