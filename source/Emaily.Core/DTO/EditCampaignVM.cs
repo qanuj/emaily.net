@@ -4,5 +4,6 @@
     {
         public bool IsHtml { get; set; }
         public int Id { get; set; }
+        public int[] Lists { get; set; }
     }
 }

@@ -12,21 +12,22 @@ namespace Emaily.Web.Utils
         public string Error { get; set; }
         public string Original { get; set; }
         public string Key { get; set; }
+        public bool Added { get; set; }
 
         public FilesStatus() { }
-        public FilesStatus(FileInfo fileInfo, bool isPicture = false) { SetValues(fileInfo.Name, fileInfo.Extension, isPicture); }
+        public FilesStatus(FileInfo fileInfo) { SetValues(fileInfo.Name, fileInfo.Extension); }
 
-        public FilesStatus(FileInfo fileInfo, string fileError, bool isPicture = false)
+        public FilesStatus(FileInfo fileInfo, string fileError)
         {
-            SetValues(fileInfo.Name, fileInfo.Extension, isPicture, (int)fileInfo.Length);
+            SetValues(fileInfo.Name, fileInfo.Extension, (int)fileInfo.Length);
             Error = fileError;
         }
 
-        public FilesStatus(string fileName, string ext = "", bool isPicture = false, long fileLength = 0, string salt = "nothing")
+        public FilesStatus(string fileName, string ext = "", long fileLength = 0, string salt = "nothing")
         {
-            SetValues(fileName, ext, isPicture, fileLength, salt);
+            SetValues(fileName, ext, fileLength, salt);
         }
-        private void SetValues(string fileName, string ext, bool isPicture = false, long fileLength = 0, string salt = "nothing")
+        private void SetValues(string fileName, string ext,  long fileLength = 0, string salt = "nothing")
         {
             Original = fileName;
             Key = Path.GetFileNameWithoutExtension(fileName) + "-" +
@@ -35,7 +36,7 @@ namespace Emaily.Web.Utils
             Type = MimeTypeMap.GetMimeType(ext);
             Size = fileLength;
             Progress = 100;
-            Url = "/" + (isPicture ? "picture" : "files") + "/" + Name;
+            Url = "/files/" + Name;
         }
     }
 }

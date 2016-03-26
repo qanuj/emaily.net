@@ -1,5 +1,6 @@
 ﻿using System.Linq;
-using System.Net.Http;      
+using System.Net.Http;
+using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.OData;
 using Emaily.Core.Abstraction.Services;
@@ -43,7 +44,7 @@ namespace Emaily.Web.Controllers.Api.v1
         {
             if (ModelState.IsValid)
             {
-                var item = _service.DeleteAttachment(template, id);
+                var item = _service.DeleteAttachment(template, id,true,HostingEnvironment.MapPath("~/App_Data/Uploads"));
                 return Accepted(item);
             }
             return Bad(ModelState);

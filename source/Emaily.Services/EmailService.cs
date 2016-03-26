@@ -6,6 +6,7 @@ using Emaily.Core.Data;
 using Emaily.Core.DTO;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Configuration;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -281,12 +282,36 @@ namespace Emaily.Services
 
         public AttachmentVM CreateAttachment(CreateAttachmentVM model, int template)
         {
-            throw new NotImplementedException();
+            var tmp = _templateRepository.ById(template);
+            if (tmp == null) throw new Exception("Template not found");
+            CheckIsMine(tmp.AppId);
+
+            var entity =_attachmentRepository.Create(new Attachment
+            {
+               Name = model.Name,
+               ContentType = model.ContentType,
+               Size = model.Size,
+               TemplateId = template,
+               Url = model.Url
+            });
+            _attachmentRepository.SaveChanges();
+            return Attachments(template).FirstOrDefault(x => x.Id == entity.Id);
         }
 
-        public bool DeleteAttachment(int template, int id)
+        public bool DeleteAttachment(int template, int id,bool deleteFile,string folder)
         {
-            throw new NotImplementedException();
+            var att = _attachmentRepository.All.FirstOrDefault(x => x.TemplateId == template && id == x.Id);
+            if(att==null) throw new Exception("Attachment not found");
+            _attachmentRepository.Purge(att);
+            if (deleteFile)
+            {
+                var fileInfo= new FileInfo(Path.Combine(folder,att.Name));
+                if (fileInfo.Exists)
+                {
+                    fileInfo.Delete();
+                }
+            }
+            return _attachmentRepository.SaveChanges()>0;
         }
 
         public IQueryable<TemplateVM> Templates()
@@ -637,6 +662,22 @@ namespace Emaily.Services
             UpdateBody(campaign, model);
             campaign.Label = model.Label;
             campaign.Status = CampaignStatusEnum.Draft;
+
+            var oldListIds = campaign.Lists.Select(x => x.ListId).ToList();
+
+            foreach (var l in model.Lists.Where(l => campaign.Lists.All(x => x.ListId != l)))
+            {
+                campaign.Lists.Add(new CampaignList
+                {
+                    CampaignId = model.Id,
+                    ListId = l
+                });
+            }
+
+            foreach (var tmp in campaign.Lists.Where(x => oldListIds.Contains(x.CampaignId) && !model.Lists.Contains(x.CampaignId)))
+            {
+                _campaignListRepository.Purge(tmp);
+            }
 
             _campaignRepository.Update(campaign);
             _campaignRepository.SaveChanges();

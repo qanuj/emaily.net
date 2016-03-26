@@ -11,11 +11,11 @@ namespace Emaily.Core.DTO
     public class AttachmentVM  : CreateAttachmentVM
     {
         public int Id { get; set; }
+        public int TemplateId { get; set; }
     }
 
     public class CreateAttachmentVM 
     {
-        public int TemplateId { get; set; }
         public string Name { get; set; }
         public long Size { get; set; }
         public string ContentType { get; set; }

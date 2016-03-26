@@ -571,3 +571,19 @@ ul.scatter-legend li {
 .dropzone {
     border: 1px dotted #E91E63 !important;
 }
+.mt-element-ribbon .ribbon.ribbon-color-draft {
+    background-color: #659be0;
+    color: #fff;
+}
+.mt-element-ribbon .ribbon.ribbon-color-sent {
+    background-color: #008000;
+    color: #fff;
+}
+.mt-element-ribbon .ribbon.ribbon-color-sending {
+    background-color: #f4a460;
+    color: #fff;
+}
+.mt-element-ribbon .ribbon.ribbon-color-error {
+    background-color: #ed6b75;
+    color: #fff;
+}

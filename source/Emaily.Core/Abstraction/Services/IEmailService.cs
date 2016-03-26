@@ -61,6 +61,6 @@ namespace Emaily.Core.Abstraction.Services
 
         IQueryable<AttachmentVM> Attachments(int template);
         AttachmentVM CreateAttachment(CreateAttachmentVM model, int template);
-        bool DeleteAttachment(int template, int id);
+        bool DeleteAttachment(int template, int id,bool deleteFile,string folder);
     }
 }

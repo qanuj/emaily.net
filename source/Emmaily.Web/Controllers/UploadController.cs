@@ -2,9 +2,12 @@
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Net.Mime; 
+using System.Net.Mime;
+using System.Threading;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using Emaily.Core.Abstraction.Services;
+using Emaily.Core.DTO;
 using Emaily.Web.Utils;
 
 namespace Emaily.Web.Controllers
@@ -12,6 +15,16 @@ namespace Emaily.Web.Controllers
     [Authorize]
     public class UploadController : CoreController
     {
+        private readonly IEmailService _service;
+        private readonly string[] Documents = { ".png", ".jpeg", "jpg", ".docx", ".pdf", ".xls", ".xlsx" };
+        private readonly string[] Pictures = { ".png", ".jpeg", "jpg" };
+        private readonly string[] CSV = { ".csv" };
+        public UploadController(IEmailService service)
+        {
+            _service = service;
+            _storageRoot = FindStorageRoot();
+        }
+
         private static string _storageRoot;
         public static string FindStorageRoot()
         {
@@ -28,59 +41,80 @@ namespace Emaily.Web.Controllers
             return storageRoot;
         }
 
-        public UploadController()
-        {
-            _storageRoot = FindStorageRoot();
-        }
-
-        [HttpPost]
-        [Route("~/upload")]
-        public ActionResult UploadCv()
-        {
-            var xFileName = Request.Headers["X-File-Name"];
-            return Json2(new {files= string.IsNullOrEmpty(xFileName) ? UploadWholeFile() : UploadPartialFile(xFileName)});
-        }
-
         [HttpPost]
         [Route("~/upload/picture")]
         public ActionResult UploadPicture()
         {
             var xFileName = Request.Headers["X-File-Name"];
-            return Json2(new { files = string.IsNullOrEmpty(xFileName) ? UploadWholeFile(true) : UploadPartialFile(xFileName, true) });
+            return Json2(new { files = string.IsNullOrEmpty(xFileName) ? UploadWholeFile(Pictures) : UploadPartialFile(xFileName,Pictures) });
         }
 
-        [Route("~/picture/{filename}")]
+        [HttpPost]
+        [Route("~/upload/attachment")]
+        public ActionResult UploadAttachment(int container)
+        {
+            var xFileName = Request.Headers["X-File-Name"];
+            var files = string.IsNullOrEmpty(xFileName) ? UploadWholeFile(Documents) : UploadPartialFile(xFileName, Documents);
+            var f = files.FirstOrDefault();
+            if (f != null && f.Progress >= 100 && container>0)
+            {
+                Thread.Sleep(2000);//file may not be saved yet. wait for 2 seconds.
+                var fileInfo=new FileInfo(Server.MapPath(string.Format("~/App_Data/Uploads/{0}",f.Name)));
+                if (fileInfo.Exists)
+                {
+                    _service.CreateAttachment(new CreateAttachmentVM
+                    {
+                        Name = f.Original,
+                        Size = fileInfo.Length,
+                        ContentType = f.Type,
+                        Url = f.Url
+                    }, container);
+                    f.Added = true;
+                }
+            }
+            return Json2(new { files });
+        }
+
+        [HttpPost]
+        [Route("~/upload/csv")]
+        public ActionResult UploadContactList(int container)
+        {
+            var xFileName = Request.Headers["X-File-Name"];
+            var files = string.IsNullOrEmpty(xFileName) ? UploadWholeFile(CSV) : UploadPartialFile(xFileName, CSV);
+            var f = files.FirstOrDefault();
+            if (f != null && f.Progress >= 100 && container>0)
+            {
+                var filePath = HostingEnvironment.MapPath(string.Format("~/App_Data/Uploads/{0}.csv", f.Key));
+                _service.ImportSubscribers(System.IO.File.OpenText(filePath), container);
+            }
+            return Json2(new { files });
+        }
+
+        [Route("~/files/{filename}")]
         public ActionResult ViewPicture(string filename)
         {
             var f = new FileInfo(GetFullFileName(filename));
             return File(f.FullName, MediaTypeNames.Image.Jpeg);
         }
 
-        private static bool IsAllowed(string ext, bool picture = false)
+        private static ICollection<FilesStatus> MakeFileStatusError(string name, string error)
         {
-            if (picture) return new[] { ".jpg", ".jpeg", ".png", ".gif" }.Any(x => x == ext.ToLower());
-            return new[] { ".csv" }.Any(x => x == ext.ToLower());
+            return new List<FilesStatus> { new FilesStatus(name) { Error = error } };
         }
 
-        private static ICollection<FilesStatus> MakeFileStatusError(string name, bool isPicture, string error)
-        {
-            return new List<FilesStatus> { new FilesStatus(name, "", isPicture) { Error = error } };
-        }
-
-        private ICollection<FilesStatus> UploadPartialFile(string fileName, bool isPicture = false)
+        private ICollection<FilesStatus> UploadPartialFile(string fileName, IEnumerable<string> extensions)
         {
             if (string.IsNullOrWhiteSpace(fileName))
-                return MakeFileStatusError(fileName, isPicture, "No File Name Received");
+                return MakeFileStatusError(fileName, "No File Name Received");
             if (Request.Files == null || Request.Files.Count != 1)
-                return MakeFileStatusError(fileName, isPicture,
-                    "Attempt to upload chunked file containing more than one fragment per request");
-            if (Request.Files[0] == null) return MakeFileStatusError(fileName, isPicture, "No Files Received");
+                return MakeFileStatusError(fileName, "Attempt to upload chunked file containing more than one fragment per request");
+            if (Request.Files[0] == null) return MakeFileStatusError(fileName, "No Files Received");
 
             var inputStream = Request.Files[0].InputStream;
             var status = new FilesStatus(new FileInfo(fileName));
             var ext = Path.GetExtension(fileName);
-            if (!IsAllowed(ext, isPicture))
-                return MakeFileStatusError(fileName, isPicture, string.Format("{0} not allowed", ext));
+            if (!extensions.Contains(ext.ToLower()))
+                return MakeFileStatusError(fileName, string.Format("{0} not allowed", ext));
             var fullName = GetFullFileName(status.Name);
             using (var fs = new FileStream(fullName, FileMode.Append, FileAccess.Write))
             {
@@ -105,7 +139,7 @@ namespace Emaily.Web.Controllers
         }
 
         // Upload entire file
-        private ICollection<FilesStatus> UploadWholeFile(bool isPicture = false)
+        private ICollection<FilesStatus> UploadWholeFile(string[] extensions)
         {
             var statuses = new List<FilesStatus>();
             for (var i = 0; i < Request.Files.Count; i++)
@@ -113,10 +147,10 @@ namespace Emaily.Web.Controllers
                 var file = Request.Files[i];
                 if (file == null) continue;
                 if (file.FileName == null) continue;
-                var status = new FilesStatus(new FileInfo(file.FileName), isPicture);
+                var status = new FilesStatus(new FileInfo(file.FileName));
                 var ext = Path.GetExtension(file.FileName);
-                if (!IsAllowed(ext, isPicture))
-                    return MakeFileStatusError(file.FileName, isPicture, string.Format("{0} not allowed", ext));
+                if (!extensions.Contains(ext.ToLower()))
+                    return MakeFileStatusError(file.FileName, string.Format("{0} not allowed", ext));
                 file.SaveAs(GetFullFileName(status.Name));
                 statuses.Add(status);
             }

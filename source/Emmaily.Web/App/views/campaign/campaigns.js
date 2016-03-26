@@ -1,8 +1,8 @@
 ﻿app.controller('campaignIndexController', [
     '$scope', 'dataService', '$stateParams', '$state', 'Popup', 'logger', function ($scope, db, $stateParams, $state, Popup, logger) {
         var table = 'campaign';
-        var more = 'Companies';
-        var title = "Companies";
+        var more = 'Campaigns';
+        var title = "Campaigns";
 
         $scope.title = "Campaign";
         $scope.current = 'campaigns';
@@ -49,7 +49,7 @@
 
         function loadRecords() {
             return db.card(table, $stateParams, $scope, $state.current.data, function (q) {
-                return 'substringof(\'' + q + '\',Title)';
+                return 'substringof(\'' + q + '\',Name) or substringof(\'' + q + '\',Label)';
             });
         }
     }

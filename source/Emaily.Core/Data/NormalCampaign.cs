@@ -7,11 +7,6 @@ namespace Emaily.Core.Data
 {
     public class NormalCampaign : Campaign
     {
-        public IList<CampaignList> Lists { get; set; }
-
-        public NormalCampaign()
-        {
-            this.Lists=new List<CampaignList>();
-        }
+        public virtual IList<CampaignList> Lists { get; set; }
     }
 }

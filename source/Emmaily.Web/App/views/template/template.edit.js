@@ -30,7 +30,7 @@
 
         function bindEntity(result) {
             $scope.record = result;
-            $scope.record.picture = { url: result.picture, email: result.email, title: result.name };
+            $scope.record.picture = { url: result.picture, email: result.sender.email, title: result.name };
         }
 
         function loadTemplate() {

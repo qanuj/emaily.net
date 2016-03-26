@@ -497,6 +497,7 @@
     <Content Include="App\views\system\logs.html" />
     <Content Include="App\views\system\logs.js" />
     <Content Include="App\views\upload\dropzone.html" />
+    <Content Include="App\views\upload\picture.html" />
     <Content Include="App\views\upload\file.html" />
     <Content Include="App\views\upload\upload.ui.html" />
     <Content Include="App\views\upload\upload.ui.js" />

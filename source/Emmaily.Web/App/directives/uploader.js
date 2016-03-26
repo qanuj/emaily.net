@@ -69,6 +69,7 @@
                 titlekey: '@',
                 master: '@',
                 user: '@',
+                picture:'@',
                 resumeUpload: '@',
                 icon:'@',
                 readonly:'@',

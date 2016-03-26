@@ -35,11 +35,39 @@
                     <input type="email" class="form-control" ng-model="record.sender.replyTo" placeholder="Reply to email address" name="ReplyToEmailAddress" />
                 </div>
                 <div class="form-group">
-                    <label class="control-label">Attachments</label>
-                    <ul>
-                        <li>Upload a New attachment</li>
-                        <li ng-repeat="att in attachments">
-                            {{att.name}} ( {{att.size | filesize }} )
+                    <label class="control-label">Lists</label>
+                    <ui-select multiple title="choose lists" ng-model="record.lists" theme="bootstrap" sortable="true" clear-on-select="true" close-on-select="false">
+                        <ui-select-match placeholder="Select lists...">{{$item.name}} - {{$item.actives}}</ui-select-match>
+                        <ui-select-choices repeat="list.id as list in lists  | filter: $select.search">
+                            {{list.name}} - {{list.actives}}
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+                <div class="form-group">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <ng-upload-form ng-model="record.attachment"
+                                                    url="{{encoder}}/attachment"
+                                                    quick="true"
+                                                    container="{{record.id}}"
+                                                    user="{{user}}"
+                                                    picture="false"
+                                                    auto-upload="true"
+                                                    title="Attachment"
+                                                    max-chunk-size="10"
+                                                    multiple="true"
+                                                    size-limit="5000000">
+                                    </ng-upload-form>
+                                </div>
+                                <div class="col-xs-3 text-right">                                    
+                                    <span class="badge badge-info">{{totalSize | filesize }}</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item" ng-repeat="att in attachments">
+                            <button class="btn btn-xs btn-danger btn-icon-only" ng-click="removeAttachment(att)"><i class="fa fa-trash-o"></i></button> {{att.name}} <span class="badge badge-info">{{att.size | filesize }}</span>
                         </li>
                     </ul>
                 </div>

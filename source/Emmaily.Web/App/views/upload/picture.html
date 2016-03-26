@@ -1,0 +1,44 @@
+﻿<div class="fileupload" method="POST" enctype="multipart/form-data" data-file-upload="options" ng-class="{'fileupload-processing': processing() || loadingFiles}">
+    <div class="mt-element-card mt-element-overlay">
+        <div class="mt-card-item">
+            <div class="mt-card-avatar mt-overlay-1">
+                <div class="mt-picture mt-square" ng-if="current.result.uploaded || !icon" background-image="{{ngModel.url | gravtaar:ngModel.email:ngModel.size:'mm'}}" vz-size="{{size}}"></div>
+                <div class="mt-picture mt-square" ng-if="!current.result.uploaded && icon" vz-size="{{size}}">
+                    <i class="{{icon}}"></i>
+                </div>
+            </div>
+            <div class="mt-card-content">
+                <div ng-if="current && !current.result.uploaded" class="progress active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar"
+                         ng-class="{'progress-bar-success':!current.error && !current.old.error,'progress-bar-danger':current.error || current.old.error}"
+                         ng-style="{width:(current.progress||current.old.progress)+'%'}"></div>
+                </div>
+                <div class="row">
+                    <div ng-class="{'col-xs-12':readonly||current.result.uploading,'col-xs-6':!readonly && !current.result.uploading}">
+                        <h3 class="mt-card-name">
+                            <i class="fa" ng-class="{'fa-check font-green':current.uploaded,'fa-exclamation font-red':current.error,'fa-circle-o-notch fa-spin':current.uploading}"></i> {{current.old.error || current.error || current.old.status || current.old.msg || current.msg || title}}
+                        </h3>
+                    </div>
+                    <div class="col-xs-6" ng-hide="readonly ||current.result.uploading">
+                        <div class="clearfix margin-top-15"></div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <span class="input-group pointer">
+                                    <span class="input-group-btn">
+                                        <span class="btn btn-success btn-file" ng-class="{disabled: disabled}">
+                                            <i class="fa fa-upload"></i><span class="hidden-md hidden-xs"> Upload</span>
+                                            <input class="btn btn-file" type="file" name="files" ng-disabled="disabled">
+                                        </span>
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="col-xs-6" style="padding-left: 0px;">
+                                <button ng-if="ngModel.chooser" class="btn btn-info" ng-click="ngModel.chooser(ngModel)"><i class="fa fa-ellipsis-h"></i><span class="hidden-md hidden-xs"> Browse</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
