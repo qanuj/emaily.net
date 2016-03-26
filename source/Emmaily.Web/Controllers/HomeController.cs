@@ -20,15 +20,17 @@ namespace Emaily.Web.Controllers
         private readonly ApplicationRoleManager _roleManager;
         private readonly ApplicationUserManager _userManager;
         private readonly IRepository<App> _appRepository;
+        private readonly IRepository<UserApps> _userAppRepository;
         private readonly IRepository<Plan> _planRepository;
         private readonly IEmailService _emailService;
-        public HomeController(ApplicationRoleManager roleManager, ApplicationUserManager userManager, IRepository<App> appRepository, IEmailService emailService, IRepository<Plan> planRepository)
+        public HomeController(ApplicationRoleManager roleManager, ApplicationUserManager userManager, IRepository<App> appRepository, IEmailService emailService, IRepository<Plan> planRepository, IRepository<UserApps> userAppRepository)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _appRepository = appRepository;
             _emailService = emailService;
             _planRepository = planRepository;
+            _userAppRepository = userAppRepository;
         }
 
         [Authorize]
@@ -41,7 +43,7 @@ namespace Emaily.Web.Controllers
         {
             if (!_roleManager.RoleExists(_AdminRole))
             {
-                _roleManager.Create(new Role() {Name = _AdminRole, Read = ApiAccessEnum.All, Write = ApiAccessEnum.All});
+                _roleManager.Create(new Role() {Name = _AdminRole, Read = ApiAccessEnum.All-1, Write = ApiAccessEnum.All-1});
             }
             var usr = await _userManager.FindByEmailAsync(_RootUser);
             if (usr != null && !await _userManager.IsInRoleAsync(usr.Id, _AdminRole))
@@ -68,7 +70,7 @@ namespace Emaily.Web.Controllers
             }
             if (usr != null && !_appRepository.All.Any())
             {
-                var app=_emailService.CreateApp(new CreateAppVM()
+                _emailService.CreateApp(new CreateAppVM()
                 {
                    Sender = new EmailAddress
                    {
@@ -83,10 +85,16 @@ namespace Emaily.Web.Controllers
                    Logo = "",
                    Smtp = new SmtpInfo()
                 });
+            }
 
-                usr.Apps=new List<UserApps>();
-                usr.Apps.Add(new UserApps { AppId = app.Id,UserId = usr.Id});
-                await _userManager.UpdateAsync(usr);
+            if (usr != null && !_userAppRepository.All.Any(x => x.UserId == usr.Id))
+            {
+                _userAppRepository.Create(new UserApps
+                {
+                    App = _appRepository.All.FirstOrDefault(x=>x.Name=="Emaily"),
+                    User = usr
+                });
+                _userAppRepository.SaveChanges();
             }
 
 
