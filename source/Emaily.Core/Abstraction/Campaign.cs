@@ -5,21 +5,14 @@ using Emaily.Core.Data.Complex;
 using Emaily.Core.Enumerations;
 
 namespace Emaily.Core.Abstraction
-{
-    public abstract class Campaign : CustomEntity
-    {
-        public App App { get; set; }
-        public int AppId { get; set; }
+{ 
 
-        public string OwnerId { get; set; }
+    public abstract class Campaign :  Template
+    {
         public string Label { get; set; }
 
-        public EmailAddress Sender { get; set; }
         public CampaignStatusEnum Status { get; set; }
 
-        public string PlainText { get; set; }
-        public string HtmlText { get; set; }
-        public string QueryString { get; set; }
         public bool IsHtml { get; set; }
 
         public int? Recipients { get; set; }
@@ -39,9 +32,9 @@ namespace Emaily.Core.Abstraction
 
         protected Campaign()
         {
-            this.Results=new List<CampaignResult>();
-            this.Links=new List<Link>();
-            this.Queues=new List<Queue>();
+            this.Results = new List<CampaignResult>();
+            this.Links = new List<Link>();
+            this.Queues = new List<Queue>();
         }
 
     }

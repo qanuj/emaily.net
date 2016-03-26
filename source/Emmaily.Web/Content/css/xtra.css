@@ -567,3 +567,7 @@ ul.scatter-legend li {
 .page-header.navbar .page-logo {
     width: 180px;
 }
+
+.dropzone {
+    border: 1px dotted #E91E63 !important;
+}

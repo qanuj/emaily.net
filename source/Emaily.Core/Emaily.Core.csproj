@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstraction\Attachment.cs" />
     <Compile Include="Abstraction\Events\IEventManager.cs" />
     <Compile Include="Abstraction\Persistence\IRepository.cs" />
     <Compile Include="Abstraction\Services\IUtilService.cs" />

@@ -52,7 +52,7 @@
             resolve: {}
         })
         .state('editCampaign', {
-            url: "/company/edit/:id",
+            url: "/campaign/edit/:id",
             templateUrl: root + "campaign/campaign.edit.html",
             data: { title: 'Campaign' },
             controller: "campaignEditController",

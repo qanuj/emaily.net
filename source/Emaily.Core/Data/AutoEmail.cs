@@ -8,6 +8,5 @@ namespace Emaily.Core.Data
         public int AutoResponderId { get; set; }
 
         public string TimeCondition { get; set; }
-        public string TimeZone { get; set; }
     }
 }

@@ -7,13 +7,13 @@ namespace Emaily.Web.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class Promomaynotbeneeded : IMigrationMetadata
+    public sealed partial class EmailyDatabaseV1 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Promomaynotbeneeded));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(EmailyDatabaseV1));
         
         string IMigrationMetadata.Id
         {
-            get { return "201603241422093_Promo may not be needed"; }
+            get { return "201603260637130_EmailyDatabaseV1"; }
         }
         
         string IMigrationMetadata.Source

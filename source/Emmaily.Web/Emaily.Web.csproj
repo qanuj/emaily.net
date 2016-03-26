@@ -248,45 +248,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\NotificationHub.cs" />
-    <Compile Include="Migrations\201603240821403_Init.cs" />
-    <Compile Include="Migrations\201603240821403_Init.Designer.cs">
-      <DependentUpon>201603240821403_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603241036586_Profile Moved.cs" />
-    <Compile Include="Migrations\201603241036586_Profile Moved.Designer.cs">
-      <DependentUpon>201603241036586_Profile Moved.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603241053111_More Profile Fields.cs" />
-    <Compile Include="Migrations\201603241053111_More Profile Fields.Designer.cs">
-      <DependentUpon>201603241053111_More Profile Fields.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603241224236_More Changes.cs" />
-    <Compile Include="Migrations\201603241224236_More Changes.Designer.cs">
-      <DependentUpon>201603241224236_More Changes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603241251107_Templates have more fields.cs" />
-    <Compile Include="Migrations\201603241251107_Templates have more fields.Designer.cs">
-      <DependentUpon>201603241251107_Templates have more fields.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603241335413_Role Permissions Added.cs" />
-    <Compile Include="Migrations\201603241335413_Role Permissions Added.Designer.cs">
-      <DependentUpon>201603241335413_Role Permissions Added.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603241422093_Promo may not be needed.cs" />
-    <Compile Include="Migrations\201603241422093_Promo may not be needed.Designer.cs">
-      <DependentUpon>201603241422093_Promo may not be needed.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603241458595_Stats comes later.cs" />
-    <Compile Include="Migrations\201603241458595_Stats comes later.Designer.cs">
-      <DependentUpon>201603241458595_Stats comes later.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603241607035_Template has Sender Information.cs" />
-    <Compile Include="Migrations\201603241607035_Template has Sender Information.Designer.cs">
-      <DependentUpon>201603241607035_Template has Sender Information.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201603250809422_List Id Moved.cs" />
-    <Compile Include="Migrations\201603250809422_List Id Moved.Designer.cs">
-      <DependentUpon>201603250809422_List Id Moved.cs</DependentUpon>
+    <Compile Include="Migrations\201603260637130_EmailyDatabaseV1.cs" />
+    <Compile Include="Migrations\201603260637130_EmailyDatabaseV1.Designer.cs">
+      <DependentUpon>201603260637130_EmailyDatabaseV1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -420,6 +384,8 @@
     <Content Include="App\views\account\accounts.js" />
     <Content Include="App\views\campaign\campaign.create.html" />
     <Content Include="App\views\campaign\campaign.create.js" />
+    <Content Include="App\views\campaign\campaign.edit.html" />
+    <Content Include="App\views\campaign\campaign.edit.js" />
     <Content Include="App\views\list\csv.html" />
     <Content Include="App\views\list\list.create.html" />
     <Content Include="App\views\list\list.create.js" />
@@ -1282,35 +1248,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201603240821403_Init.resx">
-      <DependentUpon>201603240821403_Init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603241036586_Profile Moved.resx">
-      <DependentUpon>201603241036586_Profile Moved.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603241053111_More Profile Fields.resx">
-      <DependentUpon>201603241053111_More Profile Fields.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603241224236_More Changes.resx">
-      <DependentUpon>201603241224236_More Changes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603241251107_Templates have more fields.resx">
-      <DependentUpon>201603241251107_Templates have more fields.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603241335413_Role Permissions Added.resx">
-      <DependentUpon>201603241335413_Role Permissions Added.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603241422093_Promo may not be needed.resx">
-      <DependentUpon>201603241422093_Promo may not be needed.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603241458595_Stats comes later.resx">
-      <DependentUpon>201603241458595_Stats comes later.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603241607035_Template has Sender Information.resx">
-      <DependentUpon>201603241607035_Template has Sender Information.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201603250809422_List Id Moved.resx">
-      <DependentUpon>201603250809422_List Id Moved.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201603260637130_EmailyDatabaseV1.resx">
+      <DependentUpon>201603260637130_EmailyDatabaseV1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

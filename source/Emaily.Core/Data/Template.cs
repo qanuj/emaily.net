@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Emaily.Core.Abstraction;
 using Emaily.Core.Data.Complex;
 using Emaily.Core.DTO;
@@ -14,5 +15,9 @@ namespace Emaily.Core.Data
         public string QueryString { get; set; }
         public string OwnerId { get; set; }
         public EmailAddress Sender { get; set; }
+
+        public int Price { get; set; }
+
+        public ICollection<Attachment> Attachments { get; set; } 
     }
 }

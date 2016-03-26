@@ -3,7 +3,7 @@ namespace Emaily.Web.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Init : DbMigration
+    public partial class EmailyDatabaseV1 : DbMigration
     {
         public override void Up()
         {
@@ -13,6 +13,9 @@ namespace Emaily.Web.Migrations
                     {
                         Id = c.String(nullable: false, maxLength: 128),
                         Name = c.String(nullable: false, maxLength: 256),
+                        Write = c.Int(),
+                        Read = c.Int(),
+                        Discriminator = c.String(nullable: false, maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
                 .Index(t => t.Name, unique: true, name: "RoleNameIndex");
@@ -57,14 +60,17 @@ namespace Emaily.Web.Migrations
                 "dbo.UserApps",
                 c => new
                     {
-                        UserId = c.String(nullable: false, maxLength: 128),
+                        Id = c.Int(nullable: false, identity: true),
+                        UserId = c.String(maxLength: 128),
                         AppId = c.Int(nullable: false),
+                        Created = c.DateTime(nullable: false),
+                        Modified = c.DateTime(),
+                        Deleted = c.DateTime(),
                     })
-                .PrimaryKey(t => new { t.UserId, t.AppId })
+                .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Apps", t => t.AppId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
-                .Index(t => t.UserId)
-                .Index(t => t.AppId);
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId)
+                .Index(t => new { t.UserId, t.AppId }, unique: true, name: "UserApp");
             
             CreateTable(
                 "dbo.Apps",
@@ -103,43 +109,63 @@ namespace Emaily.Web.Migrations
                 .Index(t => t.PromoId);
             
             CreateTable(
-                "dbo.Campaigns",
+                "dbo.Templates",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
                         AppId = c.Int(nullable: false),
+                        HtmlText = c.String(),
+                        PlainText = c.String(),
+                        QueryString = c.String(),
                         OwnerId = c.String(),
-                        Label = c.String(),
                         Sender_Name = c.String(),
                         Sender_Email = c.String(),
                         Sender_ReplyTo = c.String(),
-                        Status = c.Int(nullable: false),
-                        PlainText = c.String(),
-                        HtmlText = c.String(),
-                        QueryString = c.String(),
-                        IsHtml = c.Boolean(nullable: false),
-                        Recipients = c.Int(nullable: false),
-                        Sents = c.Int(nullable: false),
-                        Clicks = c.Int(nullable: false),
-                        Opens = c.Int(nullable: false),
-                        Errors = c.String(),
-                        Started = c.DateTime(),
-                        Future = c.DateTime(),
-                        TimeZone = c.String(),
+                        Price = c.Int(nullable: false),
                         Name = c.String(),
                         Custom = c.String(),
                         Created = c.DateTime(nullable: false),
                         Modified = c.DateTime(),
                         Deleted = c.DateTime(),
+                        Label = c.String(),
+                        Status = c.Int(),
+                        IsHtml = c.Boolean(),
+                        Recipients = c.Int(),
+                        Sents = c.Int(),
+                        Clicks = c.Int(),
+                        Opens = c.Int(),
+                        Errors = c.String(),
+                        Started = c.DateTime(),
+                        Future = c.DateTime(),
+                        TimeZone = c.String(),
                         AutoResponderId = c.Int(),
                         TimeCondition = c.String(),
                         Discriminator = c.String(nullable: false, maxLength: 128),
+                        App_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Apps", t => t.AppId, cascadeDelete: true)
                 .ForeignKey("dbo.AutoResponders", t => t.AutoResponderId, cascadeDelete: true)
+                .ForeignKey("dbo.Apps", t => t.App_Id)
                 .Index(t => t.AppId)
-                .Index(t => t.AutoResponderId);
+                .Index(t => t.AutoResponderId)
+                .Index(t => t.App_Id);
+            
+            CreateTable(
+                "dbo.Attachments",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        FileName = c.String(),
+                        Url = c.String(),
+                        TemplateId = c.Int(nullable: false),
+                        Created = c.DateTime(nullable: false),
+                        Modified = c.DateTime(),
+                        Deleted = c.DateTime(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Templates", t => t.TemplateId, cascadeDelete: true)
+                .Index(t => t.TemplateId);
             
             CreateTable(
                 "dbo.Links",
@@ -153,7 +179,7 @@ namespace Emaily.Web.Migrations
                         Deleted = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Campaigns", t => t.CampaignId)
+                .ForeignKey("dbo.Templates", t => t.CampaignId)
                 .Index(t => t.CampaignId);
             
             CreateTable(
@@ -201,7 +227,7 @@ namespace Emaily.Web.Migrations
                 .ForeignKey("dbo.Apps", t => t.AppId, cascadeDelete: true)
                 .ForeignKey("dbo.Lists", t => t.ListId, cascadeDelete: true)
                 .ForeignKey("dbo.AutoResponders", t => t.LastAutoResponderId)
-                .ForeignKey("dbo.Campaigns", t => t.LastCampaignId)
+                .ForeignKey("dbo.Templates", t => t.LastCampaignId)
                 .Index(t => t.ListId)
                 .Index(t => t.AppId)
                 .Index(t => t.LastCampaignId)
@@ -238,7 +264,7 @@ namespace Emaily.Web.Migrations
                         Deleted = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Campaigns", t => t.CampaignId)
+                .ForeignKey("dbo.Templates", t => t.CampaignId)
                 .ForeignKey("dbo.Subscribers", t => t.SubscriberId)
                 .Index(t => t.CampaignId)
                 .Index(t => t.SubscriberId);
@@ -261,7 +287,7 @@ namespace Emaily.Web.Migrations
                         Deleted = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Campaigns", t => t.CampaignId, cascadeDelete: true)
+                .ForeignKey("dbo.Templates", t => t.CampaignId, cascadeDelete: true)
                 .ForeignKey("dbo.Subscribers", t => t.SubscriberId)
                 .Index(t => t.SubscriberId)
                 .Index(t => t.CampaignId);
@@ -313,10 +339,25 @@ namespace Emaily.Web.Migrations
                         Deleted = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Campaigns", t => t.CampaignId, cascadeDelete: true)
+                .ForeignKey("dbo.Templates", t => t.CampaignId, cascadeDelete: true)
                 .ForeignKey("dbo.Lists", t => t.ListId)
                 .Index(t => t.ListId)
                 .Index(t => t.CampaignId);
+            
+            CreateTable(
+                "dbo.SubscriberReports",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Total = c.Int(nullable: false),
+                        ListId = c.Int(nullable: false),
+                        Created = c.DateTime(nullable: false),
+                        Modified = c.DateTime(),
+                        Deleted = c.DateTime(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Lists", t => t.ListId, cascadeDelete: true)
+                .Index(t => t.ListId);
             
             CreateTable(
                 "dbo.Clients",
@@ -351,7 +392,7 @@ namespace Emaily.Web.Migrations
                         Quota = c.Int(nullable: false),
                         AnnualPrice = c.Int(),
                         DiscountedPrice = c.Int(),
-                        PromoId = c.Int(nullable: false),
+                        PromoId = c.Int(),
                         Currency = c.Int(nullable: false),
                         Name = c.String(),
                         Custom = c.String(),
@@ -360,7 +401,7 @@ namespace Emaily.Web.Migrations
                         Deleted = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Promoes", t => t.PromoId, cascadeDelete: true)
+                .ForeignKey("dbo.Promoes", t => t.PromoId)
                 .Index(t => t.PromoId);
             
             CreateTable(
@@ -381,24 +422,6 @@ namespace Emaily.Web.Migrations
                         Deleted = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.Templates",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        AppId = c.Int(nullable: false),
-                        Html = c.String(),
-                        OwnerId = c.String(),
-                        Name = c.String(),
-                        Custom = c.String(),
-                        Created = c.DateTime(nullable: false),
-                        Modified = c.DateTime(),
-                        Deleted = c.DateTime(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Apps", t => t.AppId, cascadeDelete: true)
-                .Index(t => t.AppId);
             
             CreateTable(
                 "dbo.AspNetUserClaims",
@@ -431,6 +454,10 @@ namespace Emaily.Web.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Picture = c.String(),
+                        Address = c.String(),
+                        Postcode = c.String(),
+                        Country = c.String(),
+                        Birthday = c.DateTime(),
                         Name = c.String(),
                         Custom = c.String(),
                         Created = c.DateTime(nullable: false),
@@ -449,34 +476,36 @@ namespace Emaily.Web.Migrations
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.UserApps", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.UserApps", "AppId", "dbo.Apps");
-            DropForeignKey("dbo.Templates", "AppId", "dbo.Apps");
             DropForeignKey("dbo.Apps", "PromoId", "dbo.Promoes");
             DropForeignKey("dbo.Plans", "PromoId", "dbo.Promoes");
             DropForeignKey("dbo.Apps", "PlanId", "dbo.Plans");
             DropForeignKey("dbo.Clients", "AppId", "dbo.Apps");
-            DropForeignKey("dbo.Subscribers", "LastCampaignId", "dbo.Campaigns");
+            DropForeignKey("dbo.Templates", "App_Id", "dbo.Apps");
+            DropForeignKey("dbo.Subscribers", "LastCampaignId", "dbo.Templates");
             DropForeignKey("dbo.Subscribers", "LastAutoResponderId", "dbo.AutoResponders");
             DropForeignKey("dbo.Subscribers", "ListId", "dbo.Lists");
+            DropForeignKey("dbo.SubscriberReports", "ListId", "dbo.Lists");
             DropForeignKey("dbo.CampaignLists", "ListId", "dbo.Lists");
-            DropForeignKey("dbo.CampaignLists", "CampaignId", "dbo.Campaigns");
+            DropForeignKey("dbo.CampaignLists", "CampaignId", "dbo.Templates");
             DropForeignKey("dbo.AutoResponders", "ListId", "dbo.Lists");
             DropForeignKey("dbo.Lists", "AppId", "dbo.Apps");
             DropForeignKey("dbo.CampaignResults", "SubscriberId", "dbo.Subscribers");
-            DropForeignKey("dbo.CampaignResults", "CampaignId", "dbo.Campaigns");
+            DropForeignKey("dbo.CampaignResults", "CampaignId", "dbo.Templates");
             DropForeignKey("dbo.Queues", "SubscriberId", "dbo.Subscribers");
-            DropForeignKey("dbo.Queues", "CampaignId", "dbo.Campaigns");
-            DropForeignKey("dbo.Campaigns", "AutoResponderId", "dbo.AutoResponders");
+            DropForeignKey("dbo.Queues", "CampaignId", "dbo.Templates");
+            DropForeignKey("dbo.Templates", "AutoResponderId", "dbo.AutoResponders");
             DropForeignKey("dbo.Clicks", "SubscriberId", "dbo.Subscribers");
             DropForeignKey("dbo.Subscribers", "AppId", "dbo.Apps");
             DropForeignKey("dbo.Clicks", "LinkId", "dbo.Links");
-            DropForeignKey("dbo.Links", "CampaignId", "dbo.Campaigns");
-            DropForeignKey("dbo.Campaigns", "AppId", "dbo.Apps");
+            DropForeignKey("dbo.Links", "CampaignId", "dbo.Templates");
+            DropForeignKey("dbo.Attachments", "TemplateId", "dbo.Templates");
+            DropForeignKey("dbo.Templates", "AppId", "dbo.Apps");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.Templates", new[] { "AppId" });
             DropIndex("dbo.Plans", new[] { "PromoId" });
             DropIndex("dbo.Clients", new[] { "AppId" });
+            DropIndex("dbo.SubscriberReports", new[] { "ListId" });
             DropIndex("dbo.CampaignLists", new[] { "CampaignId" });
             DropIndex("dbo.CampaignLists", new[] { "ListId" });
             DropIndex("dbo.Lists", new[] { "AppId" });
@@ -492,12 +521,13 @@ namespace Emaily.Web.Migrations
             DropIndex("dbo.Clicks", new[] { "LinkId" });
             DropIndex("dbo.Clicks", new[] { "SubscriberId" });
             DropIndex("dbo.Links", new[] { "CampaignId" });
-            DropIndex("dbo.Campaigns", new[] { "AutoResponderId" });
-            DropIndex("dbo.Campaigns", new[] { "AppId" });
+            DropIndex("dbo.Attachments", new[] { "TemplateId" });
+            DropIndex("dbo.Templates", new[] { "App_Id" });
+            DropIndex("dbo.Templates", new[] { "AutoResponderId" });
+            DropIndex("dbo.Templates", new[] { "AppId" });
             DropIndex("dbo.Apps", new[] { "PromoId" });
             DropIndex("dbo.Apps", new[] { "PlanId" });
-            DropIndex("dbo.UserApps", new[] { "AppId" });
-            DropIndex("dbo.UserApps", new[] { "UserId" });
+            DropIndex("dbo.UserApps", "UserApp");
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.AspNetUsers", new[] { "ProfileId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
@@ -506,10 +536,10 @@ namespace Emaily.Web.Migrations
             DropTable("dbo.UserProfiles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
-            DropTable("dbo.Templates");
             DropTable("dbo.Promoes");
             DropTable("dbo.Plans");
             DropTable("dbo.Clients");
+            DropTable("dbo.SubscriberReports");
             DropTable("dbo.CampaignLists");
             DropTable("dbo.Lists");
             DropTable("dbo.CampaignResults");
@@ -518,7 +548,8 @@ namespace Emaily.Web.Migrations
             DropTable("dbo.Subscribers");
             DropTable("dbo.Clicks");
             DropTable("dbo.Links");
-            DropTable("dbo.Campaigns");
+            DropTable("dbo.Attachments");
+            DropTable("dbo.Templates");
             DropTable("dbo.Apps");
             DropTable("dbo.UserApps");
             DropTable("dbo.AspNetUsers");

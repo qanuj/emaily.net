@@ -1,0 +1,98 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div class="portlet light">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="fa fa-code theme-font"></i>
+            <span class="caption-subject theme-font bold uppercase">{{record.name}}</span>
+            <span class="caption-helper" ng-if="!record">loading...</span>
+        </div>
+        <ul class="nav nav-tabs" ng-if="record">
+            <li class="active"><a title="Html" data-target="#htmlText" data-toggle="tab"><i class="fa fa-code"></i><span class="hidden-md hidden-sm hidden-xs"> Html code</span></a></li>
+            <li><a title="Plain text" data-target="#plainText" data-toggle="tab"><i class="fa fa-file-text-o"></i><span class="hidden-md hidden-sm hidden-xs"> Plain Text</span></a></li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Subject</label>
+                    <input type="text" class="form-control" ng-model="record.name" required placeholder="Subject" name="Subject" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">From Name</label>
+                    <input type="text" class="form-control" ng-model="record.sender.name" placeholder="Name" name="Name" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">From Email</label>
+                    <input type="email" class="form-control" ng-model="record.sender.email" placeholder="Email address" name="EmailAddress" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Reply to email</label>
+                    <input type="email" class="form-control" ng-model="record.sender.replyTo" placeholder="Reply to email address" name="ReplyToEmailAddress" />
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label class="control-label">Query string</label>
+                    <input type="text" class="form-control" ng-model="record.queryString" placeholder="eg. utm_source=emaily&utm_medium=email&utm_content=email%20newsletter&utm_campaign=email%20newsletter" name="QueryString" />
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="htmlText">
+                        <div class="form-group">
+                            <label class="control-label">Html code</label>
+                            <textarea class="form-control" rows="10" ui-tinymce="tinymceOptions"
+                                      ng-model="record.htmlText"
+                                      placeholder="html text"></textarea>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="plainText">
+                        <div class="form-group">
+                            <label class="control-label">Plain text</label>
+                            <textarea class="form-control" rows="20"
+                                      ng-model="record.plainText"
+                                      placeholder="plain text"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+                        <h3>Essential tags (HTML only)</h3>
+                        The following tags can only be used on the HTML version<br /><br />
+                        <p><strong>Webversion link: </strong><br /><code class="sel">&lt;webversion&gt;View web version&lt;/webversion&gt;</code></p>
+                        <p><strong>Unsubscribe link: </strong><br /><code class="sel">&lt;unsubscribe&gt;Unsubscribe here&lt;/unsubscribe&gt;</code></p>
+                        <br />
+                        <h3>Essential tags</h3>
+                        The following tags can be used on both Plain text or HTML version<br /><br />
+                        <p><strong>Webversion link: </strong><br /><code class="sel">[webversion]</code></p>
+                        <p><strong>Unsubscribe link: </strong><br /><code class="sel">[unsubscribe]</code></p>
+                        <br />
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <h3>Personalization tags</h3>
+                        The following tags can be used on both Plain text or HTML version<br/><br/>
+                        <p><strong>Name: </strong><br/><code class="sel">[Name,fallback=]</code>
+                        </p>
+                        <p><strong>Email: </strong><br/><code class="sel">[Email]</code>
+                        </p>
+                        <p><strong>Two digit day of the month (eg. 01 to 31): </strong><br/><code class="sel">[currentdaynumber]</code>
+                        </p>
+                        <p><strong>A full textual representation of the day (eg. Friday): </strong><br/><code class="sel">[currentday]</code>
+                        </p>
+                        <p><strong>Two digit representation of the month (eg. 01 to 12): </strong><br/><code class="sel">[currentmonthnumber]</code>
+                        </p>
+                        <p><strong>Full month name (eg. May): </strong><br/><code class="sel">[currentmonth]</code>
+                        </p>
+                        <p><strong>Four digit representation of the year (eg. 2014): </strong><br/><code class="sel">[currentyear]</code>
+                        </p>
+                    </div>
+                    <div class="col-md-12">
+                        <h3>Custom field tags</h3><br />
+                        <p>You can also use custom fields to personalize your newsletter, eg. <code class="sel">[Country,fallback=anywhere in the world]</code>.</p>
+                        <p>To manage or get a reference of tags from custom fields, go to any subscriber list. Then click 'Custom fields' button at the top right.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix margin-bottom-20"></div>
+        </div>
+    </div>
+</div>

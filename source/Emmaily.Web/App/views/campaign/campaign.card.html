@@ -28,7 +28,7 @@
         <h3 class="mt-card-name">{{card.title}}</h3>
         <p class="mt-card-desc font-grey-mint">{{card.description}}&nbsp;</p>
     </div>
-    <div class="mt-card-badges">
-        <div class="ribbon ribbon-color-success">{{card.total | time}}</div>
+    <div class="mt-card-badges" ng-if="card.total>0">
+        <div class="ribbon ribbon-color-success">{{card.total | short}}</div>
     </div>
 </div>
