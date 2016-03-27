@@ -33,9 +33,6 @@ namespace Emaily.Core.Data
         public bool IsProcessing { get; set; }
         public int TotalRecord { get; set; }
 
-        public string ConfirmUrl { get; set; }
-        public string SubscribedUrl { get; set; }
-        public string UnsubscribedUrl { get; set; }
         public MailNote ThankYou { get; set; }
         public MailNote GoodBye { get; set; }
         public MailNote Confirmation { get; set; }

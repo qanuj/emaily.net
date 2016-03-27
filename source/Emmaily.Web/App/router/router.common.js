@@ -45,7 +45,7 @@
             resolve: {}
         })
         .state('campaigns', {
-            url: "/campaigns?page&parent&pageSize&q&mode",
+            url: "/?page&parent&pageSize&q&mode",
             templateUrl: root + "campaign/campaign.cards.html",
             data: { title: 'Campaigns' },
             controller: "campaignIndexController",
@@ -56,6 +56,13 @@
             templateUrl: root + "campaign/campaign.edit.html",
             data: { title: 'Campaign' },
             controller: "campaignEditController",
+            resolve: {}
+        })
+        .state('sendCampaign', {
+            url: "/campaign/send/:id",
+            templateUrl: root + "campaign/campaign.send.html",
+            data: { title: 'Campaign' },
+            controller: "campaignSendController",
             resolve: {}
         })
         .state('createCampaign', {

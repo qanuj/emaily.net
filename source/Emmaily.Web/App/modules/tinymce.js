@@ -117,7 +117,7 @@ angular.module('ui.tinymce', [])
                       tinymce.baseURL = options.baseURL;
                   }
                   tinymce.init(options);
-                  toggleDisable(scope.$eval(attrs.ngDisabled));
+                  //toggleDisable(scope.$eval(attrs.ngDisabled));
               });
 
               ngModel.$formatters.unshift(function (modelValue) {
@@ -133,6 +133,8 @@ angular.module('ui.tinymce', [])
 
                   var viewValue = ngModel.$viewValue ?
                     $sce.getTrustedHtml(ngModel.$viewValue) : '';
+
+                  toggleDisable(scope.$eval(attrs.ngDisabled));
 
                   // instance.getDoc() check is a guard against null value
                   // when destruction & recreation of instances happen

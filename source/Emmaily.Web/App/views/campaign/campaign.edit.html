@@ -34,15 +34,6 @@
                     <label class="control-label">Reply to email</label>
                     <input type="email" class="form-control" ng-model="record.sender.replyTo" placeholder="Reply to email address" name="ReplyToEmailAddress" />
                 </div>
-                <div class="form-group">
-                    <label class="control-label">Lists</label>
-                    <ui-select multiple title="choose lists" ng-model="record.lists" theme="bootstrap" sortable="true" clear-on-select="true" close-on-select="false">
-                        <ui-select-match placeholder="Select lists...">{{$item.name}} - {{$item.actives}}</ui-select-match>
-                        <ui-select-choices repeat="list.id as list in lists  | filter: $select.search">
-                            {{list.name}} - {{list.actives}}
-                        </ui-select-choices>
-                    </ui-select>
-                </div>
                 <ul class="list-group">
                     <li class="list-group-item">
                         <div class="row">

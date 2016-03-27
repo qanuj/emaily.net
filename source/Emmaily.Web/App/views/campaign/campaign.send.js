@@ -1,4 +1,4 @@
-﻿app.controller('campaignEditController', [
+﻿app.controller('campaignSendController', [
     '$scope', 'dataService', '$stateParams', '$state', 'logger', function ($scope, db, $stateParams, $state, logger) {
         $scope.title = "Campaign";
         $scope.current = 'campaigns';
@@ -9,12 +9,11 @@
         ];
         $scope.readonly = $state.current.data.readonly;
 
-        $scope.$watch("record.attachment.url", function(newVal) {
-            if (newVal) {
-                console.log('Url', newVal);
-                loadAttachments();
-            }
-        });
+        $scope.$watch("record.lists", function(newVal) {
+            if (newVal && newVal.length) {
+                buildTotals(newVal);
+            } 
+        },true);
 
         $scope.removeAttachment=function(att) {
             db.trash('attachment/' + $stateParams.id, att.id).then(loadAttachments);
@@ -24,8 +23,8 @@
             return db.post('campaign', record).then(function (result) {
                 if (result.id>0) {
                     logger.info('Campaign ' + record.name, 'modification success.');
-                    if (keepPage) {
-                        $state.go('sendCampaign',{id:$stateParams.id});
+                    if (!keepPage) {
+                        $state.go('campaigns');
                     }
                 } else {
                     logger.err('Campaign ' + record.name, 'modification failed. '+result.Error);
@@ -39,6 +38,14 @@
                 totalSize += attachments[x].size;
             }
             $scope.totalSize = totalSize;
+        }
+
+        function buildTotals(lists) {
+            var totalSize = 0;
+            for (var x in lists) {
+                totalSize += lists[x];
+            }
+            $scope.total = totalSize;
         }
            
         function loadAttachments() {

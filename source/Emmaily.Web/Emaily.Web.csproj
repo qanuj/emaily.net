@@ -261,6 +261,10 @@
     <Compile Include="Migrations\201603260735441_Removed Double App mapping.Designer.cs">
       <DependentUpon>201603260735441_Removed Double App mapping.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603270831070_Url Mmoved to MailNote.cs" />
+    <Compile Include="Migrations\201603270831070_Url Mmoved to MailNote.Designer.cs">
+      <DependentUpon>201603270831070_Url Mmoved to MailNote.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -393,8 +397,12 @@
     <Content Include="App\views\account\accounts.js" />
     <Content Include="App\views\campaign\campaign.create.html" />
     <Content Include="App\views\campaign\campaign.create.js" />
+    <Content Include="App\views\campaign\campaign.send.html" />
+    <Content Include="App\views\campaign\campaign.send.js" />
     <Content Include="App\views\campaign\campaign.edit.html" />
     <Content Include="App\views\campaign\campaign.edit.js" />
+    <Content Include="App\views\list\list.edit.html" />
+    <Content Include="App\views\list\list.edit.js" />
     <Content Include="App\views\list\csv.html" />
     <Content Include="App\views\list\list.create.html" />
     <Content Include="App\views\list\list.create.js" />
@@ -1266,6 +1274,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603260735441_Removed Double App mapping.resx">
       <DependentUpon>201603260735441_Removed Double App mapping.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603270831070_Url Mmoved to MailNote.resx">
+      <DependentUpon>201603270831070_Url Mmoved to MailNote.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -146,12 +146,10 @@ namespace Emaily.Services
                 Id = x.Id,
                 Name = x.Name,
                 AppId = x.AppId,
-                ConfirmUrl = x.ConfirmUrl,
                 GoodBye = x.GoodBye,
                 Confirmation = x.Confirmation,
                 ThankYou = x.ThankYou,
                 IsOptIn = x.IsOptIn,
-                UnsubscribedUrl = x.UnsubscribedUrl,
                 Custom = x.Custom
             }).FirstOrDefault();
             if (list == null) throw new Exception("List not found");
@@ -569,11 +567,8 @@ namespace Emaily.Services
             list.Confirmation = model.Confirmation;
             list.GoodBye = model.GoodBye;
             list.ThankYou = model.ThankYou;
-            list.SubscribedUrl = model.SubscribedUrl;
-            list.ConfirmUrl = model.ConfirmUrl;
             list.IsOptIn = model.IsOptIn;
             list.IsUnsubcribeAllList = model.IsUnsubcribeAllList;
-            list.UnsubscribedUrl = model.UnsubscribedUrl;
 
             _listRepository.Update(list);
             _listRepository.SaveChanges();

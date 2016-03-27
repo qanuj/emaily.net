@@ -1,0 +1,173 @@
+﻿<div ng-include="'App/views/layout/page-save.html'"></div>
+<div class="portlet light">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="fa fa-th-list theme-font"></i>
+            <span class="caption-subject theme-font bold uppercase">{{record.name}}</span>
+            <span class="caption-helper" ng-if="!record">loading...</span>
+        </div>
+        <ul class="nav nav-tabs" ng-if="record">
+            <li class="active"><a title="Subscribe Setting" data-target="#subscribeSetting" data-toggle="tab"><i class="fa fa-user-plus"></i><span class="hidden-md hidden-sm hidden-xs"> Subscribe Settings</span></a></li>
+            <li ng-if="record.isOptIn"><a title="Subscribe Confirmation Setting" data-target="#confirmSubscribeSetting" data-toggle="tab"><i class="fa fa-check"></i><span class="hidden-md hidden-sm hidden-xs"> Subscription Confirm Settings</span></a></li>
+            <li><a title="Unsubscribe Setting" data-target="#unsubscribeSetting" data-toggle="tab"><i class="fa fa-user-times"></i><span class="hidden-md hidden-sm hidden-xs"> Unsubscribe Settings</span></a></li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <div class="tab-content">
+            <div class="tab-pane fade active in" id="subscribeSetting">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label">List name</label>
+                            <input type="text" class="form-control" ng-model="record.name" placeholder="List name" name="Name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Options</label>
+                            <div class="form-group">
+                                <input type="checkbox" ng-model="record.isOptIn" bs-switch switch-label-width="150" switch-handle-width="150" data-on-text="Double Opt-In" data-off-text="Single Opt-In">
+                            </div>
+                        </div>
+                        <div ng-if="record.isOptIn" class="form-group">
+                            <div class="clearfix margin-bottom-10"></div>
+                            <div class="note note-info">users will be required to click a link in a confirmation email they'll receive when they sign up via the subscribe form or API</div>
+                        </div>
+                        <div class="clearfix margin-bottom-10"></div>
+                        <div class="form-group">
+                            <label class="control-label">Subscribe success page Url</label>
+                            <input type="text" class="form-control" ng-model="record.thankYou.url" placeholder="http://" name="Url" />
+                        </div>
+                        <div class="form-group">
+                            <div class="clearfix margin-bottom-10"></div>
+                            <div class="note note-info">
+                                <p>When users subscribe through the subscribe form, they'll be sent to a generic subscription confirmation page. To redirect users to a page of your preference, enter the link below. If you chose double opt-in as your List Type, this page will tell them a confirmation email has been sent to them.</p>
+                            </div>
+                            <div class="note note-warning">
+                                <p>You can also pass 'Email' and 'listID' data into the 'Subscribe success page' like so:</p>
+                                <p>
+                                    Example:<br>http://domain.com/subscribed.php?email=%e&amp;listid=%l
+                                </p>
+                                <p>
+                                    <code>%e</code> will be converted into the 'email' and <code>%l</code> will be converted into the 'listID' that subscribed.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label><input type="checkbox" ng-model="result.thankYou.isActive" /> Send user a thank you email after they subscribe through the subscribe form or API?</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Thankyou email subject</label>
+                            <input ng-disabled="!result.thankyou.isActive" type="text" class="form-control" ng-model="record.thankYou.subject" placeholder="Email Subject" name="ThankYouSubject" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Thankyou email message</label>
+                            <textarea ng-disabled="!result.thankyou.isActive" class="form-control" rows="10" ui-tinymce="tinymceOptions" ng-model="record.thankYou.message"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="confirmSubscribeSetting">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label">List name</label>
+                            <input type="text" class="form-control" ng-model="record.name" placeholder="List name" name="Name" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Subscription confirmation page url</label>
+                            <input type="text" class="form-control" ng-model="record.confirmation.url" placeholder="http://" name="Url2" />
+                        </div>
+                        <div class="clearfix margin-bottom-10"></div>
+                        <div class="note note-info">
+                            <p>Users who clicked the confirmation URL will be sent to a generic confirmation page. To redirect users to a page of your preference, enter the link below.</p>
+                        </div>
+                        <div class="clearfix margin-bottom-10"></div>
+                        <div class="note note-warning">
+                            <p>You can also pass 'Email' and 'listID' data into the 'Subscribe confirmed page' like so:</p>
+                            <p>
+                                Example:<br>http://domain.com/confirmed.php?email=%e&amp;listid=%l
+                            </p>
+                            <p>
+                                <code>%e</code> will be converted into the 'email' and <code>%l</code> will be converted into the 'listID' that subscribed.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label><input type="checkbox" ng-model="result.confirmation.isActive" /> Send user a thank you email after they subscribe through the subscribe form or API?</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Confirmation email subject</label>
+                            <input ng-disabled="!result.confirm.isActive" type="text" class="form-control" ng-model="record.confirmation.subject" placeholder="Subject of confirmation email" name="ConfirmSubject" />
+                            <span class="help-block">A generic subject line will be used if you leave this field empty.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Thankyou email message</label>
+                            <textarea class="form-control" rows="10" ui-tinymce="tinymceOptions" ng-model="record.confirmation.message"></textarea>
+                            <span class="help-block">
+                                A generic subject line will be used if you leave this field empty.<br />
+                                Don't forget to include the confirmation link tag <code id="confirmation_link_tag">[confirmation_link]</code> somewhere in your message.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="unsubscribeSetting" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label class="control-label">List name</label>
+                            <input type="text" class="form-control" ng-model="record.name" placeholder="List name" name="Name" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Unsubscribe user</label>
+                            <div class="form-group">
+                                <input type="checkbox" ng-model="record.isUnsubcribeAllList" bs-switch switch-label-width="150" switch-handle-width="150" data-on-text="All list" data-off-text="Only this list">
+                            </div>
+                        </div>
+                        <div class="clearfix margin-bottom-10"></div>
+                        <div class="note note-info">
+                            <p>When a user unsubscribes from a newsletter or through the API, choose whether to unsubscribe them from this list only, or unsubscribe them from all lists in this brand.</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Unsubscribe confirmation page url</label>
+                            <input type="text" class="form-control" ng-model="record.goodbye.url" placeholder="http://" name="Url3" />
+                        </div>
+                        <div class="clearfix margin-bottom-10"></div>
+                        <div class="note note-info">
+                            <p>When users unsubscribe from a newsletter, they'll be sent to a generic unsubscription confirmation page. To redirect users to a page of your preference, enter the link below.</p>
+                        </div>
+                        <div class="clearfix margin-bottom-10"></div>
+                        <div class="note note-warning">
+                            <p>You can also pass 'Email' and 'listID' data into the 'Unsubscribe confirmed page' like so:</p>
+                            <p>
+                                Example:<br>http://domain.com/unsubscribed.php?email=%e&amp;listid=%l
+                            </p>
+                            <p>
+                                <code>%e</code> will be converted into the 'email' and <code>%l</code> will be converted into the 'listID' that subscribed.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label><input type="checkbox" ng-model="result.goodbye.isActive" /> Send user a confirmation email after they unsubscribe from a newsletter or through the API?</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Goodbye email subject</label>
+                            <input ng-disabled="!result.goodbye.isActive" type="text" class="form-control" ng-model="record.goodbye.subject" placeholder="Email Subject" name="GoodByeSubject" />
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Goodbye email message</label>
+                            <textarea class="form-control" rows="10" ui-tinymce="tinymceOptions"
+                                      ng-model="record.goodbye.htmlText"
+                                      placeholder="html text"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix margin-bottom-20"></div>
+    </div>
+</div>
