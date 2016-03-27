@@ -265,6 +265,10 @@
     <Compile Include="Migrations\201603270831070_Url Mmoved to MailNote.Designer.cs">
       <DependentUpon>201603270831070_Url Mmoved to MailNote.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201603270835385_Whats pedning.cs" />
+    <Compile Include="Migrations\201603270835385_Whats pedning.Designer.cs">
+      <DependentUpon>201603270835385_Whats pedning.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -1277,6 +1281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603270831070_Url Mmoved to MailNote.resx">
       <DependentUpon>201603270831070_Url Mmoved to MailNote.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603270835385_Whats pedning.resx">
+      <DependentUpon>201603270835385_Whats pedning.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
