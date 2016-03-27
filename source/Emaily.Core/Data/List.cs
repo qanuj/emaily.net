@@ -26,7 +26,6 @@ namespace Emaily.Core.Data
 
         public string OwnerId { get; set; }
 
-        public bool IsOptIn { get; set; }
         public bool IsUnsubcribeAllList { get; set; }
 
         public int PreviousCount { get; set; }

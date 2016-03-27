@@ -13,9 +13,19 @@
                 </ui-select-choices>
             </ui-select>
         </div>
+        <div class="form-group" ng-if="templates.length>1">
+            <label class="control-label">Template</label>
+            <ui-select ng-model="record.templateId" title="Choose a Template...">
+                <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                <ui-select-choices repeat="item.id as item in templates  | propsFilter: {name: $select.search}">
+                    {{item.name}}
+                </ui-select-choices>
+            </ui-select>
+            <span class="help-block">If you need to start with a template</span>
+        </div>
         <div class="form-group">
             <label class="control-label">Name</label>
-            <input class="form-control" type="text" ng-model="record.name" required placeholder="Name" name="Name"/>
+            <input class="form-control" type="text" ng-model="record.name" required placeholder="Name" name="Name" />
         </div>
     </div>
 </div>

@@ -7,9 +7,9 @@
             <span class="caption-helper" ng-if="!record">loading...</span>
         </div>
         <ul class="nav nav-tabs" ng-if="record">
-            <li class="active"><a title="Subscribe Setting" data-target="#subscribeSetting" data-toggle="tab"><i class="fa fa-user-plus"></i><span class="hidden-md hidden-sm hidden-xs"> Subscribe Settings</span></a></li>
-            <li ng-if="record.isOptIn"><a title="Subscribe Confirmation Setting" data-target="#confirmSubscribeSetting" data-toggle="tab"><i class="fa fa-check"></i><span class="hidden-md hidden-sm hidden-xs"> Subscription Confirm Settings</span></a></li>
-            <li><a title="Unsubscribe Setting" data-target="#unsubscribeSetting" data-toggle="tab"><i class="fa fa-user-times"></i><span class="hidden-md hidden-sm hidden-xs"> Unsubscribe Settings</span></a></li>
+            <li class="active"><a title="Subscribe Setting" data-target="#subscribeSetting" data-toggle="tab"><i class="fa fa-user-plus"></i><span class="hidden-md hidden-sm hidden-xs"> Subscribe</span></a></li>
+            <li ng-if="record.confirmation.isActive"><a title="Subscribe Confirmation Setting" data-target="#confirmSubscribeSetting" data-toggle="tab"><i class="fa fa-check"></i><span class="hidden-md hidden-sm hidden-xs"> Subscription Confirm</span></a></li>
+            <li><a title="Unsubscribe Setting" data-target="#unsubscribeSetting" data-toggle="tab"><i class="fa fa-user-times"></i><span class="hidden-md hidden-sm hidden-xs"> Unsubscribe</span></a></li>
         </ul>
     </div>
     <div class="portlet-body">
@@ -24,7 +24,7 @@
                         <div class="form-group">
                             <label class="control-label">Options</label>
                             <div class="form-group">
-                                <input type="checkbox" ng-model="record.isOptIn" bs-switch switch-label-width="150" switch-handle-width="150" data-on-text="Double Opt-In" data-off-text="Single Opt-In">
+                                <input type="checkbox" ng-model="record.confirmation.isActive" bs-switch switch-label-width="150" switch-handle-width="150" data-on-text="Double Opt-In" data-off-text="Single Opt-In">
                             </div>
                         </div>
                         <div ng-if="record.isOptIn" class="form-group">
@@ -54,15 +54,18 @@
                     </div>
                     <div class="col-md-9">
                         <div class="form-group">
-                            <label><input type="checkbox" ng-model="result.thankYou.isActive" /> Send user a thank you email after they subscribe through the subscribe form or API?</label>
+                            <label class="control-label">Send a thank you email after they subscribe through the subscribe form or API?</label>
+                            <div class="form-group">
+                                <input type="checkbox" ng-model="result.thankYou.isActive" bs-switch data-on-text="Send" data-off-text="Don't send" switch-label-width="80" switch-handle-width="80" />
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Thankyou email subject</label>
-                            <input ng-disabled="!result.thankyou.isActive" type="text" class="form-control" ng-model="record.thankYou.subject" placeholder="Email Subject" name="ThankYouSubject" />
+                            <input ng-disabled="!result.thankYou.isActive" type="text" class="form-control" ng-model="record.thankYou.subject" placeholder="Email Subject" name="ThankYouSubject"/>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Thankyou email message</label>
-                            <textarea ng-disabled="!result.thankyou.isActive" class="form-control" rows="10" ui-tinymce="tinymceOptions" ng-model="record.thankYou.message"></textarea>
+                            <textarea ng-disabled="!result.thankYou.isActive" class="form-control" rows="10" ui-tinymce="tinymceOptions" ng-model="record.thankYou.message"></textarea>
                         </div>
                     </div>
                 </div>
@@ -96,20 +99,17 @@
                     </div>
                     <div class="col-md-9">
                         <div class="form-group">
-                            <label><input type="checkbox" ng-model="result.confirmation.isActive" /> Send user a thank you email after they subscribe through the subscribe form or API?</label>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label">Confirmation email subject</label>
-                            <input ng-disabled="!result.confirm.isActive" type="text" class="form-control" ng-model="record.confirmation.subject" placeholder="Subject of confirmation email" name="ConfirmSubject" />
+                            <input type="text" class="form-control" ng-model="record.confirmation.subject" placeholder="Subject of confirmation email" name="ConfirmSubject"/>
                             <span class="help-block">A generic subject line will be used if you leave this field empty.</span>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Thankyou email message</label>
+                            <label class="control-label">Confirmation email message</label>
+                            <span class="help-block">A generic email message will be used if you leave this field empty.</span>
+                            <div class="note note-danger">
+                                <p>Don't forget to include the confirmation link tag <code id="confirmation_link_tag">[confirmation_link]</code> somewhere in your message.</p>
+                            </div>
                             <textarea class="form-control" rows="10" ui-tinymce="tinymceOptions" ng-model="record.confirmation.message"></textarea>
-                            <span class="help-block">
-                                A generic subject line will be used if you leave this field empty.<br />
-                                Don't forget to include the confirmation link tag <code id="confirmation_link_tag">[confirmation_link]</code> somewhere in your message.
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Unsubscribe confirmation page url</label>
-                            <input type="text" class="form-control" ng-model="record.goodbye.url" placeholder="http://" name="Url3" />
+                            <input type="text" class="form-control" ng-model="record.goodBye.url" placeholder="http://" name="Url3" />
                         </div>
                         <div class="clearfix margin-bottom-10"></div>
                         <div class="note note-info">
@@ -152,16 +152,19 @@
                     </div>
                     <div class="col-md-9">
                         <div class="form-group">
-                            <label><input type="checkbox" ng-model="result.goodbye.isActive" /> Send user a confirmation email after they unsubscribe from a newsletter or through the API?</label>
+                            <label class="control-label">Send a confirmation email after they unsubscribe from a newsletter or through the API?</label>
+                            <div class="form-group">
+                                <input type="checkbox" ng-model="result.goodBye.isActive" bs-switch data-on-text="Send" data-off-text="Don't send" switch-label-width="150" switch-handle-width="150" />
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Goodbye email subject</label>
-                            <input ng-disabled="!result.goodbye.isActive" type="text" class="form-control" ng-model="record.goodbye.subject" placeholder="Email Subject" name="GoodByeSubject" />
+                            <input ng-disabled="!result.goodBye.isActive" type="text" class="form-control" ng-model="record.goodBye.subject" placeholder="Email Subject" name="GoodByeSubject"/>
                         </div>
                         <div class="form-group">
                             <label class="control-label">Goodbye email message</label>
                             <textarea class="form-control" rows="10" ui-tinymce="tinymceOptions"
-                                      ng-model="record.goodbye.htmlText"
+                                      ng-model="record.goodBye.message"
                                       placeholder="html text"></textarea>
                         </div>
                     </div>

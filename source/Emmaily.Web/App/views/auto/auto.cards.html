@@ -1,0 +1,10 @@
+﻿<div ng-include="'App/views/layout/page-bar.html'"></div>
+<div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer" class="scroller" slimscroll>
+    <div class="mt-element-card mt-element-overlay">
+        <div class="row">
+            <div class="{{cols}}" ng-repeat="card in cards.items">
+                <div ng-include="'App/views/list/list.card.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>

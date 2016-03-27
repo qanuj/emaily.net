@@ -4,5 +4,6 @@
     {
         public string Name { get; set; }
         public int AppId { get; set; }
+        public int TemplateId { get; set; }
     }
 }

@@ -23,6 +23,13 @@
             controller: "shareUiController",
             resolve: {}
         })
+        .state('autoResponders', {
+            url: "/auto-responders/:id?page&parent&pageSize&q&mode",
+            templateUrl: root + "auto/auto.cards.html",
+            data: { title: 'Auto Reponders'},
+            controller: "autoIndexController",
+            resolve: {}
+        })
         .state('companies', {
             url: "/companies?page&parent&pageSize&q&mode",
             templateUrl: root + "company/company.cards.html",
@@ -98,6 +105,13 @@
             templateUrl: root + "list/list.edit.html",
             data: { title: 'List' },
             controller: "listEditController",
+            resolve: {}
+        })
+        .state('reportList', {
+            url: "/list/report/:id/:tab",
+            templateUrl: root + "list/list.report.html",
+            data: { title: 'List Report' },
+            controller: "listReportController",
             resolve: {}
         })
         .state('importList', {

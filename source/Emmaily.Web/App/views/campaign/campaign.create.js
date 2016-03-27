@@ -19,5 +19,13 @@
         $scope.dismiss = function () {
             $uibModalInstance.dismiss('cancel');
         }
+
+        function loadTemplates() {
+            return db.get('template/all').then(function (templates) {
+                $scope.templates = templates;
+            });
+        }
+
+        loadTemplates();
     }
 ]);

@@ -14,12 +14,20 @@ namespace Emaily.Core.DTO
 
     public class UpdateSubscriberVM  : ListEmail
     {
+        public int Id { get; set; }
         public bool IsConfirmed { get; set; }
     }
 
-    public class CreateSubscriberVM
+    public class CreateDataSubscriberVM
     {
-        public string Data { get; set; } 
+        public string Data { get; set; }
+    }
+
+    public class CreateNameSubscriberVM
+    {
+        public string Name { get; set; }
+        [DataType(DataType.EmailAddress),Required]
+        public string Email { get; set; }
     }
 
     public class ProcessSubscriberFileVM
@@ -27,10 +35,27 @@ namespace Emaily.Core.DTO
         public string FileName { get; set; }
     }
 
+    public class SubscriberReportVM
+    {
+        public DateTime X { get; set; }
+        public int Y { get; set; }
+    }
+
+    public class SubscriberCountReportVM
+    {
+        public int All { get; set; }
+        public int Active { get; set; }
+        public int Unconfirmed { get; set; }
+        public int Unsubscribed { get; set; }
+        public int Bounced { get; set; }
+        public int Spam { get; set; }
+    }
+
     public class SubscriberVM : ListEmail
     {
         public int Id { get; set; }
         public DateTime Created { get; set; }
+        public bool IsActive { get; set; }
         public bool IsUnsubscribed { get; set; }
         public bool IsBounced { get; set; }
         public bool IsSoftBounce { get; set; }

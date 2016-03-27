@@ -21,12 +21,12 @@
                     </a>
                 </li>
                 <li ng-if="perm.current.write">
-                    <a class="btn default btn-outline" title="View {{title}} - {{card.name}}" ui-sref="reportList({id:card.id,tab:'all'})">
+                    <a class="btn default btn-outline" title="View {{title}} - {{card.name}}" ui-sref="reportList({id:card.id})">
                         <i class="fa fa-area-chart"></i>
                     </a>
                 </li>
                 <li ng-if="perm.current.write">
-                    <a class="btn default btn-outline" title="Auto Responders for {{card.name}}" ui-sref="autoResponders({id:card.id'})">
+                    <a class="btn default btn-outline" title="Auto Responders for {{card.name}}" ui-sref="autoReponders({id:card.id})">
                         <i class="fa fa-mail-reply"></i>
                     </a>
                 </li>

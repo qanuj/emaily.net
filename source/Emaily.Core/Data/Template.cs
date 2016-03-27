@@ -18,7 +18,7 @@ namespace Emaily.Core.Data
 
         public int Price { get; set; }
 
-        public ICollection<Attachment> Attachments { get; set; }
+        public virtual ICollection<Attachment> Attachments { get; set; }
 
         public Template()
         {

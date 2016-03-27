@@ -1,0 +1,26 @@
+﻿<div class="mt-card-item mt-element-ribbon" ng-class="{active:card.selected}">
+    <div class="mt-card-avatar mt-overlay-1">
+        <div class="mt-picture mt-16x9" background-image="{{card.picture | gravtaar:card.email:275:'mm'}}"></div>
+        <div class="mt-overlay">
+            <ul class="mt-info">
+                <li>
+                    <a class="btn default btn-outline" title="Edit - {{card.name}}" ng-click="edit(card.id)">
+                        <i class="fa fa-pencil-square-o"></i>
+                    </a>
+                </li>
+                <li ng-if="perm.current.write">
+                    <a class="btn default btn-outline" title="Delete {{title}} - {{card.name}}" ng-click="trash(card)">
+                        <i class="fa fa-trash-o"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="mt-card-content" ng-click="toggleOne(card)">
+        <h3 class="mt-card-name">{{card.name}}</h3>
+        <p class="mt-card-desc font-grey-mint">{{card.description}}&nbsp;</p>
+    </div>
+    <div class="mt-card-badges">
+        <div ng-if="card.total" class="ribbon ribbon-color-success">{{card.total | short}}</div>
+    </div>
+</div>

@@ -3,7 +3,7 @@
         opt.size = opt.size || 'lg';
         var modalInstance = $uibModal.open({
             animation: opt.animation,
-            templateUrl: '/App/views/popup/' + opt.key + '.html',
+            templateUrl: '/App/views/' + (opt.inPopup ? 'popup/' : '') + opt.key + '.html',
             controller: opt.ctrl,
             size: opt.size,
             resolve: {
@@ -18,57 +18,59 @@
         video: function (opt) {
             opt.key = 'video';
             opt.ctrl = 'VideoPlayerController';
+            opt.inPopup = true;
             return open(opt);
         },
         embed: function (opt) {
             opt.key = 'embed';
             opt.ctrl = 'EmbedBuilderController';
+            opt.inPopup = true;
             return open(opt);
         },
         history: function (opt) {
             opt.key = 'history';
             opt.ctrl = 'HistoryController';
+            opt.inPopup = true;
             return open(opt);
         },
         comment: function (opt) {
             opt.key = 'comment';
             opt.ctrl = 'CommentController';
+            opt.inPopup = true;
             return open(opt);
         },
         usage: function (opt) {
             opt.key = 'usage';
             opt.ctrl = 'UsageController';
+            opt.inPopup = true;
             return open(opt);
         },
         trash: function (opt) {
             opt.key = 'trash';
             opt.ctrl = 'TrashController';
+            opt.inPopup = true;
             return open(opt);
         },
         picker: function (opt) {
             opt.key = 'image.picker';
             opt.ctrl = 'ImagePickerController';
+            opt.inPopup = true;
             return open(opt);
         },
         moderate: function (opt) {
             opt.key = 'moderate';
             opt.ctrl = 'ModerateController';
+            opt.inPopup = true;
+            return open(opt);
+        },
+        create: function (opt) {
+            opt.ctrl = 'AnythingController';
+            opt.inPopup = false;
             return open(opt);
         },
         open:function(opt) {
-            opt.size = opt.size || 'lg';
-            var modalInstance = $uibModal.open({
-                animation: opt.animation,
-                templateUrl: '/App/views/' + opt.key + '.html',
-                controller: opt.ctrl,
-                size: opt.size,
-                resolve: {
-                    opt: function () {
-                        return opt;
-                    }
-                }
-            });
-            return modalInstance.result;
+            opt.inPopup = false;
+            return open(opt);;
         }
     }
 }])
@@ -134,6 +136,17 @@
     }
 
     loadItems();
+}])
+.controller('AnythingController', ['$scope', '$uibModalInstance', 'opt', function ($scope, $uibModalInstance, opt) {
+    $scope.info = opt.info;
+    $scope.usages = opt.items;
+    $scope.record = opt.record || {};
+    $scope.ok = function (info) {
+        $uibModalInstance.close({ ok: true, data: info });
+    };
+    $scope.dismiss = function () {
+        $uibModalInstance.close();
+    }
 }])
 .controller('UsageController', ['$scope', '$uibModalInstance', 'opt', function ($scope, $uibModalInstance, opt) {
     $scope.info = opt.info;

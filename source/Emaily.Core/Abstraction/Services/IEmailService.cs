@@ -9,7 +9,7 @@ namespace Emaily.Core.Abstraction.Services
     public interface IEmailService
     {
         ListVM CreateList(CreateListVM model);
-        void Subscribe(CreateSubscriber model);
+        SubscriberVM Subscribe(CreateSubscriber model);
         Task ImportSubscribers(string importData, int listId);
         Task ImportSubscribers(TextReader reader, int listId);
 
@@ -38,8 +38,8 @@ namespace Emaily.Core.Abstraction.Services
         void CreateAutoEmail(CreateAutoEmailVM model);
         void UpdateAutoEmail(UpdateAutoEmailVM model);
 
-        void CreateAutoResponder(CreateAutoResponderVM model);
-        void UpdateAutoResponder(UpdateAutoResponderVM model);
+        AutoResponderVM CreateAutoResponder(CreateAutoResponderVM model,int list);
+        AutoResponderVM UpdateAutoResponder(UpdateAutoResponderVM model, int list);
 
         void AddCustomField(CustomFieldVM model);
         void RenameCustomField(RenameCustomFieldVM model);
@@ -49,6 +49,8 @@ namespace Emaily.Core.Abstraction.Services
         IQueryable<TemplateVM> Templates();
         IQueryable<ListVM> Lists();
         IQueryable<SubscriberVM> Subscribers(int listId);
+        IQueryable<SubscriberReportVM> SubscriberReport(int listId);
+        IQueryable<AutoResponderVM> Auto(int listId);
         IQueryable<AppVM> Apps();
         TemplateInfoVM TemplateById(int id);
         bool DeleteTemplate(int id);
@@ -62,5 +64,8 @@ namespace Emaily.Core.Abstraction.Services
         IQueryable<AttachmentVM> Attachments(int template);
         AttachmentVM CreateAttachment(CreateAttachmentVM model, int template);
         bool DeleteAttachment(int template, int id,bool deleteFile,string folder);
+        bool DeleteAutoResponder(int list, int id);
+        AutoResponderVM AutoResponderById(int list, int id);
+        SubscriberCountReportVM SubscriberCountReport(int list);
     }
 }

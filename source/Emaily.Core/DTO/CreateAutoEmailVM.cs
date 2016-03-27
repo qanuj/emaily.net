@@ -9,4 +9,12 @@ namespace Emaily.Core.DTO
         public int ListId { get; set; }
         public AutoResponderEnum Mode { get; set; }
     }
+
+    public class AutoEmailVM
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int ListId { get; set; }
+        public AutoResponderEnum Mode { get; set; }
+    }
 }

@@ -39,13 +39,52 @@ namespace Emaily.Web.Controllers.Api.v1
         }
 
         /// <summary>
+        /// Returns template information
+        /// </summary>
+        /// <param name="list">List Id</param>
+        /// <returns></returns>
+        [HttpGet, Route("report")]
+        public IQueryable<SubscriberReportVM> GetSubscriberSignUpReport(int list)
+        {
+            return _service.SubscriberReport(list);
+        }
+
+        /// <summary>
+        /// Returns template information
+        /// </summary>
+        /// <param name="list">List Id</param>
+        /// <returns></returns>
+        [HttpGet, Route("count")]
+        public SubscriberCountReportVM GetSubscriberCountReport(int list)
+        {
+            return _service.SubscriberCountReport(list);
+        }
+
+        /// <summary>
+        /// PUT command to insert a template
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPut, Route("create")]
+        public HttpResponseMessage Put(int list, CreateSubscriber model)
+        {
+            if (ModelState.IsValid)
+            {
+                var item = _service.Subscribe(model);
+                return Accepted(item);
+            }
+            return Bad(ModelState);
+        }
+
+        /// <summary>
         /// PUT command to insert a template
         /// </summary>
         /// <param name="list"></param>
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPut, Route]
-        public HttpResponseMessage Put(int list, CreateSubscriberVM model)
+        public HttpResponseMessage Put(int list, CreateDataSubscriberVM model)
         {
             if (ModelState.IsValid)
             {

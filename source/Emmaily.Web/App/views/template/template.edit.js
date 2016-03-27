@@ -33,19 +33,6 @@
             }
         });
 
-        $scope.update = function (record, keepPage) {
-            return db.post('campaign', record).then(function (result) {
-                if (result.id > 0) {
-                    logger.info('Campaign ' + record.name, 'modification success.');
-                    if (!keepPage) {
-                        $state.go('campaigns');
-                    }
-                } else {
-                    logger.err('Campaign ' + record.name, 'modification failed. ' + result.Error);
-                }
-            });
-        }
-
         function buildTotalSize(attachments) {
             var totalSize = 0;
             for (var x in attachments) {

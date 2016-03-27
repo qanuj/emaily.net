@@ -236,6 +236,7 @@
     <Compile Include="Controllers\Api\BasicApiController.cs" />
     <Compile Include="Controllers\Api\v1\AccountController.cs" />
     <Compile Include="Controllers\Api\v1\AttachmentContoller.cs" />
+    <Compile Include="Controllers\Api\v1\AutoContoller.cs" />
     <Compile Include="Controllers\Api\v1\SubscriberContoller.cs" />
     <Compile Include="Controllers\Api\v1\ListContoller.cs" />
     <Compile Include="Controllers\Api\v1\TemplateContoller.cs" />
@@ -268,6 +269,10 @@
     <Compile Include="Migrations\201603270835385_Whats pedning.cs" />
     <Compile Include="Migrations\201603270835385_Whats pedning.Designer.cs">
       <DependentUpon>201603270835385_Whats pedning.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201603270905049_OptIn Removed.cs" />
+    <Compile Include="Migrations\201603270905049_OptIn Removed.Designer.cs">
+      <DependentUpon>201603270905049_OptIn Removed.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -399,12 +404,20 @@
     <Content Include="App\views\account\account.about.html" />
     <Content Include="App\views\account\account.html" />
     <Content Include="App\views\account\accounts.js" />
+    <Content Include="App\views\auto\auto.card.html" />
+    <Content Include="App\views\auto\auto.cards.html" />
+    <Content Include="App\views\auto\autos.js" />
     <Content Include="App\views\campaign\campaign.create.html" />
     <Content Include="App\views\campaign\campaign.create.js" />
     <Content Include="App\views\campaign\campaign.send.html" />
     <Content Include="App\views\campaign\campaign.send.js" />
     <Content Include="App\views\campaign\campaign.edit.html" />
     <Content Include="App\views\campaign\campaign.edit.js" />
+    <Content Include="App\views\list\subscriber.edit.html" />
+    <Content Include="App\views\list\subscriber.create.html" />
+    <Content Include="App\views\list\subscriber.card.html" />
+    <Content Include="App\views\list\list.report.html" />
+    <Content Include="App\views\list\list.report.js" />
     <Content Include="App\views\list\list.edit.html" />
     <Content Include="App\views\list\list.edit.js" />
     <Content Include="App\views\list\csv.html" />
@@ -1284,6 +1297,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201603270835385_Whats pedning.resx">
       <DependentUpon>201603270835385_Whats pedning.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201603270905049_OptIn Removed.resx">
+      <DependentUpon>201603270905049_OptIn Removed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

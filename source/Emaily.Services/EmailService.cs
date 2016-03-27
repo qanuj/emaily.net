@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Configuration;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Amazon.SimpleEmail.Model;
@@ -149,7 +150,6 @@ namespace Emaily.Services
                 GoodBye = x.GoodBye,
                 Confirmation = x.Confirmation,
                 ThankYou = x.ThankYou,
-                IsOptIn = x.IsOptIn,
                 Custom = x.Custom
             }).FirstOrDefault();
             if (list == null) throw new Exception("List not found");
@@ -178,7 +178,7 @@ namespace Emaily.Services
                 Bounced = x.Subscribers.Count(y => y.IsBounced),
                 Spams = x.Subscribers.Count(y => y.IsComplaint),
                 Unsubscribed = x.Subscribers.Count(y => y.IsUnsubscribed),
-                Actives = x.Subscribers.Count(y => !y.IsBounced && !y.IsComplaint && !y.IsUnsubscribed),
+                Actives = x.Subscribers.Count(y => !y.IsBounced && !y.IsComplaint && !y.IsUnsubscribed && y.IsConfirmed),
                 Total = x.Subscribers.Count()
             });
         }
@@ -195,9 +195,20 @@ namespace Emaily.Services
                 IsComplaint = x.IsComplaint,
                 IsConfirmed = x.IsConfirmed,
                 IsSoftBounce = x.IsSoftBounce,
+                IsActive = !x.IsBounced && !x.IsComplaint && !x.IsUnsubscribed && x.IsConfirmed,
                 IsUnsubscribed = x.IsUnsubscribed
             });
         }
+
+        public IQueryable<SubscriberReportVM> SubscriberReport(int listId)
+        {
+            return _subscriberReportRepository.All.Where(x => x.ListId == listId && _appProvider.Apps.Contains(x.List.AppId)).Select(x => new SubscriberReportVM
+            {
+                X = x.Created,
+                Y = x.Total
+            });
+        }
+
         public IQueryable<CampaignVM> Campaigns()
         {
             return _campaignRepository.All.Where(x => _appProvider.Apps.Contains(x.AppId)).Select(x => new CampaignVM
@@ -246,7 +257,18 @@ namespace Emaily.Services
 
         public SubscriberVM UpdateSubscriber(UpdateSubscriberVM model)
         {
-            throw new NotImplementedException();
+            var entity = _subscriberRepository.All.FirstOrDefault(x=>x.Id==model.Id && x.ListId==model.ListId && _appProvider.Apps.Any(y => y==x.List.AppId));
+            if(entity==null) throw new Exception("Subscriber not found");
+
+            entity.Name = model.Name;
+            entity.IsConfirmed = model.IsConfirmed;
+            entity.Email = model.Email;
+            entity.Custom = model.Custom;
+
+            _subscriberRepository.Update(entity);
+            _subscriberRepository.SaveChanges();
+
+            return Subscribers(model.ListId).FirstOrDefault(x => x.Id == model.Id);
         }
 
         public SubscriberVM SubscriberById(int list, int id)
@@ -312,6 +334,35 @@ namespace Emaily.Services
             return _attachmentRepository.SaveChanges()>0;
         }
 
+        public bool DeleteAutoResponder(int list, int id)
+        {
+            var autoresponder = _autoResponderRepository.ById(id);
+            var listOf = _listRepository.ById(list);
+            if (autoresponder == null || autoresponder.ListId != list) throw new Exception("List not found");
+            CheckIsMine(listOf.AppId);
+
+            _autoResponderRepository.Delete(autoresponder);
+            return _autoResponderRepository.SaveChanges() > 0;
+        }
+
+        public AutoResponderVM AutoResponderById(int list, int id)
+        {
+            return Auto(list).FirstOrDefault(x => x.Id == id);
+        }
+
+        public SubscriberCountReportVM SubscriberCountReport(int list)
+        {
+            var query= Subscribers(list);
+            return new SubscriberCountReportVM{
+                Bounced = query.Count(x => x.IsBounced),
+                All = query.Count(),
+                Active = query.Count(x => x.IsActive),
+                Spam = query.Count(x => x.IsComplaint),
+                Unconfirmed = query.Count(x => !x.IsConfirmed),
+                Unsubscribed = query.Count(x => x.IsUnsubscribed)
+            };
+        }
+
         public IQueryable<TemplateVM> Templates()
         {
             return _templateRepository.All.Where(x => _appProvider.Apps.Contains(x.AppId)).Select(x => new TemplateVM
@@ -372,10 +423,11 @@ namespace Emaily.Services
             return Lists().FirstOrDefault(x => x.Id == list.Id);
         }
 
-        public void Subscribe(CreateSubscriber model)
+        public SubscriberVM Subscribe(CreateSubscriber model)
         {
             var list = _listRepository.ById(model.ListId); 
-            SubscribeInternal(model, list, list==null? null : _appRepository.ById(list.AppId));
+            var entityId=SubscribeInternal(model, list, list==null? null : _appRepository.ById(list.AppId));
+            return Subscribers(model.ListId).FirstOrDefault(x => x.Id == entityId);
         }
 
         private bool IsValidEmail(string email)
@@ -383,7 +435,7 @@ namespace Emaily.Services
             return !(string.IsNullOrWhiteSpace(email) || !new RegexUtilities().IsValidEmail(email));
         }
 
-        private void SubscribeInternal(CreateSubscriber model, List list, App app, bool updateCounts = true, bool sendEmail = true, IRepository<Subscriber> secondRepository=null)
+        private int SubscribeInternal(CreateSubscriber model, List list, App app, bool updateCounts = true, bool sendEmail = true, IRepository<Subscriber> secondRepository=null)
         {
             if (list == null) throw new Exception("List not found");
             if (app == null) throw new Exception("App not found");
@@ -415,7 +467,7 @@ namespace Emaily.Services
 
             if (sendEmail)
             {
-                if (list.IsOptIn && list.Confirmation.IsActive)
+                if (list.Confirmation.IsActive)
                 {
                     SendNote(list.Confirmation, app.Sender, new EmailAddress(subscriber.Email, subscriber.Name));
                 }
@@ -424,6 +476,8 @@ namespace Emaily.Services
                     SendNote(list.ThankYou, app.Sender, new EmailAddress(subscriber.Email, subscriber.Name));
                 }
             }
+
+            return subscriber.Id;
         }
 
         private const int ImportEvery = 125;
@@ -567,7 +621,6 @@ namespace Emaily.Services
             list.Confirmation = model.Confirmation;
             list.GoodBye = model.GoodBye;
             list.ThankYou = model.ThankYou;
-            list.IsOptIn = model.IsOptIn;
             list.IsUnsubcribeAllList = model.IsUnsubcribeAllList;
 
             _listRepository.Update(list);
@@ -633,7 +686,7 @@ namespace Emaily.Services
         {
             var app = FindApp(model.AppId);
 
-            var campaign = _campaignRepository.Create(new NormalCampaign
+            var entity = new NormalCampaign
             {
                 Name = model.Name,
                 Label = model.Name,
@@ -641,7 +694,29 @@ namespace Emaily.Services
                 Sender = app.Sender,
                 App = app,
                 OwnerId = _appProvider.OwnerId
-            });
+            };
+            var template = model.TemplateId > 0 ? _templateRepository.ById(model.TemplateId) : null;
+            if (template != null)
+            {
+                entity.Name = template.Name;
+                entity.HtmlText = template.HtmlText;
+                entity.PlainText = template.PlainText;
+                var attachments = template.Attachments.ToList();
+                entity.Attachments=new List<Attachment>();
+                for (var i = 0; i < attachments.Count; i++)
+                {
+                    var att = attachments[i];
+                    entity.Attachments.Add(new Attachment
+                    {
+                        Name = att.Name,
+                        ContentType = att.ContentType,
+                        Size = att.Size,
+                        Url = att.Url
+                    });
+                }
+                entity.Attachments = template.Attachments;
+            }
+            var campaign = _campaignRepository.Create(entity);
 
             _campaignRepository.SaveChanges();
 
@@ -924,29 +999,30 @@ namespace Emaily.Services
             _autoEmailRepository.Update(autoEmail);
             _autoResponderRepository.SaveChanges();
         }
-        public void CreateAutoResponder(CreateAutoResponderVM model)
+        public AutoResponderVM CreateAutoResponder(CreateAutoResponderVM model,int listId)
         {
-            var list = _listRepository.ById(model.ListId);
+            var list = _listRepository.ById(listId);
             if (list == null) throw new Exception("List not found");
 
             CheckIsMine(list.AppId);
 
-            _autoResponderRepository.Create(new AutoResponder
+            var entity=_autoResponderRepository.Create(new AutoResponder
             {
                 Name = model.Name,
-                Custom = JsonConvert.SerializeObject(model.Custom),
-                ListId = model.ListId,
+                ListId = listId,
                 Mode = model.Mode
             });
 
             _autoResponderRepository.SaveChanges();
+
+            return Auto(list.Id).FirstOrDefault(x => x.Id == entity.Id);
         }
-        public void UpdateAutoResponder(UpdateAutoResponderVM model)
+        public AutoResponderVM UpdateAutoResponder(UpdateAutoResponderVM model, int listId)
         {
             var entity = _autoResponderRepository.ById(model.Id);
             if (entity == null) throw new Exception("Auto Responder not found");
 
-            var list = _listRepository.ById(entity.ListId);
+            var list = _listRepository.ById(listId);
             if (list == null) throw new Exception("List not found");
 
             CheckIsMine(list.AppId);
@@ -956,9 +1032,22 @@ namespace Emaily.Services
             entity.Custom = JsonConvert.SerializeObject(model.Custom);
 
             _autoResponderRepository.Update(entity);
-
             _autoResponderRepository.SaveChanges();
+
+            return Auto(list.Id).FirstOrDefault(x => x.Id == entity.Id);
         }
+
+        public IQueryable<AutoResponderVM> Auto(int listId)
+        {
+            return _autoResponderRepository.All.Where(x => x.ListId == listId && _appProvider.Apps.Contains(x.List.AppId)).Select(x => new AutoResponderVM
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Created = x.Created,
+                ListId = x.ListId,
+                Mode = x.Mode
+            });
+        } 
 
         public void AddCustomField(CustomFieldVM model)
         {

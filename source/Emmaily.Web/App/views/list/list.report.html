@@ -1,0 +1,41 @@
+﻿<div ng-include="'App/views/layout/page-bar.html'"></div>
+<div class="portlet light">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="fa fa-th-list theme-font"></i>
+            <span class="caption-subject theme-font bold uppercase">{{list.name}}</span>
+            <span class="caption-helper" ng-if="!list">loading...</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <canvas id="line" class="chart chart-scatter" chart-data="data" chart-options="chartOption"></canvas>
+        <div class="clearfix margin-bottom-20"></div>
+    </div>
+</div>
+<div class="portlet light">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="fa fa-th-list theme-font"></i>
+            <span class="caption-subject theme-font bold uppercase">{{currentTab | uncamel}} Subscribers</span>
+            <span class="caption-helper" ng-if="!cards">loading...</span>
+        </div>
+        <ul class="nav nav-tabs" ng-if="cards">
+            <li ng-repeat="tab in modes" ng-class="{'active':tab.link==currentTab}">
+                <a title="All" ui-sref="{tab:tab.link}">
+                    {{tab.title}} <span class="badge badge-{{tab.css}}">{{tab.count}}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+        <div fill-height additional-padding="111" debounce-wait="400" footer-element-id="page-footer" class="scroller" slimscroll>
+            <div class="mt-element-card mt-element-overlay">
+                <div class="row">
+                    <div class="{{cols}}" ng-repeat="card in cards.items">
+                        <div ng-include="'App/views/list/subscriber.card.html'"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -90,7 +90,7 @@ namespace Emaily.Web
 
             config.MapHttpAttributeRoutes(constraintResolver, new CustomDirectRouteProvider());
             config.AddODataQueryFilter();
-            config.Filters.Add(new UnhandledExceptionFilter());
+            config.Filters.Add(new UnhandledExceptionFilter());   
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
@@ -101,7 +101,8 @@ namespace Emaily.Web
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 Formatting = Formatting.None,
-                DateTimeZoneHandling = DateTimeZoneHandling.Local,
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                DateFormatHandling = DateFormatHandling.IsoDateFormat,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
         }
